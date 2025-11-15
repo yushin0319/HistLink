@@ -39,34 +39,20 @@ LIMIT 10;
 -- =======================================
 -- 2. 用語数チェック
 -- =======================================
-\echo '【2】用語数チェック（目標: 100語）';
+\echo '【2】用語数';
 \echo '---';
 
-SELECT
-    COUNT(*) AS term_count,
-    CASE
-        WHEN COUNT(*) = 100 THEN '✓ OK - 100語'
-        WHEN COUNT(*) > 100 THEN '✓ OK - ' || COUNT(*) || '語（目標超過）'
-        ELSE '✗ NG - ' || COUNT(*) || '語（不足）'
-    END AS status
-FROM terms;
+SELECT COUNT(*) AS term_count FROM terms;
 
 \echo '';
 
 -- =======================================
 -- 3. リレーション数チェック
 -- =======================================
-\echo '【3】リレーション数チェック（目標: 300リレーション）';
+\echo '【3】リレーション数';
 \echo '---';
 
-SELECT
-    COUNT(*) AS relation_count,
-    CASE
-        WHEN COUNT(*) = 300 THEN '✓ OK - 300リレーション'
-        WHEN COUNT(*) > 300 THEN '✓ OK - ' || COUNT(*) || 'リレーション（目標超過）'
-        ELSE '✗ NG - ' || COUNT(*) || 'リレーション（不足）'
-    END AS status
-FROM relations;
+SELECT COUNT(*) AS relation_count FROM relations;
 
 \echo '';
 

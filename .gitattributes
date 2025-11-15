@@ -1,0 +1,18 @@
+# TSV files should always use LF
+*.tsv text eol=lf
+
+# Markdown files should use LF
+*.md text eol=lf
+
+# SQL files should use LF
+*.sql text eol=lf
+
+# Python files should use LF
+*.py text eol=lf
+
+# TypeScript/JavaScript files should use LF
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf

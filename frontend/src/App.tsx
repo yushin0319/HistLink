@@ -12,15 +12,15 @@ interface CardData {
 
 const sampleCurrentCard: CardData = {
   id: '1',
-  term: '縄文時代',
-  era: '古代'
+  term: 'ルネサンス',
+  era: '近世'
 };
 
 const sampleChoices: CardData[] = [
-  { id: '2', term: '弥生時代', era: '古代' },
-  { id: '3', term: '古墳時代', era: '古代' },
-  { id: '4', term: '飛鳥時代', era: '古代' },
-  { id: '5', term: '奈良時代', era: '古代' }
+  { id: '2', term: 'レオナルド・ダ・ヴィンチ', era: '近世' },
+  { id: '3', term: 'サンフランシスコ平和条約', era: '現代' },
+  { id: '4', term: 'ノルマンディー上陸作戦', era: '現代' },
+  { id: '5', term: 'コンスタンティヌス帝', era: '古代' }
 ];
 
 export default function App() {
@@ -129,7 +129,6 @@ export default function App() {
             <ChoiceCard
               key={choice.id}
               term={choice.term}
-              era={choice.era}
               onClick={() => handleChoiceClick(choice.id)}
               isSelected={selectedChoice === choice.id}
             />

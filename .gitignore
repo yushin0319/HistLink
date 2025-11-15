@@ -16,6 +16,8 @@ htmlcov/
 .coverage.*
 coverage.xml
 *.cover
+.hypothesis/
+coverage/
 
 # IDE
 .vscode/
@@ -46,3 +48,4 @@ check_tie.py
 test_randomness.py
 test_random_start.py
 game_test.py
+tmp_*.py

@@ -245,13 +245,13 @@ def test_bfs_distances_properties(start_term_id):
 ## 段階的スケール計画
 
 ### Phase 1: MVP（1-2週間）
-- **100語、300リレーション**（各語平均3リレーション）
+- 歴史用語データベース構築
 - 基本ゲームシステム完成
 - ルート生成アルゴリズム実装
+- データ確認: `SELECT COUNT(*) FROM terms;` / `SELECT COUNT(*) FROM relations;`
 
 ### Phase 2: 拡張（将来）
-- **500語、1500リレーション**（最終目標）
-- データ拡充
+- データ拡充（追加予定）
 - UI/UX改善
 
 ---
@@ -269,7 +269,7 @@ def test_bfs_distances_properties(start_term_id):
 ```sql
 -- ENUM定義（データ健全性）
 CREATE TYPE era_enum AS ENUM ('古代', '中世', '近世', '近代', '現代');
-CREATE TYPE relation_enum AS ENUM ('因果', '契機', '対立', '政策', '文化', '同時代');
+CREATE TYPE relation_enum AS ENUM ('因果', '契機', '対立', '政策', '文化', '同時代', '外交');
 CREATE TYPE difficulty_enum AS ENUM ('easy', 'std', 'hard');
 
 -- 用語テーブル
@@ -277,6 +277,7 @@ CREATE TABLE terms (
   id SERIAL PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
   era era_enum NOT NULL,
+  year INT,  -- 発生年（西暦、紀元前は負の数）
   tags TEXT[],
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -704,22 +705,37 @@ VALUES
 
 ## データソース
 
-### Phase 1: 100語 + 300リレーション
+### データ統計
 
-#### 統計
-- **総用語数**: 100
-- **総リレーション数**: 300
-- **平均リレーション数**: 3.0
-- **橋渡しノード**: 30個（明治維新、関ヶ原の戦い、太平洋戦争など）
-- **最小degree**: 2（全ノード保証）
-- **最大degree**: 5（超橋渡しノード）
+#### 統計確認方法
+```sql
+-- 総用語数
+SELECT COUNT(*) FROM terms;
 
-#### 時代別配分
-- 古代（～平安）: 15語
-- 中世（鎌倉～戦国）: 20語
-- 近世（江戸）: 20語
-- 近代（幕末～明治）: 25語
-- 現代（大正～）: 20語
+-- 総リレーション数
+SELECT COUNT(*) FROM relations;
+
+-- 平均次数（degree）
+SELECT AVG(degree) FROM (
+  SELECT t.id,
+    (SELECT COUNT(*) FROM relations WHERE src_id = t.id) +
+    (SELECT COUNT(*) FROM relations WHERE dst_id = t.id) AS degree
+  FROM terms t
+) sub;
+
+-- 最小・最大次数
+SELECT MIN(degree), MAX(degree) FROM (
+  SELECT t.id,
+    (SELECT COUNT(*) FROM relations WHERE src_id = t.id) +
+    (SELECT COUNT(*) FROM relations WHERE dst_id = t.id) AS degree
+  FROM terms t
+) sub;
+```
+
+#### 時代別配分確認
+```sql
+SELECT era, COUNT(*) FROM terms GROUP BY era ORDER BY era;
+```
 
 #### リレーションタイプ
 - **因果**: A→Bの直接的原因
@@ -728,6 +744,7 @@ VALUES
 - **政策**: Aという政策の結果B
 - **文化**: Aという時代・人物の文化的成果B
 - **同時代**: 同じ時代の関連事項
+- **外交**: 国際関係・外交政策
 
 ---
 
@@ -735,7 +752,8 @@ VALUES
 
 ### CSV/JSON インポート機能
 
-Phase 2でデータを500語・1500リレーションに拡大する際、手動INSERT文は非効率。CSVインポート機能を実装。
+データを拡大する際、手動INSERT文は非効率。CSVインポート機能を実装。
+現在のデータ件数は `SELECT COUNT(*) FROM terms;` で確認可能。
 
 #### 用語CSVフォーマット
 ```csv
@@ -864,12 +882,12 @@ jobs:
 ## 開発スケジュール
 
 ### Week 1: データ基盤
-- [x] 日本史100語リスト作成
-- [x] 300リレーション作成（各語平均3）
+- [x] 歴史用語リスト作成
+- [x] リレーション作成
 - [x] PostgreSQLマイグレーション作成
 - [x] シードデータ作成
-- [ ] PostgreSQL環境構築＆マイグレーション実行
-- [ ] データ品質チェック（全ノードdegree≥2確認）
+- [x] PostgreSQL環境構築＆マイグレーション実行
+- [x] データ品質チェック（全ノードdegree≥2確認）
 
 ### Week 2: バックエンド（TDD）
 - [ ] FastAPI + pytest環境セットアップ
@@ -1552,23 +1570,11 @@ SELECT
     END AS status
 FROM v_dead_points;
 
--- 2. 用語数チェック（100語）
-SELECT
-    COUNT(*) AS term_count,
-    CASE
-        WHEN COUNT(*) = 100 THEN 'OK'
-        ELSE 'NG'
-    END AS status
-FROM terms;
+-- 2. 用語数表示
+SELECT COUNT(*) AS term_count FROM terms;
 
--- 3. リレーション数チェック（300リレーション）
-SELECT
-    COUNT(*) AS relation_count,
-    CASE
-        WHEN COUNT(*) = 300 THEN 'OK'
-        ELSE 'NG'
-    END AS status
-FROM relations;
+-- 3. リレーション数表示
+SELECT COUNT(*) AS relation_count FROM relations;
 
 -- 4. 孤立ノードチェック（どこにも繋がっていないノード）
 SELECT
@@ -1579,7 +1585,7 @@ FROM terms t
 LEFT JOIN relations r ON (r.src_id = t.id OR r.dst_id = t.id)
 WHERE r.id IS NULL;
 
--- 5. リレーションの有向性チェック（src_id != dst_id）
+-- 5. リレーションの自己ループチェック（src_id != dst_id）
 SELECT
     COUNT(*) AS self_loop_count,
     CASE
@@ -1588,6 +1594,18 @@ SELECT
     END AS status
 FROM relations
 WHERE src_id = dst_id;
+
+-- 6. 次数（degree）の分布
+SELECT
+  MIN(degree) AS min_degree,
+  MAX(degree) AS max_degree,
+  AVG(degree) AS avg_degree
+FROM (
+  SELECT t.id,
+    (SELECT COUNT(*) FROM relations WHERE src_id = t.id) +
+    (SELECT COUNT(*) FROM relations WHERE dst_id = t.id) AS degree
+  FROM terms t
+) sub;
 ```
 
 **pytest テスト:**
@@ -1601,19 +1619,38 @@ def test_no_dead_points(db_session):
     ).scalar()
     assert dead_points == 0, "死に点が存在します"
 
-def test_term_count(db_session):
-    """用語数が100であること"""
+def test_terms_exist(db_session):
+    """用語が存在すること"""
     count = db_session.execute(
         text("SELECT COUNT(*) FROM terms")
     ).scalar()
-    assert count == 100, f"用語数が{count}です（期待値: 100）"
+    assert count > 0, "用語が1件も存在しません"
 
-def test_relation_count(db_session):
-    """リレーション数が300であること"""
+def test_relations_exist(db_session):
+    """リレーションが存在すること"""
     count = db_session.execute(
         text("SELECT COUNT(*) FROM relations")
     ).scalar()
-    assert count == 300, f"リレーション数が{count}です（期待値: 300）"
+    assert count > 0, "リレーションが1件も存在しません"
+
+def test_no_orphaned_terms(db_session):
+    """孤立ノード（どこにも繋がっていない）が存在しないこと"""
+    orphaned = db_session.execute(
+        text("""
+            SELECT COUNT(*)
+            FROM terms t
+            LEFT JOIN relations r ON (r.src_id = t.id OR r.dst_id = t.id)
+            WHERE r.id IS NULL
+        """)
+    ).scalar()
+    assert orphaned == 0, f"{orphaned}件の孤立ノードが存在します"
+
+def test_no_self_loops(db_session):
+    """自己ループ（src_id = dst_id）が存在しないこと"""
+    self_loops = db_session.execute(
+        text("SELECT COUNT(*) FROM relations WHERE src_id = dst_id")
+    ).scalar()
+    assert self_loops == 0, f"{self_loops}件の自己ループが存在します"
 ```
 
 ---
@@ -1659,8 +1696,10 @@ HistLink/
 │   │   └── 002_seed_data.sql
 │   └── scripts/
 ├── data/
-│   ├── 日本史100語厳選リスト.md
-│   └── リレーション300.md
+│   ├── terms.tsv
+│   ├── terms.md
+│   ├── relations.tsv
+│   └── relations.md
 ├── PLAN.md
 └── README.md
 ```

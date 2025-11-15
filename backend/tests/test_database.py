@@ -28,17 +28,17 @@ def test_relations_table_exists(db_session):
 
 
 def test_terms_count(db_session):
-    """Test that we have 100 terms"""
+    """Test that we have 200 terms"""
     result = db_session.execute(text("SELECT COUNT(*) FROM terms"))
     count = result.scalar()
-    assert count == 100
+    assert count == 200
 
 
 def test_relations_count(db_session):
-    """Test that we have 389 relations"""
+    """Test that we have 675 relations"""
     result = db_session.execute(text("SELECT COUNT(*) FROM relations"))
     count = result.scalar()
-    assert count == 389
+    assert count == 675
 
 
 def test_sample_term(db_session):

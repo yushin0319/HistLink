@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.routes import routes, games
 
 app = FastAPI(
     title=settings.project_name,
@@ -18,6 +19,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(routes.router, prefix=settings.api_v1_prefix)
+app.include_router(games.router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/")

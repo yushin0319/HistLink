@@ -121,6 +121,26 @@ HistLink/
 - **マイグレーション**: `database/migrations/` に番号付きSQLファイル
   - 命名規則: `001_create_tables.sql`, `002_seed_data.sql`, etc.
 
+#### ⚠️ TSVファイル更新時の必須作業
+
+**MUST**: `data/terms.tsv` または `data/relations.tsv` を更新したら、**必ず以下を実行**：
+
+```bash
+# 1. データベース再構築（DROP SCHEMA CASCADE → 完全再構築）
+./scripts/update_migration.sh
+
+# 2. データ品質チェック
+cd backend && pytest tests/test_data_quality.py -v
+
+# 3. 全テスト実行
+pytest tests/ -v
+```
+
+**理由：**
+- TSVファイルが単一の情報源（Single Source of Truth）
+- データベースとTSVが乖離すると、テスト失敗や不整合が発生
+- `update_migration.sh` は既存スキーマを完全削除してから再構築するため安全
+
 ### 5. データ設計規約
 
 #### 用語（Terms）

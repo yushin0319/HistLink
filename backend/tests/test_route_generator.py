@@ -48,7 +48,7 @@ class TestBFSDistances:
         """到達不可能なノードの距離はNoneまたは無限大"""
         # 孤立ノードを作成（テスト用）
         from sqlalchemy import text
-        db_session.execute(text("INSERT INTO terms (id, name, era, tags) VALUES (999, 'isolated', '古代', ARRAY[]::TEXT[])"))
+        db_session.execute(text("INSERT INTO terms (id, name, era, tags) VALUES (999, 'isolated', '古代', '[]'::jsonb)"))
         db_session.commit()
 
         distances = calculate_bfs_distances(1, db_session)
@@ -154,7 +154,7 @@ class TestEdgeCases:
         """孤立ノードから開始した場合"""
         # 孤立ノードを作成
         from sqlalchemy import text
-        db_session.execute(text("INSERT INTO terms (id, name, era, tags) VALUES (998, 'isolated2', '古代', ARRAY[]::TEXT[])"))
+        db_session.execute(text("INSERT INTO terms (id, name, era, tags) VALUES (998, 'isolated2', '古代', '[]'::jsonb)"))
         db_session.commit()
 
         route = generate_route(998, 10, db_session)

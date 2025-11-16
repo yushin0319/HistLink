@@ -1,26 +1,98 @@
-# CLAUDE.md (HistLink Project)
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## プロジェクト概要
 
 **HistLink** - 日本史・西洋史の用語を連鎖的につなぐ歴史学習ゲーム
 
 ### 技術スタック
-- **Backend**: Python (FastAPI)
-- **Database**: PostgreSQL (Docker)
-- **Frontend**: TypeScript + React (予定)
+- **Backend**: Python (FastAPI) + SQLAlchemy
+- **Database**: PostgreSQL 16 (Docker)
+- **Frontend**: React 19 + TypeScript + Vite + MUI
+- **Testing**: pytest (backend), Vitest + Testing Library (frontend)
 
-### ディレクトリ構造
+### アーキテクチャ
+
+**Backend (backend/app/):**
+- `routes/`: APIエンドポイント（games.py, routes.py）
+- `services/`: ビジネスロジック（route_generator.py, distractor_generator.py）
+- `models/`: SQLAlchemyモデル
+- `schemas/`: Pydanticスキーマ
+- `database.py`: DB接続管理
+- `config.py`: 環境設定
+
+**Database:**
+- `data/*.tsv`: 単一の情報源（Single Source of Truth）
+- `database/migrations/`: SQLマイグレーション（番号付き）
+- `database/scripts/`: データ品質チェックSQL
+
+**Frontend (frontend/):**
+- Vite + React 19 + TypeScript
+- MUI (Material-UI) コンポーネント
+- Zustand (状態管理)
+
+---
+
+## 開発コマンド
+
+### データベース
+
+```bash
+# Docker起動
+docker compose up -d
+
+# DB接続（ホストから）
+PGPASSWORD=histlink_dev_password psql -h localhost -p 5432 -U histlink_user -d histlink
+
+# DB接続（Docker内から）
+docker compose exec postgres psql -U histlink_user -d histlink
+
+# TSVファイル更新後の必須作業（スキーマ完全再構築）
+./scripts/update_migration.sh
+
+# データ品質チェック
+PGPASSWORD=histlink_dev_password psql -h localhost -p 5432 -U histlink_user -d histlink -f database/scripts/check_data_quality.sql
 ```
-HistLink/
-├── backend/                  # Pythonバックエンド
-├── database/                 # DBマイグレーション・スクリプト
-│   ├── migrations/           # SQLマイグレーションファイル
-│   └── scripts/              # データ品質チェックなど
-├── data/                     # データファイル（MD形式）
-│   ├── terms.md              # 全用語リスト（200語）
-│   ├── relations.md          # 全リレーション（675件、統計とSQL）
-│   └── data_quality_report.md # データ品質レポート
-└── .serena/                  # Serena設定・メモリ・失敗記録
+
+### Backend
+
+```bash
+cd backend
+
+# テスト実行
+pytest                              # 全テスト
+pytest tests/test_data_quality.py -v  # データ品質テストのみ
+pytest -k test_function_name        # 特定テストのみ
+pytest --cov=app --cov-report=html  # カバレッジ付き
+
+# Linter/Formatter
+ruff check .                        # Lint実行
+ruff check --fix .                  # 自動修正
+
+# 開発サーバー起動
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Frontend
+
+```bash
+cd frontend
+
+# 開発サーバー起動
+npm run dev
+
+# テスト実行
+npm test                   # Vitest実行
+npm run test:ui            # Vitest UI
+npm run test:coverage      # カバレッジ付き
+
+# ビルド
+npm run build              # 本番ビルド
+npm run preview            # ビルドプレビュー
+
+# Lint
+npm run lint
 ```
 
 ---
@@ -141,21 +213,37 @@ pytest tests/ -v
 - データベースとTSVが乖離すると、テスト失敗や不整合が発生
 - `update_migration.sh` は既存スキーマを完全削除してから再構築するため安全
 
-### 5. データ設計規約
+---
 
-#### 用語（Terms）
-- **ID範囲**:
-  - 日本史: 1-100
-  - 西洋史: 101-200
+## データ設計規約
+
+### 用語（Terms）
+- **ID範囲**: 日本史 1-100、西洋史 101-200
 - **必須フィールド**: id, name, era, tags
 - **Era値**: 古代, 中世, 近世, 近代, 現代
+- **データソース**: `data/terms.tsv` (TSV形式、タブ区切り)
 
-#### リレーション（Relations）
+### リレーション（Relations）
 - **制約**:
-  - src_id ≠ dst_id（自己ループ禁止）
-  - すべての用語はdegree ≥ 2（孤立ノード禁止）
+  - `src_id ≠ dst_id` （自己ループ禁止）
+  - すべての用語は `degree ≥ 2` （孤立ノード禁止）
 - **タイプ**: 因果, 契機, 対立, 政策, 文化, 同時代, 外交
 - **日本西洋史接点**: 限定的な接続（10-20件）で隘路を設計
+- **データソース**: `data/relations.tsv` (TSV形式、タブ区切り)
+
+### データフロー
+
+```
+data/*.tsv (唯一の真実)
+    ↓
+scripts/update_migration.sh (DB完全再構築)
+    ↓
+PostgreSQL (Docker)
+    ↓
+backend/app/ (FastAPI)
+    ↓
+frontend/ (React)
+```
 
 ---
 
@@ -163,24 +251,3 @@ pytest tests/ -v
 
 - **Notion連携**: `use-notion` スキル経由でタスク管理
 - **Todo管理**: Claude Code の TodoWrite ツール使用
-
----
-
-## データ品質チェック
-
-定期的に以下を実行：
-
-```bash
-# SQL品質チェック
-psql -f database/scripts/check_data_quality.sql
-
-# Python自動テスト
-pytest backend/tests/test_data_quality.py -v
-```
-
----
-
-## 参考
-
-- 失敗記録: `.serena/failures/`
-- メモリ: `.serena/memories/`

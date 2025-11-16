@@ -50,9 +50,17 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "SlashCommand(/gemini serena MCP server official documentation setup installation)",
-      "WebFetch(domain:smithery.ai)"
+      "WebFetch(domain:smithery.ai)",
+      "mcp__serena__get_current_config",
+      "mcp__serena__activate_project",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "serena",
+    "notion",
+    "google-workspace"
+  ]
 }

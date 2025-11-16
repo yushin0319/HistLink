@@ -3,20 +3,21 @@ import { Paper, Typography, Box } from '@mui/material';
 interface GameCardProps {
   term: string;
   era: string;
+  description?: string;
 }
 
-export default function GameCard({ term, era }: GameCardProps) {
+export default function GameCard({ term, era, description }: GameCardProps) {
   return (
     <Paper
       elevation={8}
       sx={{
-        width: { xs: '100%', sm: 400, md: 500 },
-        height: { xs: 200, sm: 250, md: 300 },
+        width: { xs: '100%', sm: 380, md: 450 },
+        height: { xs: 160, sm: 180, md: 200 },
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        gap: 2,
+        p: 2,
         borderRadius: 3,
         bgcolor: 'background.paper',
         transition: 'all 0.3s ease',
@@ -29,13 +30,14 @@ export default function GameCard({ term, era }: GameCardProps) {
         }
       }}
     >
-      <Box sx={{ textAlign: 'center', px: 3 }}>
+      {/* Top: Name & Era */}
+      <Box sx={{ textAlign: 'center', width: '100%' }}>
         <Typography
           variant="h3"
           fontWeight="bold"
           sx={{
-            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-            mb: 1,
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.25rem' },
+            mb: 0.5,
             color: 'text.primary'
           }}
         >
@@ -44,14 +46,32 @@ export default function GameCard({ term, era }: GameCardProps) {
         <Typography
           variant="h6"
           sx={{
-            fontSize: { xs: '1rem', sm: '1.25rem' },
+            fontSize: { xs: '0.9rem', sm: '1rem' },
             color: 'text.secondary',
-            fontWeight: 500
+            fontWeight: 500,
+            mb: description ? 0.5 : 0
           }}
         >
           {era}
         </Typography>
       </Box>
+
+      {/* Bottom: Description */}
+      {description && (
+        <Box sx={{ width: '100%' }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: '0.75rem',
+              color: 'text.secondary',
+              lineHeight: 1.4,
+              textAlign: 'center'
+            }}
+          >
+            {description}
+          </Typography>
+        </Box>
+      )}
     </Paper>
   );
 }

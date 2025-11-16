@@ -3,17 +3,25 @@ import { Box, Container, Paper, Typography } from '@mui/material';
 import { Favorite, Link as LinkIcon, TrendingUp } from '@mui/icons-material';
 import GameCard from './components/GameCard';
 import ChoiceCard from './components/ChoiceCard';
+import RelationDisplay from './components/RelationDisplay';
 
 interface CardData {
   id: string;
   term: string;
   era: string;
+  description?: string;
+}
+
+interface RelationData {
+  keyword: string;
+  explanation: string;
 }
 
 const sampleCurrentCard: CardData = {
-  id: '1',
-  term: 'ルネサンス',
-  era: '近世'
+  id: '3',
+  term: 'サンフランシスコ平和条約',
+  era: '現代',
+  description: '1951年に調印された第二次世界大戦の講和条約。日本の主権回復と占領終結を実現し、戦後の国際社会への復帰を果たした。'
 };
 
 const sampleChoices: CardData[] = [
@@ -23,20 +31,42 @@ const sampleChoices: CardData[] = [
   { id: '5', term: 'コンスタンティヌス帝', era: '古代' }
 ];
 
+// サンプルリレーションデータ（正解は id: '2'）
+const sampleRelation: RelationData = {
+  keyword: '芸術家の活躍',
+  explanation: 'ルネサンス期にレオナルド・ダ・ヴィンチが芸術と科学の両分野で活躍'
+};
+
 export default function App() {
   const [lives, setLives] = useState(3);
   const [chain, setChain] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [showRelation, setShowRelation] = useState(false);
 
   const handleChoiceClick = (id: string) => {
     setSelectedChoice(id);
-    // Simulate correct answer - you can add your game logic here
-    setTimeout(() => {
-      setChain(chain + 1);
-      setScore(score + 100);
-      setSelectedChoice(null);
-    }, 500);
+    // Simulate correct answer (id: '2' is correct)
+    const isCorrect = id === '2';
+
+    if (isCorrect) {
+      // Show relation display
+      setShowRelation(true);
+
+      // Hide relation and update game state after 2.5 seconds
+      setTimeout(() => {
+        setShowRelation(false);
+        setChain(chain + 1);
+        setScore(score + 100);
+        setSelectedChoice(null);
+      }, 2500);
+    } else {
+      // Wrong answer - just reset
+      setTimeout(() => {
+        setLives(lives - 1);
+        setSelectedChoice(null);
+      }, 500);
+    }
   };
 
   return (
@@ -107,11 +137,22 @@ export default function App() {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            mb: 4
+            mb: 2
           }}
         >
-          <GameCard term={sampleCurrentCard.term} era={sampleCurrentCard.era} />
+          <GameCard
+            term={sampleCurrentCard.term}
+            era={sampleCurrentCard.era}
+            description={sampleCurrentCard.description}
+          />
         </Box>
+
+        {/* Relation Display (always reserves space, shown after correct answer) */}
+        <RelationDisplay
+          keyword={sampleRelation.keyword}
+          explanation={sampleRelation.explanation}
+          show={showRelation}
+        />
 
         {/* Choice Cards */}
         <Box

@@ -23,13 +23,12 @@ export default function ChoiceCard({ term, onClick, isSelected }: ChoiceCardProp
         transition: 'all 0.3s ease',
         border: '2px solid transparent',
         '&:hover': {
-          transform: 'translateY(-8px)',
           boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
           borderColor: 'primary.main',
           bgcolor: isSelected ? 'primary.dark' : 'action.hover'
         },
         '&:active': {
-          transform: 'translateY(-4px)'
+          opacity: 0.8
         }
       }}
     >

@@ -121,9 +121,9 @@ const loadGameState = () => {
   - 品質とリファクタリング容易性を重視
 
 ### テストカバレッジ目標
-- **バックエンド**: 80%以上（pytest-cov）
-- **フロントエンド**: 80%以上（Vitest coverage）
-- **重要ロジック**: 100%（ルート生成、ダミー生成、スコアリング）
+- **バックエンド**: 100%（基本方針）
+- **フロントエンド**: 100%（基本方針）
+- **重要ロジック**: 100%必達（ルート生成、ダミー生成、スコアリング）
 
 ### プロパティベーステスト
 
@@ -882,82 +882,227 @@ jobs:
 ## 開発スケジュール
 
 ### Week 1: データ基盤
-- [x] 歴史用語リスト作成
-- [x] リレーション作成
-- [x] PostgreSQLマイグレーション作成
-- [x] シードデータ作成
-- [x] PostgreSQL環境構築＆マイグレーション実行
-- [x] データ品質チェック（全ノードdegree≥2確認）
+
+**歴史用語データベース構築:**
+- 歴史用語リスト作成
+- リレーション作成
+- PostgreSQLマイグレーション作成
+- シードデータ作成
+
+**環境構築:**
+- PostgreSQL環境構築＆マイグレーション実行
+- データ品質チェック（全ノードdegree≥2確認）
 
 ### Week 2: バックエンド（TDD）
-- [ ] FastAPI + pytest環境セットアップ
+
+**環境セットアップ:**
+- FastAPI + pytest環境構築
   - pyproject.toml作成（FastAPI, pytest, SQLAlchemy）
   - ディレクトリ構成設計
   - DB接続設定
   - pytestセットアップ
 
-- [ ] ルート生成アルゴリズムのテスト＆実装
+**ルート生成アルゴリズム:**
+- テスト項目:
   - BFS距離前進テスト
   - 残余次数ソートテスト
   - 三角形ペナルティテスト
   - バックトラックテスト
   - ループ防止テスト
 
-- [ ] ダミー生成ロジックのテスト＆実装
+**ダミー生成ロジック:**
+- テスト項目:
   - 正解と繋がっていないこと確認
   - ダミー数≥3確認
   - 時代/タグの妥当性確認
 
-- [ ] API（GET /routes/{id}/steps/{k}）のテスト＆実装
+**API実装:**
+- GET /routes/{id}/steps/{k}
   - エンドポイント実装
   - レスポンス形式テスト
 
 ### Week 3: フロントエンド（TDD）
-- [ ] Vite + React + Vitest環境セットアップ
-  - Viteプロジェクト初期化
-  - TypeScript設定
-  - Vitest + React Testing Library設定
-  - MUI導入
 
-- [ ] カードコンポーネントのテスト＆実装
-  - カード表示テスト
-  - クリックイベントテスト
-  - 選択状態テスト
+#### 実装優先順位
+1. Zustandストア作成（状態管理基盤）
+2. テーマ変換＋既存テスト更新
+3. GameHeader実装（タイマー機能含む）
+4. ResultHeader実装（GameHeaderの亜種）
+5. ChoiceCard更新（フィードバック色）
+6. SelectPage実装
+7. ResultPage実装（ResultHeader, RankingTable, NameInputModal含む）
+8. 画面遷移統合
 
-- [ ] ゲームロジック（ライフ・スコア）のテスト＆実装
-  - ライフ減少テスト
-  - スコア加算テスト
-  - コンボボーナステスト
-  - ゲームオーバー判定テスト
+#### Phase 1: 基盤整備（状態管理）
 
-- [ ] 4択選択UIのテスト＆実装
-  - 4枚表示テスト
-  - 正解選択時の挙動テスト
-  - 不正解選択時の挙動テスト
+**Zustandストア設計:**
+- `stores/gameStore.ts`: ゲーム状態の一元管理
+  - lives, score, chain, stage, timer, difficulty
+  - startGame, answerQuestion, resetGame アクション
+
+**テストファイル:**
+- `stores/__tests__/gameStore.test.ts`
+  - 初期状態テスト
+  - answerQuestion(correct)でスコア増加テスト
+  - answerQuestion(wrong)でライフ減少テスト
+  - resetGame()で状態リセットテスト
+  - カバレッジ: 100%
+
+#### Phase 2: テーマ変換
+
+**ライトテーマへの変更（`main.tsx`）:**
+- カラーパレット更新（背景白、テキスト黒）
+- primary: ライトグリーン（#90EE90）
+- error: ライトレッド（#FF6B6B）
+
+**既存コンポーネントテストの更新:**
+- GameCard, ChoiceCardテストをライトテーマ対応
+
+#### Phase 3: ヘッダーコンポーネント
+
+**GameHeader（2×2グリッドレイアウト）:**
+- `components/GameHeader.tsx`
+  - 残りライフ（ハートアイコン）
+  - 訪問時間（タイマー機能）
+  - ステージ（12/50形式）
+  - 点数（フォーマット済み）
+
+**テストファイル:**
+- `components/__tests__/GameHeader.test.tsx`
+  - 2×2グリッドで4つの情報を表示
+  - ライフが減ると表示が更新される
+  - タイマーが正しくカウントアップする
+  - ステージ表示が正しい
+  - カバレッジ: 100%
+
+**ResultHeader（リザルト画面用ヘッダー）:**
+- `components/ResultHeader.tsx`
+  - GameHeaderの亜種（2×2グリッド）
+  - 最終ライフ、総時間、総ステージ、最終点数
+
+**テストファイル:**
+- `components/__tests__/ResultHeader.test.tsx`
+  - 最終結果の正しい表示
+  - カバレッジ: 100%
+
+#### Phase 4: フィードバックシステム
+
+**ChoiceCard更新:**
+- `components/ChoiceCard.tsx`
+  - `feedbackState: 'correct' | 'wrong' | null`プロップ追加
+  - 正解時: 緑背景（#90EE90）
+  - 不正解時: 赤背景（#FF6B6B）
+  - チェックマークアニメーション（MUI標準）
+
+**テストファイル:**
+- `components/__tests__/ChoiceCard.test.tsx`
+  - 正解時に緑色になるテスト
+  - 不正解時に赤色になるテスト
+  - チェックマークアニメーションのテスト
+  - カバレッジ: 100%
+
+#### Phase 5: セレクト画面
+
+**SelectPage（ゲーム開始画面）:**
+- `pages/SelectPage.tsx`
+  - タイトル表示
+  - 難易度選択ボタン（EASY/NORMAL/HARD）
+  - ステージ数選択ボタン（10/30/50問）
+  - GAME STARTボタン（ライトグリーン）
+
+**テストファイル:**
+- `pages/__tests__/SelectPage.test.tsx`
+  - 難易度ボタンをクリックすると選択状態になる
+  - ステージ数を選択できる
+  - GAME STARTボタンでゲーム開始
+  - カバレッジ: 100%
+
+#### Phase 6: リザルト画面コンポーネント
+
+**RankingTable（ランキング表示）:**
+- `components/RankingTable.tsx`
+  - 5位までの表示
+  - 現在のプレイヤーを赤枠でハイライト
+
+**テストファイル:**
+- `components/__tests__/RankingTable.test.tsx`
+  - ランキング表示が正しい
+  - 現在プレイヤーがハイライトされる
+  - カバレッジ: 100%
+
+**NameInputModal（名前入力モーダル）:**
+- `components/NameInputModal.tsx`
+  - テキストフィールド
+  - 決定ボタン
+
+**テストファイル:**
+- `components/__tests__/NameInputModal.test.tsx`
+  - モーダル表示
+  - 名前入力と決定ボタン
+  - カバレッジ: 100%
+
+#### Phase 7: リザルト画面統合
+
+**ResultPage（ゲーム終了画面）:**
+- `pages/ResultPage.tsx`
+  - ResultHeader使用
+  - RankingTable表示
+  - NameInputModal統合
+  - LocalStorageでスコア保存
+  - ボタン: もう一回、トップに戻る
+
+**テストファイル:**
+- `pages/__tests__/ResultPage.test.tsx`
+  - 最終結果表示
+  - ランキング表示
+  - 名前入力モーダル表示
+  - スコア保存
+  - ナビゲーションボタン
+  - カバレッジ: 100%
+
+#### Phase 8: 画面遷移統合
+
+**App.tsx更新:**
+- 条件分岐レンダリング
+- Select → Game → Result の画面遷移
+- ルーティングライブラリ不使用（シンプルな状態管理）
+
+**統合テスト:**
+- 選択画面→ゲーム画面→リザルト画面の遷移
+- 正解時にスコアとチェーンが増加
+- 不正解時にライフが減少
+- ライフ0でゲームオーバー
+
+#### テスト戦略
+- 各コンポーネント単位でTDD実装
+- Red → Green → Refactor のサイクル
+- 既存パターンに従う（userEvent, screen, vi.fn()）
+- **カバレッジ目標: 100%**（基本方針）
 
 ### Week 4: 統合＆ポリッシュ
-- [ ] フロント⇔バック接続
-  - axios設定
-  - API呼び出し実装
-  - エラーハンドリング
 
-- [ ] E2Eテスト
-  - Playwright E2Eテスト
-  - ゲーム開始～終了までの一連の流れ
-  - 正解選択のシナリオ
-  - 不正解選択のシナリオ
-  - ゲームオーバーシナリオ
+**フロント⇔バック接続:**
+- axios設定
+- API呼び出し実装
+- エラーハンドリング
 
-- [ ] アニメーション実装
-  - カード出現アニメーション
-  - 選択時アニメーション
-  - 正解/不正解フィードバック
+**E2Eテスト:**
+- Playwright E2Eテスト
+- ゲーム開始～終了までの一連の流れ
+- 正解選択のシナリオ
+- 不正解選択のシナリオ
+- ゲームオーバーシナリオ
 
-- [ ] デプロイ
-  - バックエンド：Render / Railway
-  - フロントエンド：Vercel / Netlify
-  - DB：Supabase / Render Postgres
-  - 環境変数設定
+**アニメーション実装:**
+- カード出現アニメーション
+- 選択時アニメーション
+- 正解/不正解フィードバック
+
+**デプロイ:**
+- バックエンド：Render / Railway
+- フロントエンド：Vercel / Netlify
+- DB：Supabase / Render Postgres
+- 環境変数設定
 
 ---
 

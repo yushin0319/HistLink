@@ -83,7 +83,8 @@ cd frontend
 npm run dev
 
 # テスト実行
-npm test                   # Vitest実行
+npm test                   # Vitest実行（watch mode）
+npm run test:run           # Vitest 1回実行
 npm run test:ui            # Vitest UI
 npm run test:coverage      # カバレッジ付き
 
@@ -175,6 +176,70 @@ npm run lint
    - 「〇〇タスクをNotionで完了にしますか？」と確認
    - 承認後、`use-notion`スキルでステータス更新
 
+### 5. ユーザー指示の厳守 ⚠️ **最重要**
+
+**MUST**: ユーザーの指示通りのツール・方法を使用する
+
+**絶対に守ること：**
+- ユーザーが「〇〇で調べて」と指示したら、そのツールを使う
+- 「早いから」「便利だから」という理由で勝手に別のツールに変更しない
+- 指示と異なるツールを使いたい場合は、必ずユーザーに確認してから使う
+
+**例：**
+```
+❌ NG
+ユーザー: 「geminiで使い方調べて」
+Claude: WebSearchを使う（勝手な判断）
+
+✅ OK
+ユーザー: 「geminiで使い方調べて」
+Claude: geminiを使う（指示通り）
+
+✅ OK（代替案を提案する場合）
+ユーザー: 「geminiで使い方調べて」
+Claude: 「geminiのレート制限があるので、WebSearchを使ってもいいですか？」と確認
+```
+
+**理由：**
+- ユーザーの意図を尊重する
+- ツールごとに異なる情報源・結果が得られる
+- 「口約束」ではなく、ルールとして明文化
+
+**違反した場合：**
+1. Serenaメモリ「湧心くんの指摘_失敗と教訓の全記録」に記録
+2. このCLAUDE.mdを再読してルールを再確認
+
+### 6. 推測の禁止 ⚠️ **最重要**
+
+**MUST**: 不明なことは不明と言う。推測で答えない。
+
+**絶対に守ること：**
+- 存在しないオプションやコマンドを推測で提案しない
+- 「たぶん〇〇で動くはず」という推測で進めない
+- ドキュメントにない機能は「確認できませんでした」と正直に答える
+- 不明な場合は、調査方法を提案するか、ユーザーに確認を求める
+
+**例：**
+```
+❌ NG
+ユーザー: 「no-browserオプションのソースは？」
+Claude: 「--no-browserオプションで無効化できます」（推測で答える）
+
+✅ OK
+ユーザー: 「no-browserオプションのソースは？」
+Claude: 「公式ドキュメントを確認しましたが、--no-browserオプションは見つかりませんでした。
+       設定ファイルのweb_dashboard_open_on_launch: falseが正しい方法です」
+```
+
+**理由：**
+- 推測で答えると、存在しない機能を提案してしまう
+- ユーザーの時間を無駄にする
+- 信頼を失う
+
+**違反した場合：**
+1. Serenaメモリ「湧心くんの指摘_失敗と教訓の全記録」に記録
+2. このCLAUDE.mdを再読してルールを再確認
+
 ---
 
 ## 技術仕様
@@ -244,6 +309,65 @@ backend/app/ (FastAPI)
     ↓
 frontend/ (React)
 ```
+
+---
+
+## フロントエンド設計
+
+### 状態管理（Zustand）
+
+**ストア構造:**
+- `stores/gameStore.ts`: ゲーム状態の一元管理
+  - lives, score, chain, stage, timer, difficulty
+  - startGame, answerQuestion, resetGame アクション
+
+**テスト戦略:**
+- 各ストアに対応する `__tests__/` ファイル
+- カバレッジ100%を目標
+
+### コンポーネント設計
+
+**ディレクトリ構造:**
+```
+frontend/src/
+├── components/         # 再利用可能なコンポーネント
+│   ├── GameHeader.tsx
+│   ├── ResultHeader.tsx  # GameHeaderの亜種
+│   ├── ChoiceCard.tsx
+│   ├── RankingTable.tsx
+│   ├── NameInputModal.tsx
+│   └── __tests__/
+├── pages/             # ページコンポーネント
+│   ├── SelectPage.tsx
+│   ├── GamePage.tsx
+│   ├── ResultPage.tsx
+│   └── __tests__/
+└── stores/            # Zustandストア
+    ├── gameStore.ts
+    └── __tests__/
+```
+
+**画面遷移:**
+- ルーティングライブラリ不使用
+- App.tsx内で条件分岐レンダリング
+- Select → Game → Result の3画面遷移
+
+**テーマ設計:**
+- ライトテーマ
+- primary: #90EE90（ライトグリーン）
+- error: #FF6B6B（ライトレッド）
+
+### TDD実装ルール
+
+**Test-Driven Development:**
+- Red → Green → Refactor のサイクル厳守
+- コンポーネント実装前にテストファイル作成
+- カバレッジ100%を基本方針とする
+
+**テストファイル命名:**
+- `components/__tests__/ComponentName.test.tsx`
+- `stores/__tests__/storeName.test.ts`
+- `pages/__tests__/PageName.test.tsx`
 
 ---
 

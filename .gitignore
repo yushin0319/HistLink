@@ -1,51 +1,74 @@
+# Claude Code settings
+.claude/
+.serena/
+
+# MCP settings
+.mcp.json
+
 # Python
+*.egg-info/
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
 venv/
-env/
 ENV/
+env/
 .venv
 
-# pytest
-.pytest_cache/
-htmlcov/
-.coverage
-.coverage.*
-coverage.xml
-*.cover
-.hypothesis/
-coverage/
-
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
 
-# Environment variables
-.env
-.env.local
-
 # Logs
 *.log
+logs/
 
-# OS
-.DS_Store
-Thumbs.db
+# Hypothesis
+.hypothesis/
 
-# Temporary files
-*.tmp
-debug_route.py
-check_tie.py
-test_randomness.py
-test_random_start.py
-game_test.py
-tmp_*.py
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/

@@ -7,10 +7,10 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#90EE90', // ライトグリーン
+      main: '#4CAF50', // 落ち着いたグリーン
     },
     error: {
-      main: '#FF6B6B', // ライトレッド
+      main: '#F44336', // マテリアルレッド
     },
     background: {
       default: '#E8E8E8', // 薄いグレー

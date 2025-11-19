@@ -4,6 +4,7 @@ import { Favorite, Link as LinkIcon, TrendingUp } from '@mui/icons-material';
 import GameCard from './components/GameCard';
 import ChoiceCard from './components/ChoiceCard';
 import RelationDisplay from './components/RelationDisplay';
+import SelectPage from './pages/SelectPage';
 
 interface CardData {
   id: string;
@@ -38,6 +39,10 @@ const sampleRelation: RelationData = {
 };
 
 export default function App() {
+  // 一時的にSelectPageだけ表示
+  return <SelectPage />;
+
+  /* 以下は後で使用
   const [lives, setLives] = useState(3);
   const [chain, setChain] = useState(0);
   const [score, setScore] = useState(0);
@@ -68,114 +73,5 @@ export default function App() {
       }, 500);
     }
   };
-
-  return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        bgcolor: 'background.default',
-        display: 'flex',
-        flexDirection: 'column',
-        py: 3
-      }}
-    >
-      <Container maxWidth="lg">
-        {/* Game Info Bar */}
-        <Paper
-          elevation={2}
-          sx={{
-            p: 2,
-            mb: 4,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderRadius: 2,
-            bgcolor: 'background.paper',
-            flexWrap: 'wrap',
-            gap: 2
-          }}
-        >
-          {/* Lives */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {[...Array(3)].map((_, index) => (
-              <Favorite
-                key={index}
-                sx={{
-                  color: index < lives ? '#e91e63' : 'action.disabled',
-                  fontSize: 32,
-                  transition: 'all 0.3s ease'
-                }}
-              />
-            ))}
-          </Box>
-
-          {/* Chain Count */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <LinkIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-            <Typography variant="h5" fontWeight="bold" color="primary">
-              {chain}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              連鎖
-            </Typography>
-          </Box>
-
-          {/* Score */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <TrendingUp sx={{ color: 'success.main', fontSize: 28 }} />
-            <Typography variant="h5" fontWeight="bold">
-              {score.toLocaleString()}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              点
-            </Typography>
-          </Box>
-        </Paper>
-
-        {/* Current Card */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            mb: 2
-          }}
-        >
-          <GameCard
-            term={sampleCurrentCard.term}
-            era={sampleCurrentCard.era}
-            description={sampleCurrentCard.description}
-          />
-        </Box>
-
-        {/* Relation Display (always reserves space, shown after correct answer) */}
-        <RelationDisplay
-          keyword={sampleRelation.keyword}
-          explanation={sampleRelation.explanation}
-          show={showRelation}
-        />
-
-        {/* Choice Cards */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: 'repeat(2, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(4, 1fr)'
-            },
-            gap: 2
-          }}
-        >
-          {sampleChoices.map((choice) => (
-            <ChoiceCard
-              key={choice.id}
-              term={choice.term}
-              onClick={() => handleChoiceClick(choice.id)}
-              isSelected={selectedChoice === choice.id}
-            />
-          ))}
-        </Box>
-      </Container>
-    </Box>
-  );
+  */
 }

@@ -23,7 +23,6 @@ export default function GameCard({ term, era, description }: GameCardProps) {
         transition: 'all 0.3s ease',
         border: '2px solid',
         borderColor: 'primary.main',
-        background: 'linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%)',
         '&:hover': {
           transform: 'scale(1.02)',
           boxShadow: '0 12px 40px rgba(0,0,0,0.3)'

@@ -177,6 +177,42 @@ describe('GamePage', () => {
   });
 
   describe('回答送信', () => {
+    it('sessionIdがない場合、ChoiceCardクリックでsubmitAnswerは呼ばれない', async () => {
+      const user = userEvent.setup();
+
+      // sessionIdがnullを返すようにモック
+      mockStartGameSession.mockResolvedValue({
+        session_id: null as any, // sessionIdをnullにする
+        route_id: 1,
+        difficulty: 'normal',
+        total_stages: 10,
+        current_stage: 1,
+        current_term: {
+          id: 1,
+          name: 'ペリー来航',
+          era: '近代',
+          tags: ['外交', '開国'],
+          description: '1853年、アメリカのペリー提督が浦賀に来航',
+        },
+        options: [
+          { id: 2, name: '日米修好通商条約' },
+          { id: 3, name: '大政奉還' },
+          { id: 4, name: '明治維新' },
+          { id: 1, name: 'ペリー来航' },
+        ],
+      });
+
+      render(<GamePage />);
+
+      await screen.findByText('日米修好通商条約');
+
+      const choiceCard = screen.getByText('日米修好通商条約');
+      await user.click(choiceCard);
+
+      // sessionIdがnullの場合、submitAnswerは呼ばれない
+      expect(mockSubmitAnswer).not.toHaveBeenCalled();
+    });
+
     it('ChoiceCardをクリックするとsubmitAnswerが呼ばれる', async () => {
       const user = userEvent.setup();
 
@@ -316,6 +352,44 @@ describe('GamePage', () => {
       await screen.findByText(/エラーが発生しました/);
 
       expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
+    });
+
+    it('回答送信失敗時にエラーメッセージが表示される', async () => {
+      const user = userEvent.setup();
+
+      mockStartGameSession.mockResolvedValue({
+        session_id: 'test-session-123',
+        route_id: 1,
+        difficulty: 'normal',
+        total_stages: 10,
+        current_stage: 1,
+        current_term: {
+          id: 1,
+          name: 'ペリー来航',
+          era: '近代',
+          tags: ['外交', '開国'],
+          description: '1853年、アメリカのペリー提督が浦賀に来航',
+        },
+        options: [
+          { id: 2, name: '日米修好通商条約' },
+          { id: 3, name: '大政奉還' },
+          { id: 4, name: '明治維新' },
+          { id: 1, name: 'ペリー来航' },
+        ],
+      });
+
+      mockSubmitAnswer.mockRejectedValue(new Error('Server Error'));
+
+      render(<GamePage />);
+
+      await screen.findByText('日米修好通商条約');
+
+      const choiceCard = screen.getByText('日米修好通商条約');
+      await user.click(choiceCard);
+
+      await screen.findByText(/回答の送信に失敗しました/);
+
+      expect(screen.getByText(/回答の送信に失敗しました/)).toBeInTheDocument();
     });
   });
 });

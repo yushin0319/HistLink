@@ -81,6 +81,50 @@ class TestGameStart:
             choice_ids = [c["term_id"] for c in choices]
             assert correct_id in choice_ids
 
+    def test_game_start_relation_data(self, client, db_session):
+        """リレーション情報が正しく含まれているか確認"""
+        response = client.post(
+            "/api/v1/games/start",
+            json={"target_length": 5}
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+
+        # 最後のステップ以外はリレーション情報がある
+        missing_relations = []
+        for i, step in enumerate(data["steps"][:-1]):
+            # relation_typeとrelation_descriptionフィールドが存在
+            assert "relation_type" in step
+            assert "relation_description" in step
+
+            # 型の確認
+            assert isinstance(step["relation_type"], str)
+            assert isinstance(step["relation_description"], str)
+
+            # データが空の場合、どのステップかを記録
+            if not step["relation_type"] and not step["relation_description"]:
+                src_id = step["term"]["id"]
+                dst_id = step["correct_next_id"]
+                missing_relations.append({
+                    "step_no": i,
+                    "src_id": src_id,
+                    "dst_id": dst_id,
+                    "src_name": step["term"]["name"]
+                })
+
+        # リレーションが欠けている場合、詳細情報を表示してテスト失敗
+        if missing_relations:
+            error_msg = f"Missing relations found:\n"
+            for rel in missing_relations:
+                error_msg += f"  Step {rel['step_no']}: {rel['src_name']} (id={rel['src_id']}) -> term_id={rel['dst_id']}\n"
+            pytest.fail(error_msg)
+
+        # 最後のステップはリレーション情報が空
+        last_step = data["steps"][-1]
+        assert last_step["relation_type"] == ""
+        assert last_step["relation_description"] == ""
+
     def test_game_start_invalid_era(self, client, db_session):
         """存在しない時代でエラー"""
         response = client.post(

@@ -42,6 +42,8 @@ export interface RouteStepWithChoices {
   term: Term;
   correct_next_id: number | null;
   choices: Choice[];
+  relation_type: string;
+  relation_description: string;
 }
 
 export interface GameStartResponse {

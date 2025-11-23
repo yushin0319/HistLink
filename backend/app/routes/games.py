@@ -125,6 +125,33 @@ async def start_game(
             correct_next_id = route[step_no + 1]
             visited.add(term_id)
 
+            # リレーション情報を取得（双方向で検索）
+            relation_result = db.execute(
+                text("""
+                    SELECT relation_type, keyword, explanation
+                    FROM relations
+                    WHERE (src_id = :src_id AND dst_id = :dst_id)
+                       OR (src_id = :dst_id AND dst_id = :src_id)
+                    LIMIT 1
+                """),
+                {"src_id": term_id, "dst_id": correct_next_id}
+            )
+            relation_row = relation_result.fetchone()
+
+            if not relation_row:
+                print(f"[WARNING] No relation found for src_id={term_id}, dst_id={correct_next_id}")
+                relation_type = ""
+                keyword = ""
+                explanation = ""
+            else:
+                relation_type = relation_row[0] or ""
+                keyword = relation_row[1] or ""
+                explanation = relation_row[2] or ""
+                print(f"[DEBUG] Relation found: src_id={term_id}, dst_id={correct_next_id}, type={relation_type}, keyword={keyword}, explanation={explanation}")
+
+            # keyword + explanation を組み合わせて説明文として表示
+            relation_description = f"{keyword}: {explanation}" if keyword and explanation else (keyword or explanation)
+
             # ダミーを3つ生成
             distractors = generate_distractors(
                 correct_id=correct_next_id,
@@ -165,7 +192,9 @@ async def start_game(
                 step_no=step_no,
                 term=term,
                 correct_next_id=correct_next_id,
-                choices=choices
+                choices=choices,
+                relation_type=relation_type,
+                relation_description=relation_description
             ))
         else:
             # 最後のステップは選択肢なし
@@ -173,7 +202,9 @@ async def start_game(
                 step_no=step_no,
                 term=term,
                 correct_next_id=None,
-                choices=[]
+                choices=[],
+                relation_type="",
+                relation_description=""
             ))
 
     return FullRouteStartResponse(

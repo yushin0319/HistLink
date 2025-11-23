@@ -4,6 +4,8 @@ import { useGameStore } from '../stores/gameStore';
 import { startGameSession, submitGameResult } from '../services/gameApi';
 import GameCard from '../components/GameCard';
 import ChoiceCard from '../components/ChoiceCard';
+import GameHeader from '../components/GameHeader';
+import RelationDisplay from '../components/RelationDisplay';
 
 export default function GamePage() {
   const {
@@ -17,6 +19,9 @@ export default function GamePage() {
     isCompleted,
     steps,
     gameId,
+    showRelation,
+    lastRelationKeyword,
+    lastRelationExplanation,
     loadGameData,
     startGame,
     answerQuestion,
@@ -26,6 +31,22 @@ export default function GamePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasSubmittedResult, setHasSubmittedResult] = useState(false);
+
+  // リレーション表示を4秒後に非表示にする
+  useEffect(() => {
+    console.log('[GamePage] showRelation changed:', showRelation, 'keyword:', lastRelationKeyword, 'explanation:', lastRelationExplanation);
+    if (showRelation) {
+      const timer = setTimeout(() => {
+        console.log('[GamePage] Hiding relation after 4 seconds');
+        useGameStore.setState({ showRelation: false });
+      }, 4000);
+
+      return () => {
+        console.log('[GamePage] Clearing timer');
+        clearTimeout(timer);
+      };
+    }
+  }, [showRelation, lastRelationKeyword, lastRelationExplanation]); // 関連する値が変わったら再実行
 
   // ゲームセッション開始（全ルート+選択肢を一括取得）
   useEffect(() => {
@@ -177,23 +198,14 @@ export default function GamePage() {
       }}
     >
       <Container maxWidth="md">
-        {/* ゲーム情報 */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            mb: 4,
-          }}
-        >
-          <Typography variant="h6">ライフ: {lives}</Typography>
-          <Typography variant="h6">スコア: {score}</Typography>
-          <Typography variant="h6">
-            ステージ: {currentStage + 1} / {totalStages}
-          </Typography>
-          <Typography variant="h6">
-            タイマー: {(remainingTime / 10).toFixed(1)}秒
-          </Typography>
-        </Box>
+        {/* ゲーム情報ヘッダー（2×2グリッド） */}
+        <GameHeader
+          lives={lives}
+          score={score}
+          currentStage={currentStage}
+          totalStages={totalStages}
+          remainingTime={remainingTime}
+        />
 
         {/* 現在の問題 */}
         {currentStep && (
@@ -212,11 +224,18 @@ export default function GamePage() {
           </Box>
         )}
 
-        {/* 選択肢 */}
+        {/* リレーション説明（正解時に表示） */}
+        <RelationDisplay
+          keyword={lastRelationKeyword}
+          explanation={lastRelationExplanation}
+          show={showRelation}
+        />
+
+        {/* 選択肢（2×2グリッド） */}
         {currentStep && currentStep.choices.length > 0 && (
           <Grid container spacing={2}>
             {currentStep.choices.map((choice) => (
-              <Grid item xs={6} key={choice.term_id}>
+              <Grid size={{ xs: 6 }} key={choice.term_id}>
                 <ChoiceCard term={choice.name} onClick={() => handleAnswer(choice.term_id)} />
               </Grid>
             ))}

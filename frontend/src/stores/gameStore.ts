@@ -24,6 +24,11 @@ interface GameState {
   isPlaying: boolean;
   isCompleted: boolean; // ゲームクリアしたか
 
+  // フィードバック表示
+  showRelation: boolean; // リレーション説明を表示するか
+  lastRelationKeyword: string; // 最後に表示したリレーションのキーワード
+  lastRelationExplanation: string; // 最後に表示したリレーションの説明
+
   // アクション
   loadGameData: (gameId: string, routeId: number, steps: RouteStepWithChoices[]) => void;
   startGame: (difficulty: Difficulty, totalStages: TotalStages) => void;
@@ -33,7 +38,7 @@ interface GameState {
 }
 
 const INITIAL_LIVES = 3;
-const MAX_TIME = 100; // 10.0秒 = 100 × 0.1秒
+const MAX_TIME = 200; // 20.0秒 = 200 × 0.1秒
 
 // スコア計算：残り時間のみ（0-100点）
 const calculateScore = (remainingTime: number): number => {
@@ -53,6 +58,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   remainingTime: 0,
   isPlaying: false,
   isCompleted: false,
+  showRelation: false,
+  lastRelationKeyword: '',
+  lastRelationExplanation: '',
 
   // バックエンドから取得したゲームデータを読み込む
   loadGameData: (gameId, routeId, steps) => {
@@ -96,12 +104,20 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newLives = isCorrect ? state.lives : state.lives - 1;
     const newStage = state.currentStage + 1;
 
+    // 正解時はリレーション情報を表示
+    const showRelation = isCorrect;
+    const lastRelationKeyword = isCorrect ? currentStep.relation_type : '';
+    const lastRelationExplanation = isCorrect ? currentStep.relation_description : '';
+
+    console.log('[gameStore] answerQuestion - isCorrect:', isCorrect, 'showRelation:', showRelation, 'keyword:', lastRelationKeyword, 'explanation:', lastRelationExplanation);
+
     // ライフが0になったらゲームオーバー
     if (newLives <= 0) {
       set({
         lives: 0,
         isPlaying: false,
         isCompleted: false,
+        showRelation: false,
       });
       return;
     }
@@ -116,6 +132,9 @@ export const useGameStore = create<GameState>((set, get) => ({
         currentStage: newStage,
         isPlaying: false,
         isCompleted: true,
+        showRelation,
+        lastRelationKeyword,
+        lastRelationExplanation,
       });
       return;
     }
@@ -126,6 +145,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       lives: newLives,
       currentStage: newStage,
       remainingTime: MAX_TIME,
+      showRelation,
+      lastRelationKeyword,
+      lastRelationExplanation,
     });
   },
 
@@ -179,6 +201,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       remainingTime: 0,
       isPlaying: false,
       isCompleted: false,
+      showRelation: false,
+      lastRelationKeyword: '',
+      lastRelationExplanation: '',
     });
   },
 }));

@@ -99,7 +99,7 @@ class TestDistanceCalculation:
     def test_calculate_distance_unreachable(self, db_session):
         """到達不可能な場合はNoneまたは無限大"""
         # 孤立ノードを作成
-        db_session.execute(text("INSERT INTO terms (id, name, era, tags) VALUES (997, 'isolated_test', '古代', '[]'::jsonb)"))
+        db_session.execute(text("INSERT INTO terms (id, name, era, tags, description) VALUES (997, 'isolated_test', '古代', '[]'::jsonb, 'test description')"))
         db_session.commit()
 
         distance = calculate_distance_between(1, 997, db_session)

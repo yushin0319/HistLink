@@ -27,7 +27,7 @@ describe('SelectPage', () => {
       render(<SelectPage />);
       expect(screen.getByRole('button', { name: /かんたん/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /ふつう/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /むずかしい/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /難しい/i })).toBeInTheDocument();
     });
 
     it('ステージ数選択ボタンが3つ表示される', () => {
@@ -68,7 +68,7 @@ describe('SelectPage', () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
-      const hardButton = screen.getByRole('button', { name: /むずかしい/i });
+      const hardButton = screen.getByRole('button', { name: /難しい/i });
       await user.click(hardButton);
 
       expect(hardButton).toHaveAttribute('data-selected', 'true');
@@ -133,6 +133,40 @@ describe('SelectPage', () => {
     });
   });
 
+  describe('選択の保護', () => {
+    it('同じ難易度ボタンを再クリックしても選択は維持される', async () => {
+      const user = userEvent.setup();
+      render(<SelectPage />);
+
+      const normalButton = screen.getByRole('button', { name: /ふつう/i });
+
+      // 初期状態で選択されている
+      expect(normalButton).toHaveAttribute('data-selected', 'true');
+
+      // 同じボタンを再クリック
+      await user.click(normalButton);
+
+      // 選択は維持される
+      expect(normalButton).toHaveAttribute('data-selected', 'true');
+    });
+
+    it('同じステージ数ボタンを再クリックしても選択は維持される', async () => {
+      const user = userEvent.setup();
+      render(<SelectPage />);
+
+      const stage10Button = screen.getByRole('button', { name: /10問/i });
+
+      // 初期状態で選択されている
+      expect(stage10Button).toHaveAttribute('data-selected', 'true');
+
+      // 同じボタンを再クリック
+      await user.click(stage10Button);
+
+      // 選択は維持される
+      expect(stage10Button).toHaveAttribute('data-selected', 'true');
+    });
+  });
+
   describe('ゲーム開始', () => {
     it('スタートボタンをクリックするとstartGameが呼ばれる（デフォルト: normal, 10）', async () => {
       const user = userEvent.setup();
@@ -164,7 +198,7 @@ describe('SelectPage', () => {
       render(<SelectPage />);
 
       // むずかしい + 50問を選択
-      await user.click(screen.getByRole('button', { name: /むずかしい/i }));
+      await user.click(screen.getByRole('button', { name: /難しい/i }));
       await user.click(screen.getByRole('button', { name: /50問/i }));
 
       const startButton = screen.getByRole('button', { name: /スタート/i });

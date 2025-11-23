@@ -25,4 +25,36 @@ describe('GameCard', () => {
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).toBeInTheDocument();
   });
+
+  it('descriptionが提供された場合は表示される', () => {
+    render(
+      <GameCard
+        term="サンフランシスコ平和条約"
+        era="現代"
+        description="1951年に調印された第二次世界大戦の講和条約。日本の主権回復と占領終結を実現し、戦後の国際社会への復帰を果たした。"
+      />
+    );
+    expect(screen.getByText(/1951年に調印された/)).toBeInTheDocument();
+  });
+
+  it('descriptionが未提供の場合はエラーにならない', () => {
+    expect(() => {
+      render(<GameCard term="井伊直弼" era="近代" />);
+    }).not.toThrow();
+  });
+
+  it('長いdescriptionでもレイアウトが崩れない', () => {
+    const { container } = render(
+      <GameCard
+        term="サンフランシスコ平和条約"
+        era="現代"
+        description="1951年に調印された第二次世界大戦の講和条約。日本の主権回復と占領終結を実現し、戦後の国際社会への復帰を果たした。"
+      />
+    );
+    // MUI Paperコンポーネントが正常に存在することを確認
+    const paper = container.querySelector('.MuiPaper-root');
+    expect(paper).toBeInTheDocument();
+    // 長いdescriptionが表示されることを確認
+    expect(screen.getByText(/1951年に調印された第二次世界大戦の講和条約/)).toBeInTheDocument();
+  });
 });

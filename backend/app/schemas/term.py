@@ -8,6 +8,7 @@ class TermResponse(BaseModel):
     name: str
     era: str
     tags: list[str]
+    description: str
 
     class Config:
         from_attributes = True

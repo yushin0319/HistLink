@@ -284,7 +284,7 @@ pytest tests/ -v
 
 ### 用語（Terms）
 - **ID範囲**: 日本史 1-100、西洋史 101-200
-- **必須フィールド**: id, name, era, tags
+- **必須フィールド**: id, name, era, tags, description
 - **Era値**: 古代, 中世, 近世, 近代, 現代
 - **データソース**: `data/terms.tsv` (TSV形式、タブ区切り)
 

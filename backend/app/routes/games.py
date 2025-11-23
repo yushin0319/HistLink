@@ -88,7 +88,7 @@ async def start_game(
     # current_termを取得
     current_term_result = db.execute(
         text("""
-            SELECT id, name, era, tags
+            SELECT id, name, era, tags, description
             FROM terms
             WHERE id = :term_id
         """),
@@ -100,7 +100,8 @@ async def start_game(
         id=term_row[0],
         name=term_row[1],
         era=term_row[2],
-        tags=term_row[3]
+        tags=term_row[3],
+        description=term_row[4]
     )
 
     # レスポンスを作成
@@ -167,7 +168,7 @@ async def get_game_state(
     # current_termを取得
     current_term_result = db.execute(
         text("""
-            SELECT id, name, era, tags
+            SELECT id, name, era, tags, description
             FROM terms
             WHERE id = :term_id
         """),
@@ -179,7 +180,8 @@ async def get_game_state(
         id=term_row[0],
         name=term_row[1],
         era=term_row[2],
-        tags=term_row[3]
+        tags=term_row[3],
+        description=term_row[4]
     )
 
     return GameStateResponse(
@@ -312,7 +314,7 @@ async def get_choices(
     # current_term詳細を取得
     current_term_full = db.execute(
         text("""
-            SELECT id, name, era, tags
+            SELECT id, name, era, tags, description
             FROM terms
             WHERE id = :term_id
         """),
@@ -323,7 +325,8 @@ async def get_choices(
         id=current_term_full[0],
         name=current_term_full[1],
         era=current_term_full[2],
-        tags=current_term_full[3]
+        tags=current_term_full[3],
+        description=current_term_full[4]
     )
 
     return ChoicesResponse(
@@ -452,7 +455,7 @@ async def post_answer(
 
     current_term_full = db.execute(
         text("""
-            SELECT id, name, era, tags
+            SELECT id, name, era, tags, description
             FROM terms
             WHERE id = :term_id
         """),
@@ -463,7 +466,8 @@ async def post_answer(
         id=current_term_full[0],
         name=current_term_full[1],
         era=current_term_full[2],
-        tags=current_term_full[3]
+        tags=current_term_full[3],
+        description=current_term_full[4]
     )
 
     # 更新後のゲーム状態を取得

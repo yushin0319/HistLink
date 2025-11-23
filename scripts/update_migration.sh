@@ -65,6 +65,7 @@ CREATE TABLE terms (
     era VARCHAR(50) NOT NULL,
     year INTEGER,
     tags JSONB DEFAULT '[]'::jsonb,
+    description TEXT NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -215,7 +216,7 @@ rm /tmp/terms_data.tsv /tmp/relations_data.tsv
 echo "📥 データインポート中..."
 docker compose exec -T postgres psql -U histlink_user -d histlink << 'EOF'
 -- termsテーブルにインポート（IDを含む）
-COPY terms (id, name, era, year, tags)
+COPY terms (id, name, era, year, tags, description)
 FROM '/tmp/terms.tsv'
 WITH (FORMAT text, DELIMITER E'\t', ENCODING 'UTF8');
 

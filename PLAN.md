@@ -16,15 +16,13 @@
 - 何枚繋げられるかハイスコアを目指す
 
 ### スコアリング
-- 1枚繋ぐ: 100点
-- コンボボーナス: 連続数 × 50点
-- 時間ボーナス: 早く選ぶほど高得点
+- 正解時: 残り時間に応じて加点（即答100点 → 10秒経過0点）
+- 不正解時: スコア変化なし、ライフ-1
 
 ### ゲーム性の磨き（拡張機能）
 
-#### ライフ回復システム
-- **10連鎖達成でライフ+1**: 10枚連続で正解すると最大ライフを超えて+1（最大5まで）
-- **20連鎖達成でライフ+1**: さらに10連鎖ごとに+1
+#### ライフ回復システム（拡張機能案）
+- 10問連続正解でライフ+1（最大5まで）
 - モチベーション維持と長時間プレイのご褒美
 
 #### キーボード操作
@@ -52,7 +50,7 @@ useEffect(() => {
 
 #### セッション保存（オプション機能）
 - **LocalStorage活用**: ゲーム途中で離脱しても再開可能
-- **保存内容**: game_id, current_step, life, score, combo, history
+- **保存内容**: game_id, current_step, life, score, history
 - **自動保存**: 回答するたびに自動保存
 - **復元**: リロード時に「前回の続きから再開しますか？」と表示
 
@@ -66,7 +64,6 @@ const saveGameState = () => {
     currentStep,
     life,
     score,
-    combo,
     history,
     savedAt: Date.now(),
   }));
@@ -88,11 +85,10 @@ const loadGameState = () => {
 };
 ```
 
-#### コンボ演出強化
-- **5連鎖**: "Great!"メッセージ表示
-- **10連鎖**: "Excellent!!" + 画面フラッシュ
-- **15連鎖**: "Amazing!!!" + パーティクルエフェクト
-- **20連鎖**: "LEGENDARY!!!!" + 虹色エフェクト
+#### 正解演出（拡張機能案）
+- 正解時: フィードバック色（緑背景）+ チェックマーク
+- 不正解時: フィードバック色（赤背景）+ バツマーク
+- マイルストーン達成時のメッセージ表示
 
 ---
 
@@ -924,21 +920,22 @@ jobs:
 ### Week 3: フロントエンド（TDD）
 
 #### 実装優先順位
-1. Zustandストア作成（状態管理基盤）
-2. テーマ変換＋既存テスト更新
-3. GameHeader実装（タイマー機能含む）
-4. ResultHeader実装（GameHeaderの亜種）
-5. ChoiceCard更新（フィードバック色）
-6. SelectPage実装
-7. ResultPage実装（ResultHeader, RankingTable, NameInputModal含む）
-8. 画面遷移統合
+1. ✅ Zustandストア作成（状態管理基盤）
+2. ✅ テーマ変換＋既存テスト更新
+3. ✅ GameHeader実装（タイマー機能含む）
+4. ✅ ResultHeader実装（GameHeaderの亜種）
+5. ✅ ChoiceCard更新（フィードバック色）
+6. ✅ SelectPage実装
+7. ✅ ResultPage実装（ResultHeader, RankingTable, NameInputModal含む）
+8. ✅ 画面遷移統合
+9. ✅ description フィールド対応（Step 1-6完了）
 
 #### Phase 1: 基盤整備（状態管理）
 
 **Zustandストア設計:**
 - `stores/gameStore.ts`: ゲーム状態の一元管理
-  - lives, score, chain, stage, timer, difficulty
-  - startGame, answerQuestion, resetGame アクション
+  - lives, score, currentStage, remainingTime, difficulty, totalStages
+  - startGame, answerQuestion, decrementTimer, resetGame アクション
 
 **テストファイル:**
 - `stores/__tests__/gameStore.test.ts`
@@ -1079,6 +1076,30 @@ jobs:
 - 既存パターンに従う（userEvent, screen, vi.fn()）
 - **カバレッジ目標: 100%**（基本方針）
 
+---
+
+### description フィールド実装完了 ✅
+
+**Step 1-6 完了状況:**
+- ✅ Step 1: TSVファイルにdescription列追加
+- ✅ Step 2: マイグレーションスクリプト更新（NOT NULL制約）
+- ✅ Step 3: バックエンドスキーマ更新（TermResponse）
+- ✅ Step 4: 全APIエンドポイントでdescription返却
+- ✅ Step 5: フロントエンドテスト追加
+  - GameCard.test.tsx: 長いdescriptionテスト（TSV実データ使用）
+  - SelectPage.test.tsx: ラベル修正（むずかしい → 難しい）
+- ✅ Step 6: 動作確認
+  - マイグレーション: `psql -U postgres -d histlink -f database/migrations/002_add_description.sql`
+  - API確認: `curl http://localhost:8001/api/routes | jq`
+  - テスト確認: `cd frontend && npm run test:coverage` / `cd backend && pytest --cov`
+
+**テスト修正内容:**
+- `test_distractor_generator.py`: description追加（孤立ノード）
+- `test_route_generator.py`: description追加（孤立ノード×2）
+- `test_routes_api.py`: テスト前にDELETE FROM routes（テスト独立性確保）
+- `GameCard.test.tsx`: 長いdescriptionレイアウトテスト（サンフランシスコ平和条約）
+- `SelectPage.test.tsx`: 難易度ラベル修正（"むずかしい" → "難しい"）
+
 ### Week 4: 統合＆ポリッシュ
 
 **フロント⇔バック接続:**
@@ -1175,8 +1196,7 @@ jobs:
   "route_id": 1,
   "current_step": 3,
   "life": 2,
-  "score": 450,
-  "combo": 3,
+  "score": 250,
   "history": [
     {"step": 0, "term_id": 52, "term_name": "ペリー来航"},
     {"step": 1, "term_id": 54, "term_name": "日米和親条約"},
@@ -1241,9 +1261,8 @@ jobs:
 {
   "is_correct": true,
   "life": 2,
-  "score": 600,
-  "combo": 4,
-  "earned_points": 150,
+  "score": 350,
+  "earned_points": 75,
   "relation_explanation": {
     "type": "因果",
     "keyword": "条約調印への反発",
@@ -1258,8 +1277,7 @@ jobs:
 {
   "is_correct": false,
   "life": 1,
-  "score": 600,
-  "combo": 0,
+  "score": 350,
   "correct_answer": {
     "id": 56,
     "name": "井伊直弼"
@@ -1278,10 +1296,9 @@ jobs:
 {
   "is_correct": false,
   "life": 0,
-  "score": 600,
-  "combo": 0,
+  "score": 350,
   "is_game_over": true,
-  "final_score": 600,
+  "final_score": 350,
   "total_steps": 4
 }
 ```
@@ -1303,28 +1320,23 @@ jobs:
 
 ```typescript
 interface GameState {
-  // ゲーム状態
-  gameId: string | null;
-  routeId: number | null;
-  currentStep: number;
-  life: number;
+  // ゲーム設定
+  difficulty: Difficulty;
+  totalStages: TotalStages;
+
+  // ゲーム進行状態
+  lives: number;
   score: number;
-  combo: number;
-  history: Array<{step: number; termId: number; termName: string}>;
-  isGameOver: boolean;
+  currentStage: number;
+  remainingTime: number; // 残り時間（0.1秒単位）
 
-  // 現在の選択肢
-  choices: Term[];
-  relationHint: RelationHint | null;
-
-  // UI状態
-  isLoading: boolean;
-  error: string | null;
+  // ゲーム状態
+  isPlaying: boolean;
 
   // アクション
-  startGame: (routeId: number) => Promise<void>;
-  submitAnswer: (termId: number, answerTimeMs: number) => Promise<void>;
-  loadChoices: () => Promise<void>;
+  startGame: (difficulty: Difficulty, totalStages: TotalStages) => void;
+  answerQuestion: (isCorrect: boolean) => void;
+  decrementTimer: () => void;
   resetGame: () => void;
 }
 ```

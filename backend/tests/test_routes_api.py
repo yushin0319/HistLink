@@ -10,6 +10,10 @@ class TestGetRoutes:
 
     def test_get_routes_empty(self, client, db_session):
         """ルートが0件の場合、空リストを返す"""
+        # 既存のルートをクリア
+        db_session.execute(text("DELETE FROM routes"))
+        db_session.commit()
+
         response = client.get("/api/v1/routes")
 
         assert response.status_code == 200
@@ -21,7 +25,8 @@ class TestGetRoutes:
 
     def test_get_routes_with_data(self, client, db_session):
         """ルートが存在する場合、一覧を返す"""
-        # テスト用ルートを作成
+        # 既存のルートをクリアしてからテスト用ルートを作成
+        db_session.execute(text("DELETE FROM routes"))
         db_session.execute(
             text("""
                 INSERT INTO routes (id, start_term_id, length, difficulty)
@@ -43,7 +48,8 @@ class TestGetRoutes:
 
     def test_get_routes_multiple(self, client, db_session):
         """複数のルートを返す"""
-        # 3つのテスト用ルートを作成
+        # 既存のルートをクリアしてから3つのテスト用ルートを作成
+        db_session.execute(text("DELETE FROM routes"))
         for i in range(1, 4):
             db_session.execute(
                 text(f"""

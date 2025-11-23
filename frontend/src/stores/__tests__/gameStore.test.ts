@@ -198,4 +198,30 @@ describe('gameStore', () => {
       expect(state.isPlaying).toBe(false);
     });
   });
+
+  describe('ゲーム停止中のアクション', () => {
+    it('answerQuestion: isPlaying=falseの時は何も起きない', () => {
+      const { answerQuestion } = useGameStore.getState();
+
+      // ゲーム未開始（isPlaying=false）の状態で呼び出し
+      answerQuestion(true);
+      const state = useGameStore.getState();
+
+      // 状態は変わらない
+      expect(state.score).toBe(0);
+      expect(state.currentStage).toBe(0);
+      expect(state.lives).toBe(3);
+    });
+
+    it('decrementTimer: isPlaying=falseの時は何も起きない', () => {
+      const { decrementTimer } = useGameStore.getState();
+
+      // ゲーム未開始（isPlaying=false）の状態で呼び出し
+      decrementTimer();
+      const state = useGameStore.getState();
+
+      // 状態は変わらない
+      expect(state.remainingTime).toBe(0);
+    });
+  });
 });

@@ -697,6 +697,39 @@ VALUES
   ('uuid-xxx', 1, 55, 'hard');
 ```
 
+### ランキング機能のためのスキーマ拡張
+
+**gamesテーブル拡張:**
+```sql
+-- player_name列を追加（既にupdate_migration.shに反映済み）
+ALTER TABLE games ADD COLUMN player_name VARCHAR(50);
+
+-- ランキング用パーシャルインデックス
+CREATE INDEX idx_games_ranking
+ON games (is_finished, score DESC)
+WHERE is_finished = true;
+```
+
+**実装方針:**
+- gamesテーブルを活用してバックエンドでランキングAPI提供
+- is_finished=trueのレコードからランキング取得
+- 難易度別・ステージ数別にランキングを分離（routesテーブルと結合）
+
+**参考SQL:**
+- `database/scripts/ranking_queries.sql` に各種ランキングクエリを記載
+  - 全体ランキング（TOP 100）
+  - 難易度別ランキング（easy/normal/hard × 10/30/50）
+  - プレイヤー順位取得（ROW_NUMBER使用）
+  - 週間/月間ランキング（created_at絞り込み）
+  - プレイヤー統計情報（MAX/AVG/COUNT）
+
+**ランキングAPI（実装予定）:**
+```
+GET /api/v1/rankings?difficulty=normal&length=10&limit=100
+POST /api/v1/rankings（ゲーム完了時に自動登録）
+GET /api/v1/rankings/player/{name}（プレイヤー順位取得）
+```
+
 ---
 
 ## データソース
@@ -1102,10 +1135,36 @@ jobs:
 
 ### Week 4: 統合＆ポリッシュ
 
-**フロント⇔バック接続:**
-- axios設定
-- API呼び出し実装
-- エラーハンドリング
+#### ✅ 完了: フロント⇔バック接続（TDD）
+
+**実装内容:**
+1. **axios設定とAPI基盤**
+   - `frontend/src/services/api.ts`: axios client（baseURL, timeout, interceptor）
+   - `frontend/src/types/api.ts`: TypeScript型定義（Term, Route, Game関連）
+
+2. **API呼び出し実装**
+   - `frontend/src/services/routesApi.ts`: fetchRoutes(), fetchRouteSteps()
+   - `frontend/src/services/gameApi.ts`: startGameSession(), submitAnswer()
+
+3. **エラーハンドリング**
+   - レスポンスエラー、ネットワークエラー、リクエストエラーの3パターン対応
+   - console.errorで適切なログ出力
+
+4. **統合テスト（100%カバレッジ）**
+   - `frontend/src/services/__tests__/api.test.ts`: 6 tests
+   - `frontend/src/services/__tests__/routesApi.test.ts`: 6 tests
+   - `frontend/src/services/__tests__/gameApi.test.ts`: 8 tests
+   - **合計66テスト、フロントエンド100%カバレッジ達成**
+
+**テスト方針:**
+- TDD（RED → GREEN → Refactor）厳守
+- axios-mock-adapterでHTTPリクエストモック
+- 成功時、APIエラー時、ネットワークエラー時の全パターンテスト
+
+**保留中:**
+- GamePageでのAPI呼び出し実装
+- リアルタイムゲーム進行とバックエンド連携
+- エラーハンドリングUI実装
 
 **E2Eテスト:**
 - Playwright E2Eテスト

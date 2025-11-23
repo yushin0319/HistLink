@@ -88,6 +88,9 @@ npm run test:run           # Vitest 1回実行
 npm run test:ui            # Vitest UI
 npm run test:coverage      # カバレッジ付き
 
+# API層のテストのみ実行
+npm test -- src/services/__tests__/
+
 # ビルド
 npm run build              # 本番ビルド
 npm run preview            # ビルドプレビュー
@@ -278,6 +281,25 @@ pytest tests/ -v
 - データベースとTSVが乖離すると、テスト失敗や不整合が発生
 - `update_migration.sh` は既存スキーマを完全削除してから再構築するため安全
 
+#### ランキング機能のためのスキーマ拡張
+
+**追加カラム:**
+- `games.player_name VARCHAR(50)`: プレイヤー名（NULL可、ランキング表示時のみ必須）
+
+**追加インデックス:**
+- `idx_games_ranking`: 完了済みゲームのスコア降順インデックス（パーシャルインデックス）
+  ```sql
+  CREATE INDEX idx_games_ranking ON games (is_finished, score DESC) WHERE is_finished = true;
+  ```
+
+**ランキング取得SQLの参考:**
+- `database/scripts/ranking_queries.sql` に各種ランキングクエリを記載
+  - 全体ランキング、難易度別、週間/月間、プレイヤー統計など
+
+**実装方針:**
+- gamesテーブルを活用してバックエンドでランキングAPI提供
+- is_finished=trueのレコードからランキング取得
+
 ---
 
 ## データ設計規約
@@ -324,6 +346,33 @@ frontend/ (React)
 **テスト戦略:**
 - 各ストアに対応する `__tests__/` ファイル
 - カバレッジ100%を目標
+
+### API層の設計
+
+**ディレクトリ構造:**
+```
+frontend/src/
+├── services/           # API通信層
+│   ├── api.ts         # axios client設定（baseURL, interceptor）
+│   ├── routesApi.ts   # ルート関連API
+│   ├── gameApi.ts     # ゲーム関連API
+│   └── __tests__/     # API層のテスト
+│       ├── api.test.ts
+│       ├── routesApi.test.ts
+│       └── gameApi.test.ts
+└── types/
+    └── api.ts         # API型定義（Response型など）
+```
+
+**axios設定:**
+- baseURL: `${VITE_API_BASE_URL}/api/v1` (デフォルト: http://localhost:8001)
+- timeout: 10秒
+- エラーインターセプター: レスポンスエラー、ネットワークエラー、リクエストエラーを分類してログ出力
+
+**テスト戦略:**
+- axios-mock-adapterでHTTPリクエストをモック
+- 成功時、エラー時、タイムアウト時のテストを網羅
+- カバレッジ100%維持
 
 ### コンポーネント設計
 

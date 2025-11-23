@@ -117,6 +117,7 @@ CREATE TABLE route_distractors (
 CREATE TABLE games (
     id UUID DEFAULT gen_random_uuid() NOT NULL,
     route_id BIGINT NOT NULL,
+    player_name VARCHAR(50),
     current_step INTEGER DEFAULT 0 NOT NULL,
     lives INTEGER DEFAULT 3 NOT NULL,
     score INTEGER DEFAULT 0 NOT NULL,
@@ -140,6 +141,7 @@ CREATE INDEX idx_relations_dst ON relations(dst_id);
 CREATE INDEX idx_terms_era ON terms(era);
 CREATE INDEX idx_games_created_at ON games USING btree (created_at DESC);
 CREATE INDEX idx_games_route_id ON games USING btree (route_id);
+CREATE INDEX idx_games_ranking ON games USING btree (is_finished, score DESC) WHERE is_finished = true;
 
 -- ========================================
 -- Views

@@ -149,6 +149,23 @@ export default function GamePage() {
   // 現在のステップを取得
   const currentStep = steps[currentStage];
 
+  // stepsがロードされていない場合はローディング表示
+  if (!currentStep) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          bgcolor: 'background.default',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="h5">読み込み中...</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{

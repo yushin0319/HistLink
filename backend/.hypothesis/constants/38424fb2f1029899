@@ -1,4 +1,0 @@
-# file: C:\Users\yushi\develop\HistLink\backend\app\config.py
-# hypothesis_version: 6.147.0
-
-[5432, '../.env', '/api/v1', 'HistLink API', 'histlink', 'histlink_user', 'localhost']

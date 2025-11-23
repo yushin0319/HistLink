@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
     project_name: str = "HistLink API"
 
-    # CORS
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177", "http://localhost:3000"]
+    # CORS (開発環境用 - main.pyで allow_origins=["*"] に上書きされる)
+    cors_origins: list[str] = ["http://localhost:5173"]
 
     class Config:
         env_file = "../.env"

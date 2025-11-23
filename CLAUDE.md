@@ -365,7 +365,7 @@ frontend/src/
 ```
 
 **axios設定:**
-- baseURL: `${VITE_API_BASE_URL}/api/v1` (デフォルト: http://localhost:8001)
+- baseURL: `${VITE_API_BASE_URL}/api/v1` (デフォルト: http://localhost:8000)
 - timeout: 10秒
 - エラーインターセプター: レスポンスエラー、ネットワークエラー、リクエストエラーを分類してログ出力
 

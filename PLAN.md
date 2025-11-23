@@ -1123,7 +1123,7 @@ jobs:
   - SelectPage.test.tsx: ラベル修正（むずかしい → 難しい）
 - ✅ Step 6: 動作確認
   - マイグレーション: `psql -U postgres -d histlink -f database/migrations/002_add_description.sql`
-  - API確認: `curl http://localhost:8001/api/routes | jq`
+  - API確認: `curl http://localhost:8000/api/routes | jq`
   - テスト確認: `cd frontend && npm run test:coverage` / `cd backend && pytest --cov`
 
 **テスト修正内容:**

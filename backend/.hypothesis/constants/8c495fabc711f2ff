@@ -1,4 +1,0 @@
-# file: C:\Users\yushi\develop\HistLink\backend\app\services\route_generator.py
-# hypothesis_version: 6.147.0
-
-['SELECT id FROM terms', 'candidate', 'current', 'era', 'term_id']

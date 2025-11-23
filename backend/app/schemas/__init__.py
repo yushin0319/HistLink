@@ -3,12 +3,11 @@ from .term import TermResponse
 from .route import RouteResponse, RouteListResponse
 from .game import (
     GameStartRequest,
-    GameStartResponse,
-    GameStateResponse,
     ChoiceResponse,
-    ChoicesResponse,
-    AnswerRequest,
-    AnswerResponse,
+    GameResultRequest,
+    GameResultResponse,
+    RouteStepWithChoices,
+    FullRouteStartResponse,
 )
 
 __all__ = [
@@ -16,10 +15,9 @@ __all__ = [
     "RouteResponse",
     "RouteListResponse",
     "GameStartRequest",
-    "GameStartResponse",
-    "GameStateResponse",
     "ChoiceResponse",
-    "ChoicesResponse",
-    "AnswerRequest",
-    "AnswerResponse",
+    "GameResultRequest",
+    "GameResultResponse",
+    "RouteStepWithChoices",
+    "FullRouteStartResponse",
 ]

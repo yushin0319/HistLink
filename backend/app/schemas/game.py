@@ -14,28 +14,6 @@ class GameStartRequest(BaseModel):
     target_length: int = Field(default=20, ge=5, le=50)
 
 
-class GameStateResponse(BaseModel):
-    """ゲーム状態レスポンス"""
-    game_id: UUID
-    route_id: int
-    current_step: int
-    current_term: TermResponse
-    lives: int
-    score: int
-    chain_count: int
-    is_finished: bool
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-class GameStartResponse(GameStateResponse):
-    """ゲーム開始レスポンス（GameStateResponseと同じ）"""
-    pass
-
-
 class ChoiceResponse(BaseModel):
     """選択肢レスポンス"""
     term_id: int
@@ -46,22 +24,35 @@ class ChoiceResponse(BaseModel):
         from_attributes = True
 
 
-class ChoicesResponse(BaseModel):
-    """4択選択肢レスポンス"""
+class GameResultRequest(BaseModel):
+    """ゲーム結果送信リクエスト"""
+    final_score: int = Field(ge=0)
+    final_lives: int = Field(ge=0)
+    is_completed: bool
+
+
+class GameResultResponse(BaseModel):
+    """ゲーム結果送信レスポンス"""
     game_id: UUID
-    current_step: int
-    current_term: TermResponse
-    choices: list[ChoiceResponse]
+    final_score: int
+    final_lives: int
+    is_completed: bool
+    message: str
 
 
-class AnswerRequest(BaseModel):
-    """回答リクエスト"""
-    selected_term_id: int
+class RouteStepWithChoices(BaseModel):
+    """ルートステップと選択肢のセット"""
+    step_no: int
+    term: TermResponse
+    correct_next_id: int | None  # 次の正解（最後のステップではNone）
+    choices: list[ChoiceResponse]  # 4択（正解1 + ダミー3）
 
 
-class AnswerResponse(BaseModel):
-    """回答結果レスポンス"""
-    is_correct: bool
-    correct_term_id: int
-    selected_term_id: int
-    game_state: GameStateResponse
+class FullRouteStartResponse(BaseModel):
+    """全ルート+全選択肢を含むゲーム開始レスポンス"""
+    game_id: UUID
+    route_id: int
+    difficulty: str
+    total_steps: int
+    steps: list[RouteStepWithChoices]
+    created_at: datetime

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { RouteStepWithChoices } from '../types/api';
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 type TotalStages = 10 | 30 | 50;
@@ -8,40 +9,60 @@ interface GameState {
   difficulty: Difficulty;
   totalStages: TotalStages;
 
+  // ゲームデータ（バックエンドから取得）
+  gameId: string | null;
+  routeId: number | null;
+  steps: RouteStepWithChoices[]; // 全ルート+選択肢
+
   // ゲーム進行状態
   lives: number;
   score: number;
-  currentStage: number;
+  currentStage: number; // 0-indexed (steps配列のインデックスと対応)
   remainingTime: number; // 残り時間（0.1秒単位、100 = 10.0秒）
 
   // ゲーム状態
   isPlaying: boolean;
+  isCompleted: boolean; // ゲームクリアしたか
 
   // アクション
+  loadGameData: (gameId: string, routeId: number, steps: RouteStepWithChoices[]) => void;
   startGame: (difficulty: Difficulty, totalStages: TotalStages) => void;
-  answerQuestion: (isCorrect: boolean) => void;
+  answerQuestion: (selectedTermId: number) => void;
   decrementTimer: () => void;
   resetGame: () => void;
 }
 
 const INITIAL_LIVES = 3;
 const MAX_TIME = 100; // 10.0秒 = 100 × 0.1秒
-const MAX_SCORE = 100; // 最大スコア
 
-// スコア計算：残り時間に基づく（即答100点 → 10秒経過0点）
+// スコア計算：残り時間のみ（0-100点）
 const calculateScore = (remainingTime: number): number => {
-  return Math.max(0, remainingTime); // 残り時間 = スコア
+  return Math.max(0, remainingTime);
 };
 
 export const useGameStore = create<GameState>((set, get) => ({
   // 初期状態
   difficulty: 'normal',
   totalStages: 10,
+  gameId: null,
+  routeId: null,
+  steps: [],
   lives: INITIAL_LIVES,
   score: 0,
   currentStage: 0,
   remainingTime: 0,
   isPlaying: false,
+  isCompleted: false,
+
+  // バックエンドから取得したゲームデータを読み込む
+  loadGameData: (gameId, routeId, steps) => {
+    set({
+      gameId,
+      routeId,
+      steps,
+      totalStages: steps.length,
+    });
+  },
 
   // ゲーム開始
   startGame: (difficulty, totalStages) => {
@@ -50,19 +71,26 @@ export const useGameStore = create<GameState>((set, get) => ({
       totalStages,
       lives: INITIAL_LIVES,
       score: 0,
-      currentStage: 1,
-      remainingTime: MAX_TIME, // 10.0秒
+      currentStage: 0, // 0-indexed
+      remainingTime: MAX_TIME,
       isPlaying: true,
+      isCompleted: false,
     });
   },
 
-  // 問題に回答
-  answerQuestion: (isCorrect) => {
+  // 問題に回答（選択された用語IDを受け取る）
+  answerQuestion: (selectedTermId) => {
     const state = get();
 
-    if (!state.isPlaying) return;
+    if (!state.isPlaying || state.steps.length === 0) return;
 
-    // スコア計算：正解時のみ残り時間に応じて加算（リセット前の値を使用）
+    const currentStep = state.steps[state.currentStage];
+    if (!currentStep) return;
+
+    // 正解判定：選択された用語IDが正解の次の用語IDと一致するか
+    const isCorrect = selectedTermId === currentStep.correct_next_id;
+
+    // スコア計算：正解時のみ残り時間で加算
     const earnedScore = isCorrect ? calculateScore(state.remainingTime) : 0;
     const newScore = state.score + earnedScore;
     const newLives = isCorrect ? state.lives : state.lives - 1;
@@ -73,16 +101,21 @@ export const useGameStore = create<GameState>((set, get) => ({
       set({
         lives: 0,
         isPlaying: false,
+        isCompleted: false,
       });
       return;
     }
 
     // 最終ステージをクリアしたらゲーム完了
-    if (newStage > state.totalStages) {
+    // totalStagesは全ステップ数（最後のステップは選択肢なし）
+    // 正解した場合のみ、全ての質問に答えたかチェック
+    if (isCorrect && newStage >= state.totalStages - 1) {
       set({
         score: newScore,
-        currentStage: state.totalStages,
+        lives: newLives,
+        currentStage: newStage,
         isPlaying: false,
+        isCompleted: true,
       });
       return;
     }
@@ -92,7 +125,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       score: newScore,
       lives: newLives,
       currentStage: newStage,
-      remainingTime: MAX_TIME, // タイマーリセット
+      remainingTime: MAX_TIME,
     });
   },
 
@@ -104,7 +137,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const newRemainingTime = state.remainingTime - 1;
 
-    // タイマーが0になったらライフを減らして次のステージへ
+    // タイマーが0になったらライフを減らして次のステージへ（不正解扱い）
     if (newRemainingTime <= 0) {
       const newLives = state.lives - 1;
       const newStage = state.currentStage + 1;
@@ -115,6 +148,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           remainingTime: 0,
           lives: 0,
           isPlaying: false,
+          isCompleted: false,
         });
         return;
       }
@@ -136,11 +170,15 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       difficulty: 'normal',
       totalStages: 10,
+      gameId: null,
+      routeId: null,
+      steps: [],
       lives: INITIAL_LIVES,
       score: 0,
       currentStage: 0,
       remainingTime: 0,
       isPlaying: false,
+      isCompleted: false,
     });
   },
 }));

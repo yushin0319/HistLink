@@ -31,27 +31,38 @@ export interface RouteStepsResponse {
   total_steps: number;
 }
 
-export interface TermOption {
-  id: number;
+export interface Choice {
+  term_id: number;
   name: string;
+  era: string;
+}
+
+export interface RouteStepWithChoices {
+  step_no: number;
+  term: Term;
+  correct_next_id: number | null;
+  choices: Choice[];
 }
 
 export interface GameStartResponse {
-  session_id: string;
+  game_id: string;
   route_id: number;
   difficulty: string;
-  total_stages: number;
-  current_stage: number;
-  current_term: Term;
-  options: TermOption[];
+  total_steps: number;
+  steps: RouteStepWithChoices[];
+  created_at: string;
 }
 
-export interface GameAnswerResponse {
-  is_correct: boolean;
-  correct_term: Term;
-  score_earned: number;
-  next_term: Term | null;
-  next_options: TermOption[];
-  current_stage: number;
-  is_game_over: boolean;
+export interface GameResultRequest {
+  final_score: number;
+  final_lives: number;
+  is_completed: boolean;
+}
+
+export interface GameResultResponse {
+  game_id: string;
+  final_score: number;
+  final_lives: number;
+  is_completed: boolean;
+  message: string;
 }

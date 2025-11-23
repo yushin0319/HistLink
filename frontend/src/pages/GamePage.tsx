@@ -1,33 +1,47 @@
 import { useEffect, useState } from 'react';
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
-import { startGameSession, submitAnswer } from '../services/gameApi';
-import type { GameStartResponse, GameAnswerResponse, Term, TermOption } from '../types/api';
+import { startGameSession, submitGameResult } from '../services/gameApi';
 import GameCard from '../components/GameCard';
 import ChoiceCard from '../components/ChoiceCard';
 
 export default function GamePage() {
-  const { difficulty, totalStages, lives, score, currentStage, remainingTime, answerQuestion } =
-    useGameStore();
+  const {
+    difficulty,
+    totalStages,
+    lives,
+    score,
+    currentStage,
+    remainingTime,
+    isPlaying,
+    isCompleted,
+    steps,
+    gameId,
+    loadGameData,
+    startGame,
+    answerQuestion,
+    decrementTimer,
+  } = useGameStore();
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
-  const [options, setOptions] = useState<TermOption[]>([]);
+  const [hasSubmittedResult, setHasSubmittedResult] = useState(false);
 
-  // ゲームセッション開始
+  // ゲームセッション開始（全ルート+選択肢を一括取得）
   useEffect(() => {
     const initGame = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        const response: GameStartResponse = await startGameSession(difficulty, totalStages);
+        // バックエンドから全ルート+選択肢を取得
+        const response = await startGameSession(difficulty, totalStages);
 
-        setSessionId(response.session_id);
-        setCurrentTerm(response.current_term);
-        setOptions(response.options);
+        // Zustandに読み込む
+        loadGameData(response.game_id, response.route_id, response.steps);
+
+        // ゲーム開始
+        startGame(difficulty, totalStages);
       } catch (err) {
         setError('エラーが発生しました');
         console.error(err);
@@ -37,31 +51,42 @@ export default function GamePage() {
     };
 
     initGame();
-  }, [difficulty, totalStages]);
+  }, [difficulty, totalStages, loadGameData, startGame]);
 
-  // 回答送信
-  const handleAnswer = async (selectedTermId: number) => {
-    if (!sessionId) return;
+  // タイマー管理（0.1秒ごと）
+  useEffect(() => {
+    if (!isPlaying) return;
 
-    try {
-      const response: GameAnswerResponse = await submitAnswer(
-        sessionId,
-        selectedTermId,
-        remainingTime
-      );
+    const intervalId = setInterval(() => {
+      decrementTimer();
+    }, 100); // 0.1秒 = 100ms
 
-      // gameStore を更新
-      answerQuestion(response.is_correct);
+    return () => clearInterval(intervalId);
+  }, [isPlaying, decrementTimer]);
 
-      // 次の問題を表示（ゲームオーバーでない場合）
-      if (!response.is_game_over && response.next_term) {
-        setCurrentTerm(response.next_term);
-        setOptions(response.next_options);
-      }
-    } catch (err) {
-      setError('回答の送信に失敗しました');
-      console.error(err);
+  // ゲーム終了時に結果を送信
+  useEffect(() => {
+    if (!isPlaying && gameId && !hasSubmittedResult && (isCompleted || lives === 0)) {
+      const submitResult = async () => {
+        try {
+          await submitGameResult(gameId, {
+            final_score: score,
+            final_lives: lives,
+            is_completed: isCompleted,
+          });
+          setHasSubmittedResult(true);
+        } catch (err) {
+          console.error('結果送信エラー:', err);
+        }
+      };
+
+      submitResult();
     }
+  }, [isPlaying, gameId, score, lives, isCompleted, hasSubmittedResult]);
+
+  // 回答送信（フロントエンドで処理）
+  const handleAnswer = (selectedTermId: number) => {
+    answerQuestion(selectedTermId);
   };
 
   if (isLoading) {
@@ -98,6 +123,32 @@ export default function GamePage() {
     );
   }
 
+  // ゲームオーバー/クリア画面
+  if (!isPlaying && (isCompleted || lives === 0)) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          bgcolor: 'background.default',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant="h3" gutterBottom>
+            {isCompleted ? 'ゲームクリア！' : 'ゲームオーバー'}
+          </Typography>
+          <Typography variant="h5">最終スコア: {score}点</Typography>
+          <Typography variant="h6">残りライフ: {lives}</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  // 現在のステップを取得
+  const currentStep = steps[currentStage];
+
   return (
     <Box
       sx={{
@@ -120,7 +171,7 @@ export default function GamePage() {
           <Typography variant="h6">ライフ: {lives}</Typography>
           <Typography variant="h6">スコア: {score}</Typography>
           <Typography variant="h6">
-            ステージ: {currentStage} / {totalStages}
+            ステージ: {currentStage + 1} / {totalStages}
           </Typography>
           <Typography variant="h6">
             タイマー: {(remainingTime / 10).toFixed(1)}秒
@@ -128,7 +179,7 @@ export default function GamePage() {
         </Box>
 
         {/* 現在の問題 */}
-        {currentTerm && (
+        {currentStep && (
           <Box
             sx={{
               display: 'flex',
@@ -137,21 +188,23 @@ export default function GamePage() {
             }}
           >
             <GameCard
-              term={currentTerm.name}
-              era={currentTerm.era}
-              description={currentTerm.description}
+              term={currentStep.term.name}
+              era={currentStep.term.era}
+              description={currentStep.term.description}
             />
           </Box>
         )}
 
         {/* 選択肢 */}
-        <Grid container spacing={2}>
-          {options.map((option) => (
-            <Grid item xs={6} key={option.id}>
-              <ChoiceCard term={option.name} onClick={() => handleAnswer(option.id)} />
-            </Grid>
-          ))}
-        </Grid>
+        {currentStep && currentStep.choices.length > 0 && (
+          <Grid container spacing={2}>
+            {currentStep.choices.map((choice) => (
+              <Grid item xs={6} key={choice.term_id}>
+                <ChoiceCard term={choice.name} onClick={() => handleAnswer(choice.term_id)} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
     </Box>
   );

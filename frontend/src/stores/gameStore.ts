@@ -60,7 +60,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       gameId,
       routeId,
       steps,
-      totalStages: steps.length,
+      totalStages: steps?.length ?? 10,
     });
   },
 

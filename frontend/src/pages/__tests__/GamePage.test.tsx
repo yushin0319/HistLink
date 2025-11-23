@@ -341,6 +341,59 @@ describe('GamePage', () => {
       expect(screen.getByText('廃藩置県')).toBeInTheDocument();
       expect(screen.getByText('版籍奉還')).toBeInTheDocument();
     });
+
+    it('ゲームオーバー時は次の問題を表示しない', async () => {
+      const user = userEvent.setup();
+
+      mockStartGameSession.mockResolvedValue({
+        session_id: 'test-session-123',
+        route_id: 1,
+        difficulty: 'normal',
+        total_stages: 10,
+        current_stage: 10,
+        current_term: {
+          id: 1,
+          name: 'ペリー来航',
+          era: '近代',
+          tags: ['外交', '開国'],
+          description: '1853年、アメリカのペリー提督が浦賀に来航',
+        },
+        options: [
+          { id: 2, name: '日米修好通商条約' },
+          { id: 3, name: '大政奉還' },
+          { id: 4, name: '明治維新' },
+          { id: 1, name: 'ペリー来航' },
+        ],
+      });
+
+      mockSubmitAnswer.mockResolvedValue({
+        is_correct: false,
+        correct_term: {
+          id: 1,
+          name: 'ペリー来航',
+          era: '近代',
+          tags: ['外交'],
+          description: '1853年、アメリカのペリー提督が浦賀に来航',
+        },
+        score_earned: 0,
+        next_term: null,
+        next_options: [],
+        current_stage: 10,
+        is_game_over: true,
+      });
+
+      render(<GamePage />);
+
+      await screen.findByText('日米修好通商条約');
+
+      const choiceCard = screen.getByText('日米修好通商条約');
+      await user.click(choiceCard);
+
+      // ゲームオーバー時は画面遷移しない（元の問題が残る）
+      expect(mockSubmitAnswer).toHaveBeenCalledWith('test-session-123', 2, 100);
+      // 次の問題は表示されない（ペリー来航が残る）
+      expect(screen.getAllByText('ペリー来航')).toHaveLength(2);
+    });
   });
 
   describe('エラーハンドリング', () => {

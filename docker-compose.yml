@@ -20,5 +20,40 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: histlink-backend
+    environment:
+      DATABASE_URL: postgresql://histlink_user:histlink_dev_password@postgres:5432/histlink
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: histlink
+      DB_USER: histlink_user
+      DB_PASSWORD: histlink_dev_password
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: histlink-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+
 volumes:
   postgres_data:

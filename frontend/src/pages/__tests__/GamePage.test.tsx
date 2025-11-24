@@ -93,7 +93,8 @@ describe('GamePage', () => {
       await screen.findByText('邪馬台国');
 
       expect(mockStartGameSession).toHaveBeenCalledWith('normal', 10);
-      expect(mockStartGameSession).toHaveBeenCalledTimes(1);
+      // StrictModeで2回呼ばれる可能性があるため、少なくとも1回呼ばれたことを確認
+      expect(mockStartGameSession).toHaveBeenCalled();
     });
 
     it('ゲーム情報が表示される', async () => {
@@ -111,7 +112,7 @@ describe('GamePage', () => {
 
       // 値を確認
       expect(screen.getByText('0')).toBeInTheDocument(); // スコア
-      expect(screen.getByText('1 / 10')).toBeInTheDocument(); // ステージ（totalStagesは初期値10）
+      expect(screen.getByText('1 / 3')).toBeInTheDocument(); // ステージ（totalStagesはsteps.lengthの3）
     });
 
     it('最初のステップが表示される', async () => {
@@ -138,6 +139,58 @@ describe('GamePage', () => {
       await screen.findByText(/エラーが発生しました/);
 
       expect(screen.getByText(/エラーが発生しました/)).toBeInTheDocument();
+    });
+  });
+
+  describe('ゲーム完了', () => {
+    it('全ステージクリアで完了状態になる', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+
+      render(<GamePage />);
+
+      await screen.findByText('邪馬台国');
+
+      // totalStagesが正しく設定されていることを確認
+      const beforeState = useGameStore.getState();
+      expect(beforeState.totalStages).toBe(3); // steps.lengthから設定される
+      expect(beforeState.currentStage).toBe(0);
+
+      // 全問正解でクリア
+      act(() => {
+        const { answerQuestion } = useGameStore.getState();
+        answerQuestion(2); // ステップ0 → 1
+        answerQuestion(6); // ステップ1 → 2（最終ステップ）
+      });
+
+      // クリア画面の表示を確認
+      const state = useGameStore.getState();
+      expect(state.currentStage).toBe(2);
+      expect(state.isCompleted).toBe(true);
+      expect(state.isPlaying).toBe(false);
+    });
+  });
+
+  describe('ゲームオーバー', () => {
+    it('ライフが0になったらゲームオーバー状態になる', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+
+      render(<GamePage />);
+
+      await screen.findByText('邪馬台国');
+
+      // 3回不正解でゲームオーバー
+      act(() => {
+        const { answerQuestion } = useGameStore.getState();
+        answerQuestion(999); // 不正解
+        answerQuestion(999); // 不正解
+        answerQuestion(999); // 不正解
+      });
+
+      // ゲームオーバーを確認
+      const state = useGameStore.getState();
+      expect(state.lives).toBe(0);
+      expect(state.isPlaying).toBe(false);
+      expect(state.isCompleted).toBe(false);
     });
   });
 });

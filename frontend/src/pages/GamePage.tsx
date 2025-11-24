@@ -58,11 +58,11 @@ export default function GamePage() {
         // バックエンドから全ルート+選択肢を取得
         const response = await startGameSession(difficulty, totalStages);
 
-        // Zustandに読み込む
+        // Zustandに読み込む（totalStagesはresponse.steps.lengthで設定される）
         loadGameData(response.game_id, response.route_id, response.steps);
 
-        // ゲーム開始
-        startGame(difficulty, totalStages);
+        // ゲーム開始（totalStagesはloadGameDataで設定済みなので、実際のステップ数を使用）
+        startGame(difficulty, response.steps.length);
       } catch (err) {
         setError('エラーが発生しました');
         console.error(err);

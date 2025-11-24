@@ -16,8 +16,9 @@
 - 何枚繋げられるかハイスコアを目指す
 
 ### スコアリング
-- 正解時: 残り時間に応じて加点（即答100点 → 10秒経過0点）
+- 正解時: 残り時間に応じて加点（即答200点 → 20秒経過0点）
 - 不正解時: スコア変化なし、ライフ-1
+- タイマー: 20秒（0.1秒単位で200カウント）
 
 ### ゲーム性の磨き（拡張機能）
 
@@ -1186,181 +1187,112 @@ jobs:
 
 ---
 
-## API設計
+## API設計（フロントエンド主体設計）
 
-### エンドポイント一覧
+### 実装方針
 
-#### 1. `GET /routes`
-利用可能なルート一覧を取得
+**フロントエンド主体設計**を採用：
+- 全ルート+全選択肢を一括返却
+- ゲームロジックはフロントエンドで実行
+- バックエンドの負荷を軽減
+- プレイ中の再計算ゼロで品質保証
 
-**クエリパラメータ:**
-- `difficulty`: easy | std | hard（オプション）
+---
 
-**レスポンス例:**
-```json
-{
-  "routes": [
-    {
-      "id": 1,
-      "name": "幕末維新の道",
-      "start_term": "ペリー来航",
-      "length": 10,
-      "difficulty": "std"
-    },
-    {
-      "id": 2,
-      "name": "戦国統一の道",
-      "start_term": "応仁の乱",
-      "length": 12,
-      "difficulty": "hard"
-    }
-  ]
-}
-```
+### 実装済みエンドポイント
 
-#### 2. `POST /games/start`
-新しいゲームを開始
+#### 1. `POST /api/v1/games/start`
+新しいゲームを開始し、全ルート+全選択肢を一括返却
 
 **リクエストボディ:**
 ```json
 {
-  "route_id": 1
+  "difficulty": "normal",
+  "era": null,
+  "target_length": 20
 }
 ```
 
-**レスポンス:**
+**レスポンス:** `FullRouteStartResponse`
 ```json
 {
   "game_id": "uuid-xxxx-xxxx",
   "route_id": 1,
-  "current_step": 0,
-  "life": 3,
-  "score": 0,
-  "start_term": {
-    "id": 52,
-    "name": "ペリー来航",
-    "era": "近世",
-    "tags": ["外交", "開国"]
-  }
-}
-```
-
-#### 3. `GET /games/{game_id}`
-ゲーム状態を取得
-
-**レスポンス:**
-```json
-{
-  "game_id": "uuid-xxxx-xxxx",
-  "route_id": 1,
-  "current_step": 3,
-  "life": 2,
-  "score": 250,
-  "history": [
-    {"step": 0, "term_id": 52, "term_name": "ペリー来航"},
-    {"step": 1, "term_id": 54, "term_name": "日米和親条約"},
-    {"step": 2, "term_id": 55, "term_name": "日米修好通商条約"}
-  ],
-  "is_game_over": false
-}
-```
-
-#### 4. `GET /games/{game_id}/choices`
-次の手札4枚を取得
-
-**レスポンス:**
-```json
-{
-  "choices": [
+  "difficulty": "normal",
+  "total_steps": 20,
+  "steps": [
     {
-      "id": 56,
-      "name": "井伊直弼",
-      "era": "近代",
-      "tags": ["人物", "幕末"]
-    },
-    {
-      "id": 10,
-      "name": "壬申の乱",
-      "era": "古代",
-      "tags": ["内乱", "権力闘争"]
-    },
-    {
-      "id": 45,
-      "name": "徳川吉宗",
-      "era": "近世",
-      "tags": ["人物", "改革者"]
-    },
-    {
-      "id": 88,
-      "name": "世界恐慌",
-      "era": "現代",
-      "tags": ["経済", "国際"]
+      "step_no": 0,
+      "term": {
+        "id": 52,
+        "name": "ペリー来航",
+        "era": "近世",
+        "tags": ["外交", "開国"],
+        "description": "1853年にアメリカのペリー艦隊が浦賀に来航..."
+      },
+      "correct_next_id": 54,
+      "choices": [
+        {"term_id": 54, "name": "日米和親条約", "era": "近世"},
+        {"term_id": 10, "name": "壬申の乱", "era": "古代"},
+        {"term_id": 45, "name": "徳川吉宗", "era": "近世"},
+        {"term_id": 88, "name": "世界恐慌", "era": "現代"}
+      ],
+      "relation_type": "因果",
+      "relation_description": "開国圧力: ペリー来航により幕府は開国を余儀なくされた"
     }
   ],
-  "relation_hint": {
-    "type": "因果",
-    "keyword": "条約調印への反発"
-  }
+  "created_at": "2025-11-23T12:00:00Z"
 }
 ```
 
-#### 5. `POST /games/{game_id}/answer`
-回答を送信して正解/不正解を判定
+**処理フロー:**
+1. ランダムスタート地点選択
+2. ルート生成（BFS距離前進アルゴリズム）
+3. routes, route_steps, games テーブルに保存
+4. 各ステップでダミー3個生成
+5. 全ステップ+選択肢を一括返却
+
+---
+
+#### 2. `POST /api/v1/games/{game_id}/result`
+ゲーム結果を送信（フロントエンドで全ゲームロジック実行後）
 
 **リクエストボディ:**
 ```json
 {
-  "term_id": 56,
-  "answer_time_ms": 3500
-}
-```
-
-**レスポンス（正解時）:**
-```json
-{
-  "is_correct": true,
-  "life": 2,
-  "score": 350,
-  "earned_points": 75,
-  "relation_explanation": {
-    "type": "因果",
-    "keyword": "条約調印への反発",
-    "explanation": "井伊直弼が勅許なしで日米修好通商条約を調印したことへの反発"
-  },
-  "is_game_over": false
-}
-```
-
-**レスポンス（不正解時）:**
-```json
-{
-  "is_correct": false,
-  "life": 1,
-  "score": 350,
-  "correct_answer": {
-    "id": 56,
-    "name": "井伊直弼"
-  },
-  "relation_explanation": {
-    "type": "因果",
-    "keyword": "条約調印への反発",
-    "explanation": "井伊直弼が勅許なしで日米修好通商条約を調印したことへの反発"
-  },
-  "is_game_over": false
-}
-```
-
-**レスポンス（ゲームオーバー時）:**
-```json
-{
-  "is_correct": false,
-  "life": 0,
-  "score": 350,
-  "is_game_over": true,
   "final_score": 350,
-  "total_steps": 4
+  "final_lives": 2,
+  "is_completed": true
 }
 ```
+
+**レスポンス:** `GameResultResponse`
+```json
+{
+  "game_id": "uuid-xxxx-xxxx",
+  "final_score": 350,
+  "final_lives": 2,
+  "is_completed": true,
+  "message": "ゲームクリア！最終スコア: 350点"
+}
+```
+
+**処理フロー:**
+1. gamesテーブルの該当レコードを更新
+2. is_finished = true, score, lives を更新
+3. 成功メッセージを返却
+
+---
+
+### 将来拡張予定のエンドポイント
+
+#### `GET /api/v1/routes`
+利用可能なルート一覧を取得（ルート選択機能用）
+
+#### ランキングAPI
+- `GET /api/v1/rankings?difficulty=normal&length=10&limit=100`
+- `GET /api/v1/rankings/player/{name}`
+- スキーマ拡張済み（games.player_name, idx_games_ranking）
 
 ---
 

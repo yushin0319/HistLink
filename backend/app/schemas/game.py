@@ -47,6 +47,7 @@ class RouteStepWithChoices(BaseModel):
     correct_next_id: int | None  # 次の正解（最後のステップではNone）
     choices: list[ChoiceResponse]  # 4択（正解1 + ダミー3）
     relation_type: str  # リレーションの種類（例: "因果"）
+    keyword: str  # リレーションのキーワード（例: "農耕開始"）
     relation_description: str  # リレーションの説明文
 
 

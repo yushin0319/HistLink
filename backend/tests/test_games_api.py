@@ -94,16 +94,18 @@ class TestGameStart:
         # 最後のステップ以外はリレーション情報がある
         missing_relations = []
         for i, step in enumerate(data["steps"][:-1]):
-            # relation_typeとrelation_descriptionフィールドが存在
+            # relation_type、keyword、relation_descriptionフィールドが存在
             assert "relation_type" in step
+            assert "keyword" in step
             assert "relation_description" in step
 
             # 型の確認
             assert isinstance(step["relation_type"], str)
+            assert isinstance(step["keyword"], str)
             assert isinstance(step["relation_description"], str)
 
             # データが空の場合、どのステップかを記録
-            if not step["relation_type"] and not step["relation_description"]:
+            if not step["relation_type"] and not step["keyword"] and not step["relation_description"]:
                 src_id = step["term"]["id"]
                 dst_id = step["correct_next_id"]
                 missing_relations.append({
@@ -123,6 +125,7 @@ class TestGameStart:
         # 最後のステップはリレーション情報が空
         last_step = data["steps"][-1]
         assert last_step["relation_type"] == ""
+        assert last_step["keyword"] == ""
         assert last_step["relation_description"] == ""
 
     def test_game_start_invalid_era(self, client, db_session):

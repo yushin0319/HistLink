@@ -14,6 +14,9 @@ const mockSteps: RouteStepWithChoices[] = [
       { term_id: 4, name: '中大兄皇子', era: '飛鳥時代' },
       { term_id: 5, name: '藤原道長', era: '平安時代' },
     ],
+    relation_type: '統治者',
+    keyword: '女王卑弥呼',
+    relation_description: '邪馬台国を統治した女王',
   },
   {
     step_no: 1,
@@ -25,12 +28,18 @@ const mockSteps: RouteStepWithChoices[] = [
       { term_id: 8, name: '平城京', era: '奈良時代' },
       { term_id: 9, name: '平安京', era: '平安時代' },
     ],
+    relation_type: '時代変化',
+    keyword: '律令制度',
+    relation_description: '大化の改新により律令制度が導入された',
   },
   {
     step_no: 2,
     term: { id: 6, name: '大化の改新', era: '飛鳥時代', tags: [], description: '' },
     correct_next_id: null, // 最後のステップ
     choices: [],
+    relation_type: '',
+    keyword: '',
+    relation_description: '',
   },
 ];
 
@@ -71,10 +80,20 @@ describe('gameStore', () => {
       expect(state.steps).toEqual(mockSteps);
       expect(state.totalStages).toBe(3); // steps.lengthから自動設定
     });
+
+    it('stepsがundefinedの場合、totalStagesはデフォルト値10になる', () => {
+      const { loadGameData } = useGameStore.getState();
+
+      // @ts-expect-error: テスト用にundefinedを渡す
+      loadGameData('test-game-id', 123, undefined);
+      const state = useGameStore.getState();
+
+      expect(state.totalStages).toBe(10); // デフォルト値
+    });
   });
 
   describe('startGame', () => {
-    it('ゲームを開始できる（残り時間10.0秒 = 100）', () => {
+    it('ゲームを開始できる（残り時間20.0秒 = 200）', () => {
       const { startGame } = useGameStore.getState();
 
       startGame('normal', 10);
@@ -85,7 +104,7 @@ describe('gameStore', () => {
       expect(state.lives).toBe(3);
       expect(state.score).toBe(0);
       expect(state.currentStage).toBe(0); // 0-indexed
-      expect(state.remainingTime).toBe(100); // 10.0秒 = 100 × 0.1秒
+      expect(state.remainingTime).toBe(200); // 20.0秒 = 200 × 0.1秒
       expect(state.isPlaying).toBe(true);
       expect(state.isCompleted).toBe(false);
     });
@@ -107,8 +126,8 @@ describe('gameStore', () => {
 
       expect(state.currentStage).toBe(1);
       expect(state.lives).toBe(3);
-      expect(state.score).toBe(100); // 即答なら100点
-      expect(state.remainingTime).toBe(100); // リセット
+      expect(state.score).toBe(200); // 即答なら200点（残り時間200）
+      expect(state.remainingTime).toBe(200); // リセット
     });
 
     it('不正解したらライフが減る', () => {
@@ -131,11 +150,11 @@ describe('gameStore', () => {
         store.decrementTimer();
       }
 
-      // 残り時間50で正解
+      // 残り時間150で正解（200 - 50 = 150）
       store.answerQuestion(2);
       const state = useGameStore.getState();
 
-      expect(state.score).toBe(50); // 残り時間50 = 50点
+      expect(state.score).toBe(150); // 残り時間150 = 150点
     });
 
     it('ライフが0になったらゲームオーバー', () => {
@@ -165,7 +184,7 @@ describe('gameStore', () => {
       expect(state.currentStage).toBe(2); // 最終ステップに到達
       expect(state.isPlaying).toBe(false);
       expect(state.isCompleted).toBe(true);
-      expect(state.score).toBe(200); // 100 + 100
+      expect(state.score).toBe(400); // 200 + 200
     });
 
     it('ゲーム未開始時は何も起きない', () => {
@@ -191,6 +210,22 @@ describe('gameStore', () => {
       expect(state.score).toBe(0);
       expect(state.currentStage).toBe(0);
     });
+
+    it('currentStageが範囲外の時は何も起きない', () => {
+      const { loadGameData, startGame, answerQuestion } = useGameStore.getState();
+      loadGameData('test-game-id', 123, mockSteps);
+      startGame('normal', 3);
+
+      // currentStageを強制的に範囲外に設定
+      useGameStore.setState({ currentStage: 999 });
+
+      answerQuestion(2);
+      const state = useGameStore.getState();
+
+      // スコアやライフが変わらないことを確認
+      expect(state.score).toBe(0);
+      expect(state.lives).toBe(3);
+    });
   });
 
   describe('decrementTimer', () => {
@@ -206,21 +241,21 @@ describe('gameStore', () => {
       decrementTimer();
       const state = useGameStore.getState();
 
-      expect(state.remainingTime).toBe(99);
+      expect(state.remainingTime).toBe(199);
     });
 
     it('タイマーが0になったらライフが減り、次のステージへ', () => {
       const store = useGameStore.getState();
 
-      // タイマーを0にする（100回 × 0.1秒 = 10秒）
-      for (let i = 0; i < 100; i++) {
+      // タイマーを0にする（200回 × 0.1秒 = 20秒）
+      for (let i = 0; i < 200; i++) {
         store.decrementTimer();
       }
 
       const state = useGameStore.getState();
 
       expect(state.lives).toBe(2);
-      expect(state.remainingTime).toBe(100); // リセット
+      expect(state.remainingTime).toBe(200); // リセット
       expect(state.currentStage).toBe(1); // 次のステージへ
     });
 
@@ -231,8 +266,8 @@ describe('gameStore', () => {
       store.answerQuestion(999); // 不正解
       store.answerQuestion(999); // 不正解
 
-      // タイマーを0にする
-      for (let i = 0; i < 100; i++) {
+      // タイマーを0にする（200回 × 0.1秒 = 20秒）
+      for (let i = 0; i < 200; i++) {
         store.decrementTimer();
       }
 

@@ -149,8 +149,8 @@ async def start_game(
                 explanation = relation_row[2] or ""
                 print(f"[DEBUG] Relation found: src_id={term_id}, dst_id={correct_next_id}, type={relation_type}, keyword={keyword}, explanation={explanation}")
 
-            # keyword + explanation を組み合わせて説明文として表示
-            relation_description = f"{keyword}: {explanation}" if keyword and explanation else (keyword or explanation)
+            # explanationのみを説明文として使用（keywordは別フィールドで返す）
+            relation_description = explanation
 
             # ダミーを3つ生成
             distractors = generate_distractors(
@@ -194,6 +194,7 @@ async def start_game(
                 correct_next_id=correct_next_id,
                 choices=choices,
                 relation_type=relation_type,
+                keyword=keyword,
                 relation_description=relation_description
             ))
         else:
@@ -204,6 +205,7 @@ async def start_game(
                 correct_next_id=None,
                 choices=[],
                 relation_type="",
+                keyword="",
                 relation_description=""
             ))
 

@@ -43,6 +43,7 @@ export interface RouteStepWithChoices {
   correct_next_id: number | null;
   choices: Choice[];
   relation_type: string;
+  keyword: string;
   relation_description: string;
 }
 

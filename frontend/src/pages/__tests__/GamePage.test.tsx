@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import GamePage from '../GamePage';
 import { useGameStore } from '../../stores/gameStore';
 import * as gameApi from '../../services/gameApi';
@@ -20,6 +20,9 @@ const mockSteps: RouteStepWithChoices[] = [
       { term_id: 4, name: '中大兄皇子', era: '飛鳥時代' },
       { term_id: 5, name: '藤原道長', era: '平安時代' },
     ],
+    relation_type: '統治者',
+    keyword: '女王卑弥呼',
+    relation_description: '邪馬台国を統治した女王',
   },
   {
     step_no: 1,
@@ -31,12 +34,18 @@ const mockSteps: RouteStepWithChoices[] = [
       { term_id: 8, name: '平城京', era: '奈良時代' },
       { term_id: 9, name: '平安京', era: '平安時代' },
     ],
+    relation_type: '時代変化',
+    keyword: '律令制度',
+    relation_description: '大化の改新により律令制度が導入された',
   },
   {
     step_no: 2,
     term: { id: 6, name: '大化の改新', era: '飛鳥時代', tags: [], description: '645年の政治改革' },
     correct_next_id: null,
     choices: [],
+    relation_type: '',
+    keyword: '',
+    relation_description: '',
   },
 ];
 
@@ -94,10 +103,15 @@ describe('GamePage', () => {
 
       await screen.findByText('邪馬台国');
 
-      expect(screen.getByText('ライフ: 3')).toBeInTheDocument();
-      expect(screen.getByText('スコア: 0')).toBeInTheDocument();
-      // totalStagesは初期値10（loadGameDataでsteps.lengthに更新されるが、startGameで10を使用）
-      expect(screen.getByText('ステージ: 1 / 10')).toBeInTheDocument();
+      // GameHeaderの英語ラベルを確認
+      expect(screen.getByText('LIFE')).toBeInTheDocument();
+      expect(screen.getByText('SCORE')).toBeInTheDocument();
+      expect(screen.getByText('STAGE')).toBeInTheDocument();
+      expect(screen.getByText('TIMER')).toBeInTheDocument();
+
+      // 値を確認
+      expect(screen.getByText('0')).toBeInTheDocument(); // スコア
+      expect(screen.getByText('1 / 10')).toBeInTheDocument(); // ステージ（totalStagesは初期値10）
     });
 
     it('最初のステップが表示される', async () => {

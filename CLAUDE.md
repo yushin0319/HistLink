@@ -247,6 +247,84 @@ Claude: 「公式ドキュメントを確認しましたが、--no-browserオプ
 
 ## 技術仕様
 
+### API設計（フロントエンド主体設計）
+
+**実装済みエンドポイント:**
+
+#### `POST /api/v1/games/start`
+新しいゲームを開始し、全ルート+全選択肢を一括返却（フロントエンド主体設計）
+
+**リクエスト:**
+```json
+{
+  "difficulty": "normal",
+  "era": null,
+  "target_length": 20
+}
+```
+
+**レスポンス:** `FullRouteStartResponse`
+```json
+{
+  "game_id": "uuid-xxxx-xxxx",
+  "route_id": 1,
+  "difficulty": "normal",
+  "total_steps": 20,
+  "steps": [
+    {
+      "step_no": 0,
+      "term": {
+        "id": 52,
+        "name": "ペリー来航",
+        "era": "近世",
+        "tags": ["外交", "開国"],
+        "description": "1853年にアメリカのペリー艦隊が浦賀に来航..."
+      },
+      "correct_next_id": 54,
+      "choices": [
+        {"term_id": 54, "name": "日米和親条約", "era": "近世"},
+        {"term_id": 10, "name": "壬申の乱", "era": "古代"},
+        {"term_id": 45, "name": "徳川吉宗", "era": "近世"},
+        {"term_id": 88, "name": "世界恐慌", "era": "現代"}
+      ],
+      "relation_type": "因果",
+      "relation_description": "開国圧力: ペリー来航により幕府は開国を余儀なくされた"
+    }
+  ],
+  "created_at": "2025-11-23T12:00:00Z"
+}
+```
+
+#### `POST /api/v1/games/{game_id}/result`
+ゲーム結果を送信（フロントエンドで全ゲームロジック実行後に呼び出し）
+
+**リクエスト:**
+```json
+{
+  "final_score": 350,
+  "final_lives": 2,
+  "is_completed": true
+}
+```
+
+**レスポンス:** `GameResultResponse`
+```json
+{
+  "game_id": "uuid-xxxx-xxxx",
+  "final_score": 350,
+  "final_lives": 2,
+  "is_completed": true,
+  "message": "ゲームクリア！最終スコア: 350点"
+}
+```
+
+**設計思想:**
+- フロントエンドに全データを渡し、ゲームロジックはフロントエンド側で実行
+- バックエンドの負荷を軽減し、オフライン対応も可能
+- プレイ中の再計算ゼロで品質保証
+
+---
+
 ### データベース操作
 
 - **Docker環境**: PostgreSQL 16 (Alpine)
@@ -306,7 +384,7 @@ pytest tests/ -v
 
 ### 用語（Terms）
 - **ID範囲**: 日本史 1-100、西洋史 101-200
-- **必須フィールド**: id, name, era, tags, description
+- **必須フィールド**: id, name, era, tags, **description** (実装済み)
 - **Era値**: 古代, 中世, 近世, 近代, 現代
 - **データソース**: `data/terms.tsv` (TSV形式、タブ区切り)
 
@@ -315,6 +393,9 @@ pytest tests/ -v
   - `src_id ≠ dst_id` （自己ループ禁止）
   - すべての用語は `degree ≥ 2` （孤立ノード禁止）
 - **タイプ**: 因果, 契機, 対立, 政策, 文化, 同時代, 外交
+- **フィールド**: relation_type, keyword, explanation
+- **フロントエンド実装**: `relation_type`と`relation_description`として返却（実装済み）
+- **無向グラフ扱い**: SQL双方向検索で実装（データ重複なし）
 - **日本西洋史接点**: 限定的な接続（10-20件）で隘路を設計
 - **データソース**: `data/relations.tsv` (TSV形式、タブ区切り)
 

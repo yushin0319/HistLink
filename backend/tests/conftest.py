@@ -1,4 +1,5 @@
 """Pytest configuration and fixtures"""
+import os
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -7,8 +8,13 @@ from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
 from app.main import app
 
-# Test database URL (use a separate test database in production)
-TEST_DATABASE_URL = "postgresql://histlink_user:histlink_dev_password@localhost:5432/histlink"
+# Test database URL (use environment variable or default to localhost)
+# In Docker: DATABASE_URL uses postgres:5432
+# In local: DATABASE_URL uses localhost:5432
+TEST_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://histlink_user:histlink_dev_password@localhost:5432/histlink"
+)
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -106,7 +106,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     // 正解時はリレーション情報を表示
     const showRelation = isCorrect;
-    const lastRelationKeyword = isCorrect ? currentStep.relation_type : '';
+    const lastRelationKeyword = isCorrect ? currentStep.keyword : '';
     const lastRelationExplanation = isCorrect ? currentStep.relation_description : '';
 
     console.log('[gameStore] answerQuestion - isCorrect:', isCorrect, 'showRelation:', showRelation, 'keyword:', lastRelationKeyword, 'explanation:', lastRelationExplanation);

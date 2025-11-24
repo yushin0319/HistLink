@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
-import { startGameSession, submitAnswer } from '../gameApi';
+import { startGameSession, submitGameResult } from '../gameApi';
 import { apiClient } from '../api';
+import type { GameStartResponse, GameResultRequest, GameResultResponse } from '../../types/api';
 
 describe('gameApi', () => {
   let mock: MockAdapter;
@@ -15,198 +16,189 @@ describe('gameApi', () => {
   });
 
   describe('startGameSession', () => {
-    it('POST /game/start が成功したらセッション情報を返す', async () => {
-      const mockData = {
-        session_id: 'abc123',
+    it('POST /games/start が成功したら全ルート+選択肢を返す', async () => {
+      const mockData: GameStartResponse = {
+        game_id: 'abc-123-def-456',
         route_id: 1,
-        difficulty: 'normal',
-        total_stages: 10,
-        current_stage: 1,
-        current_term: {
-          id: 1,
-          name: 'ペリー来航',
-          era: '近代',
-          tags: ['外交', '開国'],
-          description: '1853年、アメリカのペリー提督が浦賀に来航',
-        },
-        options: [
-          { id: 2, name: '日米修好通商条約' },
-          { id: 3, name: '大政奉還' },
-          { id: 4, name: '明治維新' },
+        difficulty: 'standard',
+        total_steps: 3,
+        steps: [
+          {
+            step_no: 0,
+            term: {
+              id: 1,
+              name: 'ペリー来航',
+              era: '近代',
+              tags: ['外交', '開国'],
+              description: '1853年、アメリカのペリー提督が浦賀に来航',
+            },
+            correct_next_id: 2,
+            choices: [
+              { term_id: 2, name: '日米修好通商条約', era: '近代' },
+              { term_id: 3, name: '大政奉還', era: '近代' },
+              { term_id: 4, name: '明治維新', era: '近代' },
+              { term_id: 5, name: '版籍奉還', era: '近代' },
+            ],
+          },
+          {
+            step_no: 1,
+            term: {
+              id: 2,
+              name: '日米修好通商条約',
+              era: '近代',
+              tags: ['外交'],
+              description: '1858年に結ばれた不平等条約',
+            },
+            correct_next_id: 3,
+            choices: [
+              { term_id: 3, name: '大政奉還', era: '近代' },
+              { term_id: 4, name: '明治維新', era: '近代' },
+              { term_id: 6, name: '廃藩置県', era: '近代' },
+              { term_id: 7, name: '岩倉使節団', era: '近代' },
+            ],
+          },
+          {
+            step_no: 2,
+            term: {
+              id: 3,
+              name: '大政奉還',
+              era: '近代',
+              tags: ['政治'],
+              description: '1867年、徳川慶喜が政権を朝廷に返上',
+            },
+            correct_next_id: null,
+            choices: [],
+          },
         ],
+        created_at: '2025-11-23T10:00:00Z',
       };
 
-      mock.onPost('/game/start').reply(200, mockData);
+      mock.onPost('/games/start').reply(200, mockData);
 
-      const result = await startGameSession('normal', 10);
+      const result = await startGameSession('standard', 30);
 
       expect(result).toEqual(mockData);
-      expect(result.session_id).toBe('abc123');
+      expect(result.game_id).toBe('abc-123-def-456');
       expect(result.route_id).toBe(1);
-      expect(result.current_stage).toBe(1);
+      expect(result.total_steps).toBe(3);
+      expect(result.steps).toHaveLength(3);
+      expect(result.steps[0].choices).toHaveLength(4);
+      expect(result.steps[2].choices).toHaveLength(0);
     });
 
     it('難易度とステージ数が正しく送信される', async () => {
-      const mockData = {
-        session_id: 'xyz789',
+      const mockData: GameStartResponse = {
+        game_id: 'xyz-789-uvw-012',
         route_id: 2,
         difficulty: 'hard',
-        total_stages: 50,
-        current_stage: 1,
-        current_term: {
-          id: 1,
-          name: 'ペリー来航',
-          era: '近代',
-          tags: ['外交', '開国'],
-          description: '1853年、アメリカのペリー提督が浦賀に来航',
-        },
-        options: [],
+        total_steps: 50,
+        steps: [],
+        created_at: '2025-11-23T10:00:00Z',
       };
 
-      mock.onPost('/game/start', { difficulty: 'hard', length: 50 }).reply(200, mockData);
+      mock.onPost('/games/start', { difficulty: 'hard', target_length: 50 }).reply(200, mockData);
 
       const result = await startGameSession('hard', 50);
 
       expect(result.difficulty).toBe('hard');
-      expect(result.total_stages).toBe(50);
+      expect(result.total_steps).toBe(50);
     });
 
     it('APIエラー時はエラーをthrowする', async () => {
-      mock.onPost('/game/start').reply(500, { error: 'Server Error' });
+      mock.onPost('/games/start').reply(500, { error: 'Server Error' });
 
-      await expect(startGameSession('normal', 10)).rejects.toThrow();
+      await expect(startGameSession('standard', 30)).rejects.toThrow();
     });
   });
 
-  describe('submitAnswer', () => {
-    it('POST /game/answer が成功したら結果を返す', async () => {
-      const mockData = {
-        is_correct: true,
-        correct_term: {
-          id: 2,
-          name: '日米修好通商条約',
-          era: '近代',
-          tags: ['外交'],
-          description: '1858年に結ばれた不平等条約',
-        },
-        score_earned: 100,
-        next_term: {
-          id: 3,
-          name: '大政奉還',
-          era: '近代',
-          tags: ['政治'],
-          description: '1867年、徳川慶喜が政権を朝廷に返上',
-        },
-        next_options: [
-          { id: 4, name: '明治維新' },
-          { id: 5, name: '廃藩置県' },
-        ],
-        current_stage: 2,
-        is_game_over: false,
+  describe('submitGameResult', () => {
+    it('POST /games/{game_id}/result が成功したら結果を返す', async () => {
+      const gameId = 'abc-123-def-456';
+      const request: GameResultRequest = {
+        final_score: 850,
+        final_lives: 2,
+        is_completed: true,
       };
 
-      mock.onPost('/game/answer').reply(200, mockData);
+      const mockData: GameResultResponse = {
+        game_id: gameId,
+        final_score: 850,
+        final_lives: 2,
+        is_completed: true,
+        message: 'ゲームクリア！最終スコア: 850点',
+      };
 
-      const result = await submitAnswer('abc123', 2, 100);
+      mock.onPost(`/games/${gameId}/result`).reply(200, mockData);
+
+      const result = await submitGameResult(gameId, request);
 
       expect(result).toEqual(mockData);
-      expect(result.is_correct).toBe(true);
-      expect(result.score_earned).toBe(100);
-      expect(result.current_stage).toBe(2);
+      expect(result.final_score).toBe(850);
+      expect(result.is_completed).toBe(true);
+      expect(result.message).toContain('ゲームクリア');
     });
 
-    it('不正解の場合も結果を返す', async () => {
-      const mockData = {
-        is_correct: false,
-        correct_term: {
-          id: 2,
-          name: '日米修好通商条約',
-          era: '近代',
-          tags: ['外交'],
-          description: '1858年に結ばれた不平等条約',
-        },
-        score_earned: 0,
-        next_term: {
-          id: 3,
-          name: '大政奉還',
-          era: '近代',
-          tags: ['政治'],
-          description: '1867年、徳川慶喜が政権を朝廷に返上',
-        },
-        next_options: [
-          { id: 4, name: '明治維新' },
-        ],
-        current_stage: 2,
-        is_game_over: false,
+    it('ゲームオーバーの場合のメッセージが返る', async () => {
+      const gameId = 'xyz-789-uvw-012';
+      const request: GameResultRequest = {
+        final_score: 420,
+        final_lives: 0,
+        is_completed: false,
       };
 
-      mock.onPost('/game/answer').reply(200, mockData);
-
-      const result = await submitAnswer('abc123', 999, 0);
-
-      expect(result.is_correct).toBe(false);
-      expect(result.score_earned).toBe(0);
-    });
-
-    it('ゲームオーバーの場合はis_game_overがtrueになる', async () => {
-      const mockData = {
-        is_correct: false,
-        correct_term: {
-          id: 2,
-          name: '日米修好通商条約',
-          era: '近代',
-          tags: ['外交'],
-          description: '1858年に結ばれた不平等条約',
-        },
-        score_earned: 0,
-        next_term: null,
-        next_options: [],
-        current_stage: 5,
-        is_game_over: true,
+      const mockData: GameResultResponse = {
+        game_id: gameId,
+        final_score: 420,
+        final_lives: 0,
+        is_completed: false,
+        message: 'ゲームオーバー。最終スコア: 420点',
       };
 
-      mock.onPost('/game/answer').reply(200, mockData);
+      mock.onPost(`/games/${gameId}/result`).reply(200, mockData);
 
-      const result = await submitAnswer('abc123', 999, 0);
+      const result = await submitGameResult(gameId, request);
 
-      expect(result.is_game_over).toBe(true);
-      expect(result.next_term).toBeNull();
+      expect(result.is_completed).toBe(false);
+      expect(result.final_lives).toBe(0);
+      expect(result.message).toContain('ゲームオーバー');
     });
 
-    it('セッションID、回答ID、残り時間が正しく送信される', async () => {
-      const mockData = {
-        is_correct: true,
-        correct_term: {
-          id: 2,
-          name: '日米修好通商条約',
-          era: '近代',
-          tags: ['外交'],
-          description: '1858年に結ばれた不平等条約',
-        },
-        score_earned: 75,
-        next_term: null,
-        next_options: [],
-        current_stage: 2,
-        is_game_over: false,
+    it('リクエストボディが正しく送信される', async () => {
+      const gameId = 'test-game-id';
+      const request: GameResultRequest = {
+        final_score: 500,
+        final_lives: 1,
+        is_completed: true,
+      };
+
+      const mockData: GameResultResponse = {
+        game_id: gameId,
+        final_score: 500,
+        final_lives: 1,
+        is_completed: true,
+        message: 'ゲームクリア！最終スコア: 500点',
       };
 
       mock
-        .onPost('/game/answer', {
-          session_id: 'test-session',
-          selected_term_id: 42,
-          remaining_time: 75,
-        })
+        .onPost(`/games/${gameId}/result`, request)
         .reply(200, mockData);
 
-      const result = await submitAnswer('test-session', 42, 75);
+      const result = await submitGameResult(gameId, request);
 
-      expect(result.score_earned).toBe(75);
+      expect(result.final_score).toBe(500);
     });
 
     it('APIエラー時はエラーをthrowする', async () => {
-      mock.onPost('/game/answer').reply(400, { error: 'Invalid session' });
+      const gameId = 'invalid-game-id';
+      const request: GameResultRequest = {
+        final_score: 0,
+        final_lives: 3,
+        is_completed: false,
+      };
 
-      await expect(submitAnswer('invalid', 1, 100)).rejects.toThrow();
+      mock.onPost(`/games/${gameId}/result`).reply(404, { error: 'Game not found' });
+
+      await expect(submitGameResult(gameId, request)).rejects.toThrow();
     });
   });
 });

@@ -128,6 +128,81 @@ describe('GamePage', () => {
       expect(screen.getByText('中大兄皇子')).toBeInTheDocument();
       expect(screen.getByText('藤原道長')).toBeInTheDocument();
     });
+
+    it('選択肢をクリックすると回答処理が実行される', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+
+      const { container } = render(<GamePage />);
+
+      await screen.findByText('邪馬台国');
+
+      // 選択肢の1つをクリック（「卑弥呼」を選択）
+      const himikoChoice = screen.getByText('卑弥呼');
+      act(() => {
+        himikoChoice.click();
+      });
+
+      // 正解したのでステージが進む
+      const state = useGameStore.getState();
+      expect(state.currentStage).toBe(1);
+      expect(state.score).toBeGreaterThan(0);
+    });
+
+    it('タイマーが実際に動作している', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+
+      render(<GamePage />);
+
+      await screen.findByText('邪馬台国');
+
+      const initialTime = useGameStore.getState().remainingTime;
+
+      // 実際に少し待つ（300ms = 3カウント分）
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const afterTime = useGameStore.getState().remainingTime;
+      // タイマーが減少していることを確認（最低2カウントは減っているはず）
+      expect(afterTime).toBeLessThanOrEqual(initialTime - 2);
+    });
+
+    it('currentStageが範囲外の時は読み込み中と表示される', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+
+      render(<GamePage />);
+
+      await screen.findByText('邪馬台国');
+
+      // currentStageを範囲外に設定
+      act(() => {
+        useGameStore.setState({ currentStage: 999 });
+      });
+
+      // currentStepがundefinedなので読み込み中が表示される
+      expect(screen.getByText('読み込み中...')).toBeInTheDocument();
+    });
+
+    it('リレーション表示が4秒後に自動的に非表示になる', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+
+      render(<GamePage />);
+
+      await screen.findByText('邪馬台国');
+
+      // 正解を選択してリレーションを表示
+      const himikoChoice = screen.getByText('卑弥呼');
+      act(() => {
+        himikoChoice.click();
+      });
+
+      // リレーションが表示される
+      expect(useGameStore.getState().showRelation).toBe(true);
+
+      // 4秒待つ
+      await new Promise((resolve) => setTimeout(resolve, 4100));
+
+      // リレーションが自動的に非表示になる
+      expect(useGameStore.getState().showRelation).toBe(false);
+    }, 10000); // タイムアウトを10秒に設定
   });
 
   describe('エラーハンドリング', () => {
@@ -191,6 +266,38 @@ describe('GamePage', () => {
       expect(state.lives).toBe(0);
       expect(state.isPlaying).toBe(false);
       expect(state.isCompleted).toBe(false);
+    });
+  });
+
+  describe('結果送信', () => {
+    it('結果送信が失敗してもエラーハンドリングされる', async () => {
+      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      mockSubmitGameResult.mockRejectedValue(new Error('Network Error'));
+
+      // console.errorをモック
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      render(<GamePage />);
+      await screen.findByText('邪馬台国');
+
+      // 全問正解でクリア（結果送信が自動で行われる）
+      act(() => {
+        const { answerQuestion } = useGameStore.getState();
+        answerQuestion(2); // ステップ0 → 1
+        answerQuestion(6); // ステップ1 → 2（最終ステップ）
+      });
+
+      // 結果送信が試行されることを確認
+      await vi.waitFor(() => {
+        expect(mockSubmitGameResult).toHaveBeenCalled();
+      });
+
+      // エラーログが出力されることを確認
+      await vi.waitFor(() => {
+        expect(consoleErrorSpy).toHaveBeenCalledWith('結果送信エラー:', expect.any(Error));
+      });
+
+      consoleErrorSpy.mockRestore();
     });
   });
 });

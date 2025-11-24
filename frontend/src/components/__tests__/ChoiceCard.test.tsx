@@ -93,4 +93,81 @@ describe('ChoiceCard', () => {
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).toBeInTheDocument();
   });
+
+  describe('フィードバック状態', () => {
+    it('feedbackState="correct"の時、success色が適用される', () => {
+      const mockOnClick = vi.fn();
+      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />);
+
+      const text = screen.getByText('徳川家康');
+      expect(text).toHaveStyle({ color: 'rgb(255, 255, 255)' });
+    });
+
+    it('feedbackState="incorrect"の時、error色が適用される', () => {
+      const mockOnClick = vi.fn();
+      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="incorrect" />);
+
+      const text = screen.getByText('徳川家康');
+      expect(text).toHaveStyle({ color: 'rgb(255, 255, 255)' });
+    });
+
+    it('feedbackStateがある時、カーソルがdefaultになる', () => {
+      const mockOnClick = vi.fn();
+      const { container } = render(
+        <ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />
+      );
+
+      const paper = container.querySelector('.MuiPaper-root');
+      expect(paper).toHaveStyle({ cursor: 'default' });
+    });
+
+    it('feedbackStateがnullの時、通常のスタイルが適用される', () => {
+      const mockOnClick = vi.fn();
+      const { container } = render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState={null} />);
+
+      const paper = container.querySelector('.MuiPaper-root');
+      expect(paper).toHaveStyle({ cursor: 'pointer' });
+    });
+
+    it('正解フィードバック状態でクリックハンドラが呼ばれる', async () => {
+      const user = userEvent.setup();
+      const mockOnClick = vi.fn();
+      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />);
+
+      const card = screen.getByText('徳川家康').closest('.MuiPaper-root');
+      if (card) {
+        await user.click(card);
+        // フィードバック表示中でもonClickは実行される（イベント制御はGamePage側で行う）
+        expect(mockOnClick).toHaveBeenCalledTimes(1);
+      }
+    });
+
+    it('不正解フィードバック状態でクリックハンドラが呼ばれる', async () => {
+      const user = userEvent.setup();
+      const mockOnClick = vi.fn();
+      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="incorrect" />);
+
+      const card = screen.getByText('徳川家康').closest('.MuiPaper-root');
+      if (card) {
+        await user.click(card);
+        // フィードバック表示中でもonClickは実行される（イベント制御はGamePage側で行う）
+        expect(mockOnClick).toHaveBeenCalledTimes(1);
+      }
+    });
+
+    it('feedbackStateとisSelectedが同時に指定された場合、feedbackStateが優先される', () => {
+      const mockOnClick = vi.fn();
+      const { container } = render(
+        <ChoiceCard term="徳川家康" onClick={mockOnClick} isSelected={true} feedbackState="correct" />
+      );
+
+      const text = screen.getByText('徳川家康');
+      // feedbackStateが優先されるのでwhiteになる
+      expect(text).toHaveStyle({ color: 'rgb(255, 255, 255)' });
+
+      const paper = container.querySelector('.MuiPaper-root');
+      // feedbackStateがあるのでcursor: default
+      expect(paper).toHaveStyle({ cursor: 'default' });
+    });
+  });
 });

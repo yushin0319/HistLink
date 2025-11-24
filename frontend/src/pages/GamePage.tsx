@@ -22,9 +22,13 @@ export default function GamePage() {
     showRelation,
     lastRelationKeyword,
     lastRelationExplanation,
+    isFeedbackPhase,
+    selectedAnswerId,
+    isLastAnswerCorrect,
     loadGameData,
     startGame,
     answerQuestion,
+    completeFeedbackPhase,
     decrementTimer,
   } = useGameStore();
 
@@ -32,14 +36,29 @@ export default function GamePage() {
   const [error, setError] = useState<string | null>(null);
   const [hasSubmittedResult, setHasSubmittedResult] = useState(false);
 
-  // リレーション表示を4秒後に非表示にする
+  // feedbackPhaseが開始されたら0.5秒後にcompleteFeedbackPhaseを呼び出す
+  useEffect(() => {
+    if (isFeedbackPhase) {
+      console.log('[GamePage] feedbackPhase started, will complete in 0.5s');
+      const timer = setTimeout(() => {
+        console.log('[GamePage] completing feedbackPhase');
+        completeFeedbackPhase();
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isFeedbackPhase, completeFeedbackPhase]);
+
+  // リレーション表示を3.5秒後に非表示にする
+  // 不正解時はfeedbackPhase中（0.5秒）から表示開始されるため、合計4秒
+  // 正解時はfeedbackPhase終了後から表示開始されるため、合計4秒（0.5秒 + 3.5秒）
   useEffect(() => {
     console.log('[GamePage] showRelation changed:', showRelation, 'keyword:', lastRelationKeyword, 'explanation:', lastRelationExplanation);
     if (showRelation) {
       const timer = setTimeout(() => {
-        console.log('[GamePage] Hiding relation after 4 seconds');
+        console.log('[GamePage] Hiding relation after 3.5 seconds');
         useGameStore.setState({ showRelation: false });
-      }, 4000);
+      }, 3500);
 
       return () => {
         console.log('[GamePage] Clearing timer');
@@ -224,23 +243,41 @@ export default function GamePage() {
           </Box>
         )}
 
+        {/* 選択肢（2×2グリッド） */}
+        {currentStep && currentStep.choices.length > 0 && (
+          <Grid container spacing={2}>
+            {currentStep.choices.map((choice) => {
+              // feedbackState判定
+              let feedbackState: 'correct' | 'incorrect' | null = null;
+              if (isFeedbackPhase && selectedAnswerId !== null) {
+                if (choice.term_id === currentStep.correct_next_id) {
+                  // 正解カードは常に緑
+                  feedbackState = 'correct';
+                } else if (choice.term_id === selectedAnswerId) {
+                  // 選択された不正解カードは赤
+                  feedbackState = 'incorrect';
+                }
+              }
+
+              return (
+                <Grid size={{ xs: 6 }} key={choice.term_id}>
+                  <ChoiceCard
+                    term={choice.name}
+                    onClick={() => handleAnswer(choice.term_id)}
+                    feedbackState={feedbackState}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
+
         {/* リレーション説明（正解時に表示） */}
         <RelationDisplay
           keyword={lastRelationKeyword}
           explanation={lastRelationExplanation}
           show={showRelation}
         />
-
-        {/* 選択肢（2×2グリッド） */}
-        {currentStep && currentStep.choices.length > 0 && (
-          <Grid container spacing={2}>
-            {currentStep.choices.map((choice) => (
-              <Grid size={{ xs: 6 }} key={choice.term_id}>
-                <ChoiceCard term={choice.name} onClick={() => handleAnswer(choice.term_id)} />
-              </Grid>
-            ))}
-          </Grid>
-        )}
       </Container>
     </Box>
   );

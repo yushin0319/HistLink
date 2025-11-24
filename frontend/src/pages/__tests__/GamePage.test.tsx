@@ -142,10 +142,20 @@ describe('GamePage', () => {
         himikoChoice.click();
       });
 
+      // feedbackPhaseに入ることを確認
+      let state = useGameStore.getState();
+      expect(state.isFeedbackPhase).toBe(true);
+
+      // 0.5秒待ってfeedbackPhaseが完了するのを待つ
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+      });
+
       // 正解したのでステージが進む
-      const state = useGameStore.getState();
+      state = useGameStore.getState();
       expect(state.currentStage).toBe(1);
       expect(state.score).toBeGreaterThan(0);
+      expect(state.isFeedbackPhase).toBe(false);
     });
 
     it('タイマーが実際に動作している', async () => {
@@ -188,17 +198,24 @@ describe('GamePage', () => {
 
       await screen.findByText('邪馬台国');
 
-      // 正解を選択してリレーションを表示
+      // 正解を選択
       const himikoChoice = screen.getByText('卑弥呼');
       act(() => {
         himikoChoice.click();
       });
 
-      // リレーションが表示される
+      // feedbackPhase完了を待つ（0.5秒）
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+      });
+
+      // リレーションが表示される（feedbackPhase後に表示開始）
       expect(useGameStore.getState().showRelation).toBe(true);
 
-      // 4秒待つ
-      await new Promise((resolve) => setTimeout(resolve, 4100));
+      // 3.5秒待つ（合計4秒）
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 3600));
+      });
 
       // リレーションが自動的に非表示になる
       expect(useGameStore.getState().showRelation).toBe(false);
@@ -231,10 +248,12 @@ describe('GamePage', () => {
       expect(beforeState.currentStage).toBe(0);
 
       // 全問正解でクリア
-      act(() => {
-        const { answerQuestion } = useGameStore.getState();
-        answerQuestion(2); // ステップ0 → 1
-        answerQuestion(6); // ステップ1 → 2（最終ステップ）
+      await act(async () => {
+        const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+        answerQuestion(2); // ステップ0 → feedbackPhase
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
+        answerQuestion(6); // ステップ1 → feedbackPhase
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
       });
 
       // クリア画面の表示を確認
@@ -254,11 +273,14 @@ describe('GamePage', () => {
       await screen.findByText('邪馬台国');
 
       // 3回不正解でゲームオーバー
-      act(() => {
+      await act(async () => {
         const { answerQuestion } = useGameStore.getState();
         answerQuestion(999); // 不正解
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
         answerQuestion(999); // 不正解
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
         answerQuestion(999); // 不正解
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
       });
 
       // ゲームオーバーを確認
@@ -281,10 +303,12 @@ describe('GamePage', () => {
       await screen.findByText('邪馬台国');
 
       // 全問正解でクリア（結果送信が自動で行われる）
-      act(() => {
+      await act(async () => {
         const { answerQuestion } = useGameStore.getState();
-        answerQuestion(2); // ステップ0 → 1
-        answerQuestion(6); // ステップ1 → 2（最終ステップ）
+        answerQuestion(2); // ステップ0 → feedbackPhase
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
+        answerQuestion(6); // ステップ1 → feedbackPhase
+        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
       });
 
       // 結果送信が試行されることを確認

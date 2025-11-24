@@ -9,7 +9,7 @@ interface GameCardProps {
 export default function GameCard({ term, era, description }: GameCardProps) {
   return (
     <Paper
-      elevation={8}
+      elevation={2}
       sx={{
         width: { xs: '100%', sm: 380, md: 450 },
         height: { xs: 160, sm: 180, md: 200 },
@@ -21,8 +21,6 @@ export default function GameCard({ term, era, description }: GameCardProps) {
         borderRadius: 3,
         bgcolor: 'background.paper',
         transition: 'all 0.3s ease',
-        border: '2px solid',
-        borderColor: 'primary.main',
         '&:hover': {
           transform: 'scale(1.02)',
           boxShadow: '0 12px 40px rgba(0,0,0,0.3)'

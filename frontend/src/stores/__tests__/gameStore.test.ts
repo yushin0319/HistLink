@@ -65,6 +65,9 @@ describe('gameStore', () => {
       expect(state.remainingTime).toBe(0);
       expect(state.isPlaying).toBe(false);
       expect(state.isCompleted).toBe(false);
+      expect(state.isFeedbackPhase).toBe(false);
+      expect(state.selectedAnswerId).toBeNull();
+      expect(state.isLastAnswerCorrect).toBeNull();
     });
   });
 
@@ -117,74 +120,50 @@ describe('gameStore', () => {
       startGame('normal', 3);
     });
 
-    it('正解したら次のステージに進む', () => {
+    it('正解したらfeedbackPhaseに入る', () => {
       const { answerQuestion } = useGameStore.getState();
 
       // ステップ0: 正解は2（卑弥呼）
       answerQuestion(2);
       const state = useGameStore.getState();
 
-      expect(state.currentStage).toBe(1);
-      expect(state.lives).toBe(3);
-      expect(state.score).toBe(200); // 即答なら200点（残り時間200）
-      expect(state.remainingTime).toBe(200); // リセット
+      expect(state.isFeedbackPhase).toBe(true);
+      expect(state.selectedAnswerId).toBe(2);
+      expect(state.isLastAnswerCorrect).toBe(true);
+      expect(state.showRelation).toBe(true); // 正解・不正解どちらも即座に表示
+      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+      expect(state.currentStage).toBe(0); // まだ遷移していない
     });
 
-    it('不正解したらライフが減る', () => {
+    it('不正解したらfeedbackPhaseに入り、relation表示が開始される', () => {
       const { answerQuestion } = useGameStore.getState();
 
       // ステップ0: 正解は2だが、3を選択
       answerQuestion(3);
       const state = useGameStore.getState();
 
-      expect(state.currentStage).toBe(1);
-      expect(state.lives).toBe(2);
-      expect(state.score).toBe(0); // スコア加算なし
+      expect(state.isFeedbackPhase).toBe(true);
+      expect(state.selectedAnswerId).toBe(3);
+      expect(state.isLastAnswerCorrect).toBe(false);
+      expect(state.showRelation).toBe(true); // 不正解時は即座に表示
+      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+      expect(state.currentStage).toBe(0); // まだ遷移していない
     });
 
-    it('残り時間に応じてスコアが変動する', () => {
-      const store = useGameStore.getState();
-
-      // 5秒経過（50 × 0.1秒）
-      for (let i = 0; i < 50; i++) {
-        store.decrementTimer();
-      }
-
-      // 残り時間150で正解（200 - 50 = 150）
-      store.answerQuestion(2);
-      const state = useGameStore.getState();
-
-      expect(state.score).toBe(150); // 残り時間150 = 150点
-    });
-
-    it('ライフが0になったらゲームオーバー', () => {
+    it('feedbackPhase中は追加の回答を受け付けない', () => {
       const { answerQuestion } = useGameStore.getState();
 
-      // 3回不正解
-      answerQuestion(999); // 不正解
-      answerQuestion(999); // 不正解
-      answerQuestion(999); // 不正解
+      // 最初の回答
+      answerQuestion(2);
+      const stateAfterFirst = useGameStore.getState();
+      expect(stateAfterFirst.isFeedbackPhase).toBe(true);
 
-      const state = useGameStore.getState();
+      // feedbackPhase中に別の回答を試みる
+      answerQuestion(3);
+      const stateAfterSecond = useGameStore.getState();
 
-      expect(state.lives).toBe(0);
-      expect(state.isPlaying).toBe(false);
-      expect(state.isCompleted).toBe(false);
-    });
-
-    it('最終ステージをクリアしたらゲーム完了', () => {
-      const { answerQuestion } = useGameStore.getState();
-
-      // ステップ0, 1を正解で進む（ステップ2は最後なので選択肢なし）
-      answerQuestion(2); // ステップ0 → 1
-      answerQuestion(6); // ステップ1 → 2（最終ステップ）
-
-      const state = useGameStore.getState();
-
-      expect(state.currentStage).toBe(2); // 最終ステップに到達
-      expect(state.isPlaying).toBe(false);
-      expect(state.isCompleted).toBe(true);
-      expect(state.score).toBe(400); // 200 + 200
+      // 状態が変わらないことを確認
+      expect(stateAfterSecond.selectedAnswerId).toBe(2); // 最初の回答のまま
     });
 
     it('ゲーム未開始時は何も起きない', () => {
@@ -222,9 +201,118 @@ describe('gameStore', () => {
       answerQuestion(2);
       const state = useGameStore.getState();
 
-      // スコアやライフが変わらないことを確認
-      expect(state.score).toBe(0);
+      // feedbackPhaseに入らないことを確認
+      expect(state.isFeedbackPhase).toBe(false);
+    });
+  });
+
+  describe('completeFeedbackPhase', () => {
+    beforeEach(() => {
+      const { loadGameData, startGame } = useGameStore.getState();
+      loadGameData('test-game-id', 123, mockSteps);
+      startGame('normal', 3);
+    });
+
+    it('正解後feedbackPhaseを完了すると次のステージに進む', () => {
+      const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+
+      // 正解を選択してfeedbackPhaseに入る
+      answerQuestion(2);
+      expect(useGameStore.getState().isFeedbackPhase).toBe(true);
+
+      // feedbackPhaseを完了
+      completeFeedbackPhase();
+      const state = useGameStore.getState();
+
+      expect(state.isFeedbackPhase).toBe(false);
+      expect(state.currentStage).toBe(1);
       expect(state.lives).toBe(3);
+      expect(state.score).toBe(200);
+      expect(state.remainingTime).toBe(200); // リセット
+      expect(state.showRelation).toBe(true); // 正解時はfeedbackPhase後に表示
+      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+    });
+
+    it('不正解後feedbackPhaseを完了するとライフが減る', () => {
+      const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+
+      // 不正解を選択してfeedbackPhaseに入る
+      answerQuestion(3);
+      expect(useGameStore.getState().isFeedbackPhase).toBe(true);
+
+      // feedbackPhaseを完了
+      completeFeedbackPhase();
+      const state = useGameStore.getState();
+
+      expect(state.isFeedbackPhase).toBe(false);
+      expect(state.currentStage).toBe(1);
+      expect(state.lives).toBe(2);
+      expect(state.score).toBe(0); // スコア加算なし
+      expect(state.showRelation).toBe(true); // 不正解時もrelation継続表示
+      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+    });
+
+    it('残り時間に応じてスコアが変動する', () => {
+      const store = useGameStore.getState();
+
+      // 5秒経過（50 × 0.1秒）
+      for (let i = 0; i < 50; i++) {
+        store.decrementTimer();
+      }
+
+      // 残り時間150で正解
+      store.answerQuestion(2);
+      store.completeFeedbackPhase();
+      const state = useGameStore.getState();
+
+      expect(state.score).toBe(150); // 残り時間150 = 150点
+    });
+
+    it('ライフが0になったらゲームオーバー', () => {
+      const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+
+      // 3回不正解
+      answerQuestion(999);
+      completeFeedbackPhase();
+      answerQuestion(999);
+      completeFeedbackPhase();
+      answerQuestion(999);
+      completeFeedbackPhase();
+
+      const state = useGameStore.getState();
+
+      expect(state.lives).toBe(0);
+      expect(state.isPlaying).toBe(false);
+      expect(state.isCompleted).toBe(false);
+      expect(state.isFeedbackPhase).toBe(false);
+    });
+
+    it('最終ステージをクリアしたらゲーム完了', () => {
+      const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+
+      // ステップ0, 1を正解で進む
+      answerQuestion(2);
+      completeFeedbackPhase();
+      answerQuestion(6);
+      completeFeedbackPhase();
+
+      const state = useGameStore.getState();
+
+      expect(state.currentStage).toBe(2);
+      expect(state.isPlaying).toBe(false);
+      expect(state.isCompleted).toBe(true);
+      expect(state.isFeedbackPhase).toBe(false);
+      expect(state.score).toBe(400); // 200 + 200
+    });
+
+    it('feedbackPhase中でない時は何も起きない', () => {
+      const { completeFeedbackPhase } = useGameStore.getState();
+
+      completeFeedbackPhase();
+      const state = useGameStore.getState();
+
+      expect(state.currentStage).toBe(0);
+      expect(state.score).toBe(0);
     });
   });
 
@@ -244,7 +332,24 @@ describe('gameStore', () => {
       expect(state.remainingTime).toBe(199);
     });
 
-    it('タイマーが0になったらライフが減り、次のステージへ', () => {
+    it('feedbackPhase中はタイマーが停止する', () => {
+      const store = useGameStore.getState();
+
+      // feedbackPhaseに入る
+      store.answerQuestion(2);
+      expect(useGameStore.getState().isFeedbackPhase).toBe(true);
+
+      const timeBeforeDecrement = useGameStore.getState().remainingTime;
+
+      // タイマーを減らそうとする
+      store.decrementTimer();
+      const state = useGameStore.getState();
+
+      // タイマーが減らないことを確認
+      expect(state.remainingTime).toBe(timeBeforeDecrement);
+    });
+
+    it('タイマーが0になったらfeedbackPhaseに入る', () => {
       const store = useGameStore.getState();
 
       // タイマーを0にする（200回 × 0.1秒 = 20秒）
@@ -254,28 +359,53 @@ describe('gameStore', () => {
 
       const state = useGameStore.getState();
 
-      expect(state.lives).toBe(2);
-      expect(state.remainingTime).toBe(200); // リセット
-      expect(state.currentStage).toBe(1); // 次のステージへ
+      expect(state.remainingTime).toBe(0);
+      expect(state.isFeedbackPhase).toBe(true);
+      expect(state.selectedAnswerId).toBe(2); // 正解カード
+      expect(state.isLastAnswerCorrect).toBe(false); // タイムアウトは不正解扱い
+      expect(state.showRelation).toBe(false); // タイムアウト時はrelation表示なし
     });
 
-    it('タイマー0でライフも0ならゲームオーバー', () => {
+    it('タイムアウト後feedbackPhaseを完了するとライフが減る', () => {
       const store = useGameStore.getState();
 
-      // ライフを1にする
-      store.answerQuestion(999); // 不正解
-      store.answerQuestion(999); // 不正解
-
-      // タイマーを0にする（200回 × 0.1秒 = 20秒）
+      // タイマーを0にする
       for (let i = 0; i < 200; i++) {
         store.decrementTimer();
       }
 
+      // feedbackPhaseを完了
+      store.completeFeedbackPhase();
+      const state = useGameStore.getState();
+
+      expect(state.lives).toBe(2);
+      expect(state.remainingTime).toBe(200); // リセット
+      expect(state.currentStage).toBe(1);
+      expect(state.isFeedbackPhase).toBe(false);
+    });
+
+    it('タイマー0＋feedbackPhase完了でライフ0ならゲームオーバー', () => {
+      const store = useGameStore.getState();
+
+      // ライフを1にする
+      store.answerQuestion(999);
+      store.completeFeedbackPhase();
+      store.answerQuestion(999);
+      store.completeFeedbackPhase();
+
+      // タイマーを0にする
+      for (let i = 0; i < 200; i++) {
+        store.decrementTimer();
+      }
+
+      // feedbackPhaseを完了
+      store.completeFeedbackPhase();
       const state = useGameStore.getState();
 
       expect(state.lives).toBe(0);
       expect(state.isPlaying).toBe(false);
       expect(state.isCompleted).toBe(false);
+      expect(state.isFeedbackPhase).toBe(false);
     });
 
     it('ゲーム停止中は何も起きない', () => {
@@ -291,13 +421,15 @@ describe('gameStore', () => {
 
   describe('resetGame', () => {
     it('ゲーム状態を初期化できる', () => {
-      const { loadGameData, startGame, answerQuestion, resetGame } =
+      const { loadGameData, startGame, answerQuestion, completeFeedbackPhase, resetGame } =
         useGameStore.getState();
 
       loadGameData('test-game-id', 123, mockSteps);
       startGame('hard', 3);
       answerQuestion(2);
+      completeFeedbackPhase();
       answerQuestion(6);
+      completeFeedbackPhase();
 
       resetGame();
       const state = useGameStore.getState();
@@ -313,6 +445,9 @@ describe('gameStore', () => {
       expect(state.remainingTime).toBe(0);
       expect(state.isPlaying).toBe(false);
       expect(state.isCompleted).toBe(false);
+      expect(state.isFeedbackPhase).toBe(false);
+      expect(state.selectedAnswerId).toBeNull();
+      expect(state.isLastAnswerCorrect).toBeNull();
     });
   });
 });

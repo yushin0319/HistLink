@@ -15,7 +15,7 @@ export default function RelationDisplay({ keyword, explanation, show }: Relation
         alignItems: 'center',
         justifyContent: 'center',
         mb: 1,
-        mt: 0.5
+        mt: 2
       }}
     >
       <Fade in={show} timeout={300}>
@@ -26,7 +26,7 @@ export default function RelationDisplay({ keyword, explanation, show }: Relation
         >
           <Typography
             variant="body2"
-            color="primary.main"
+            color="text.secondary"
             fontWeight="bold"
             sx={{ fontSize: '0.9rem', mb: 0.5 }}
           >

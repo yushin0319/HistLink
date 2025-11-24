@@ -194,7 +194,7 @@ export default function GamePage() {
         bgcolor: 'background.default',
         display: 'flex',
         flexDirection: 'column',
-        py: 4,
+        py: 2,
       }}
     >
       <Container maxWidth="md">
@@ -213,7 +213,7 @@ export default function GamePage() {
             sx={{
               display: 'flex',
               justifyContent: 'center',
-              mb: 4,
+              mb: 2,
             }}
           >
             <GameCard

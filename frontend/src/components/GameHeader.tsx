@@ -1,8 +1,6 @@
 import { Box, Typography, Grid } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import TimerIcon from '@mui/icons-material/Timer';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import DiamondOutlinedIcon from '@mui/icons-material/DiamondOutlined';
 
 interface GameHeaderProps {
   lives: number;
@@ -22,14 +20,14 @@ export default function GameHeader({
   return (
     <Box
       sx={{
-        mb: 4,
-        p: 2,
+        mb: 2,
+        p: 1.5,
         bgcolor: 'background.paper',
         borderRadius: 2,
         boxShadow: 2,
       }}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {/* ライフ */}
         <Grid size={{ xs: 6 }}>
           <Box
@@ -37,13 +35,22 @@ export default function GameHeader({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 1,
+              gap: 0.25,
+              flexDirection: 'column',
             }}
           >
-            <FavoriteIcon color="error" />
-            <Typography variant="h6" fontWeight="bold">
-              ライフ: {lives}
+            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+              LIFE
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, height: '2.125rem' }}>
+              {Array.from({ length: 3 }).map((_, index) => (
+                index < lives ? (
+                  <DiamondIcon key={index} color="error" fontSize="medium" />
+                ) : (
+                  <DiamondOutlinedIcon key={index} color="disabled" fontSize="medium" />
+                )
+              ))}
+            </Box>
           </Box>
         </Grid>
 
@@ -54,13 +61,18 @@ export default function GameHeader({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 1,
+              gap: 0.25,
+              flexDirection: 'column',
             }}
           >
-            <EmojiEventsIcon color="warning" />
-            <Typography variant="h6" fontWeight="bold">
-              スコア: {score}
+            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+              SCORE
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+              <Typography variant="h4" fontWeight="bold">
+                {score}
+              </Typography>
+            </Box>
           </Box>
         </Grid>
 
@@ -71,13 +83,18 @@ export default function GameHeader({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 1,
+              gap: 0.25,
+              flexDirection: 'column',
             }}
           >
-            <ViewModuleIcon color="primary" />
-            <Typography variant="h6" fontWeight="bold">
-              ステージ: {currentStage + 1} / {totalStages}
+            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+              STAGE
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+              <Typography variant="h4" fontWeight="bold">
+                {currentStage + 1} / {totalStages}
+              </Typography>
+            </Box>
           </Box>
         </Grid>
 
@@ -88,19 +105,24 @@ export default function GameHeader({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 1,
+              gap: 0.25,
+              flexDirection: 'column',
             }}
           >
-            <TimerIcon color="info" />
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              sx={{
-                color: remainingTime <= 30 ? 'error.main' : 'text.primary',
-              }}
-            >
-              {(remainingTime / 10).toFixed(1)}秒
+            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+              TIMER
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                sx={{
+                  color: remainingTime <= 30 ? 'error.main' : 'text.primary',
+                }}
+              >
+                {(remainingTime / 10).toFixed(1)}
+              </Typography>
+            </Box>
           </Box>
         </Grid>
       </Grid>

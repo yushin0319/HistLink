@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import SelectPage from './pages/SelectPage';
 import GamePage from './pages/GamePage';
+import ResultPage from './pages/ResultPage';
 
-type Page = 'select' | 'game';
+type Page = 'select' | 'game' | 'result';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('game');
-
-  // SelectPageからGamePageへの遷移
-  const handleStartGame = () => {
-    setCurrentPage('game');
-  };
+  const [currentPage, setCurrentPage] = useState<Page>('result');
 
   if (currentPage === 'select') {
     return <SelectPage />;
@@ -18,6 +14,10 @@ export default function App() {
 
   if (currentPage === 'game') {
     return <GamePage />;
+  }
+
+  if (currentPage === 'result') {
+    return <ResultPage />;
   }
 
   return null;

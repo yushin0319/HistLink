@@ -54,28 +54,6 @@ export default function GameHeader({
           </Box>
         </Grid>
 
-        {/* スコア */}
-        <Grid size={{ xs: 6 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 0.25,
-              flexDirection: 'column',
-            }}
-          >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
-              SCORE
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
-              <Typography variant="h4" fontWeight="bold">
-                {score}
-              </Typography>
-            </Box>
-          </Box>
-        </Grid>
-
         {/* ステージ */}
         <Grid size={{ xs: 6 }}>
           <Box
@@ -98,6 +76,28 @@ export default function GameHeader({
           </Box>
         </Grid>
 
+        {/* スコア */}
+        <Grid size={{ xs: 6 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 0.25,
+              flexDirection: 'column',
+            }}
+          >
+            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+              SCORE
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+              <Typography variant="h4" fontWeight="bold">
+                {score}
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+
         {/* タイマー */}
         <Grid size={{ xs: 6 }}>
           <Box
@@ -113,15 +113,43 @@ export default function GameHeader({
               TIMER
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
-              <Typography
-                variant="h4"
-                fontWeight="bold"
-                sx={{
-                  color: remainingTime <= 30 ? 'error.main' : 'text.primary',
-                }}
-              >
-                {(remainingTime / 10).toFixed(1)}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{
+                    color: remainingTime <= 30 ? 'error.main' : 'text.primary',
+                    fontVariantNumeric: 'tabular-nums',
+                    minWidth: '2ch',
+                    textAlign: 'right',
+                  }}
+                >
+                  {Math.floor(remainingTime / 10)}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{
+                    color: remainingTime <= 30 ? 'error.main' : 'text.primary',
+                    width: '0.5ch',
+                    textAlign: 'center',
+                  }}
+                >
+                  .
+                </Typography>
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{
+                    color: remainingTime <= 30 ? 'error.main' : 'text.primary',
+                    fontVariantNumeric: 'tabular-nums',
+                    width: '1ch',
+                    textAlign: 'left',
+                  }}
+                >
+                  {remainingTime % 10}
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Grid>

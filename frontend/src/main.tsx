@@ -17,6 +17,9 @@ const lightTheme = createTheme({
       paper: '#FFFFFF',
     },
   },
+  typography: {
+    fontFamily: '"Exo 2", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
 });
 
 createRoot(document.getElementById('root')!).render(

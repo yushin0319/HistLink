@@ -111,7 +111,7 @@ describe('GamePage', () => {
       expect(screen.getByText('TIMER')).toBeInTheDocument();
 
       // 値を確認
-      expect(screen.getByText('0')).toBeInTheDocument(); // スコア
+      expect(screen.getAllByText('0').length).toBeGreaterThan(0); // スコアとタイマーに0が表示される
       expect(screen.getByText('1 / 3')).toBeInTheDocument(); // ステージ（totalStagesはsteps.lengthの3）
     });
 

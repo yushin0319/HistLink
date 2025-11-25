@@ -14,7 +14,9 @@ describe('GameHeader', () => {
     expect(screen.getByText('TIMER')).toBeInTheDocument();
     expect(screen.getByText('500')).toBeInTheDocument();
     expect(screen.getByText(/6 \/ 10/)).toBeInTheDocument();
-    expect(screen.getByText('7.5')).toBeInTheDocument();
+    // タイマーは3つに分割されている: "7" + "." + "5"
+    expect(screen.getByText('7')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
   });
 
   it('タイマーが30以下の時は赤色で表示される', () => {
@@ -22,15 +24,17 @@ describe('GameHeader', () => {
       <GameHeader lives={3} score={500} currentStage={5} totalStages={10} remainingTime={30} />
     );
 
-    const timerText = screen.getByText('3.0');
-    expect(timerText).toHaveStyle({ color: 'rgb(211, 47, 47)' }); // error.main color
+    // 整数部分 "3" をチェック
+    const integerPart = screen.getByText('3');
+    expect(integerPart).toHaveStyle({ color: 'rgb(211, 47, 47)' }); // error.main color (#F44336)
 
     rerender(
       <GameHeader lives={3} score={500} currentStage={5} totalStages={10} remainingTime={31} />
     );
 
-    const normalTimerText = screen.getByText('3.1');
-    expect(normalTimerText).not.toHaveStyle({ color: 'rgb(211, 47, 47)' });
+    // 31以上では通常色に戻る
+    const normalIntegerPart = screen.getByText('3');
+    expect(normalIntegerPart).not.toHaveStyle({ color: 'rgb(211, 47, 47)' });
   });
 
   it('currentStageは0-indexedなので表示は+1される', () => {
@@ -41,12 +45,13 @@ describe('GameHeader', () => {
     expect(screen.getByText(/1 \/ 10/)).toBeInTheDocument();
   });
 
-  it('タイマーは小数点1桁で表示される', () => {
+  it('タイマーは小数点1桁で表示される（整数部、小数点、小数部に分割）', () => {
     render(
       <GameHeader lives={3} score={500} currentStage={5} totalStages={10} remainingTime={100} />
     );
 
-    expect(screen.getByText('10.0')).toBeInTheDocument();
+    expect(screen.getByText('10')).toBeInTheDocument(); // 整数部
+    expect(screen.getByText('0')).toBeInTheDocument();  // 小数部
   });
 
   it('ライフが0の時も正しく表示される（全てのダイヤがアウトライン表示）', () => {

@@ -4364,9 +4364,9 @@
     },
     {
       "source": "万里の長城",
-      "target": "漢字",
+      "target": "秦（戦国）",
       "difficulty": "easy",
-      "reason": "T1度数調整"
+      "reason": "万里の長城は秦が建造を開始した"
     },
     {
       "source": "イスラーム教",
@@ -4376,15 +4376,15 @@
     },
     {
       "source": "農奴制",
-      "target": "ゲルマン人の大移動",
+      "target": "フランク王国",
       "difficulty": "easy",
-      "reason": "T1度数調整"
+      "reason": "フランク王国時代に農奴制の基礎が形成された"
     },
     {
       "source": "宋",
       "target": "科挙",
       "difficulty": "easy",
-      "reason": "T1度数調整"
+      "reason": "宋は科挙制度を整備し重視した"
     },
     {
       "source": "モンゴル帝国",

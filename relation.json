@@ -5095,24 +5095,6 @@
       "reason": "宋代における儒教（朱子学）と道教の思想的関係"
     },
     {
-      "source": "パルテノン",
-      "target": "ペリクレス",
-      "difficulty": "easy",
-      "reason": "未定義"
-    },
-    {
-      "source": "封建社会",
-      "target": "農奴制",
-      "difficulty": "easy",
-      "reason": "未定義"
-    },
-    {
-      "source": "コンスタンティノープル",
-      "target": "コンスタンティヌス",
-      "difficulty": "normal",
-      "reason": "未定義"
-    },
-    {
       "source": "ギルド",
       "target": "黒死病",
       "difficulty": "normal",
@@ -5227,12 +5209,6 @@
       "reason": "未定義"
     },
     {
-      "source": "高句麗",
-      "target": "新羅",
-      "difficulty": "hard",
-      "reason": "未定義"
-    },
-    {
       "source": "百済",
       "target": "高句麗",
       "difficulty": "hard",
@@ -5265,12 +5241,6 @@
     {
       "source": "ウイグル",
       "target": "元",
-      "difficulty": "hard",
-      "reason": "未定義"
-    },
-    {
-      "source": "遣唐使",
-      "target": "唐",
       "difficulty": "hard",
       "reason": "未定義"
     },
@@ -5479,12 +5449,6 @@
       "reason": "米国の帝国主義的介入への反発"
     },
     {
-      "source": "アフリカ諸国の独立／アフリカの年",
-      "target": "ファショダ事件",
-      "difficulty": "hard",
-      "reason": "アフリカ分割から独立へ"
-    },
-    {
       "source": "公民権法",
       "target": "キング牧師",
       "difficulty": "hard",
@@ -5587,12 +5551,6 @@
       "reason": "スペイン内戦はファシズム勢力の勝利に終わる"
     },
     {
-      "source": "国際通貨基金／ＩＭＦ",
-      "target": "ブレトン＝ウッズ会議／ブレトン＝ウッズ体制",
-      "difficulty": "hard",
-      "reason": "ブレトン・ウッズ会議でIMF設立が決定"
-    },
-    {
       "source": "ヨーロッパ経済共同体／ＥＥＣ",
       "target": "EU",
       "difficulty": "hard",
@@ -5663,6 +5621,54 @@
       "target": "フロイト",
       "difficulty": "hard",
       "reason": "精神分析が実存主義の人間理解に影響"
+    },
+    {
+      "source": "パルテノン",
+      "target": "アテネ",
+      "difficulty": "easy",
+      "reason": "パルテノンはアテネのアクロポリスに建つ代表的神殿"
+    },
+    {
+      "source": "ファショダ事件",
+      "target": "帝国主義",
+      "difficulty": "hard",
+      "reason": "帝国主義列強のアフリカ分割を象徴する英仏衝突事件"
+    },
+    {
+      "source": "国際通貨基金／ＩＭＦ",
+      "target": "アジア通貨危機",
+      "difficulty": "hard",
+      "reason": "IMFがアジア通貨危機で韓国などに緊急支援を実施"
+    },
+    {
+      "source": "遣唐使",
+      "target": "朝貢貿易",
+      "difficulty": "hard",
+      "reason": "遣唐使は形式上朝貢使節として扱われたが実質は文化導入が目的"
+    },
+    {
+      "source": "フランク王国",
+      "target": "封建社会",
+      "difficulty": "easy",
+      "reason": "フランク王国で封建制の基礎が形成された"
+    },
+    {
+      "source": "新羅",
+      "target": "唐",
+      "difficulty": "hard",
+      "reason": "新羅は唐と同盟して朝鮮半島を統一した"
+    },
+    {
+      "source": "マリ王国",
+      "target": "イスラーム教",
+      "difficulty": "hard",
+      "reason": "マリ王国はイスラーム化した西アフリカの大国"
+    },
+    {
+      "source": "金と塩の交易",
+      "target": "奴隷／奴隷制度",
+      "difficulty": "hard",
+      "reason": "サハラ交易と奴隷制度の歴史的つながり"
     }
   ]
 }

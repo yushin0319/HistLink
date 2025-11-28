@@ -1,0 +1,5668 @@
+{
+  "edges": [
+    {
+      "source": "ホモ＝サピエンス",
+      "target": "農耕・牧畜",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ホモ＝サピエンス",
+      "target": "文明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "農耕・牧畜",
+      "target": "新石器革命／農業革命",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "新石器革命／農業革命",
+      "target": "文明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "文明",
+      "target": "文字",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "文字",
+      "target": "楔形文字",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "メソポタミア文明",
+      "target": "ハンムラビ法典",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "メソポタミア文明",
+      "target": "楔形文字",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ハンムラビ法典",
+      "target": "十二表法",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ユダヤ教",
+      "target": "一神教",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ユダヤ教",
+      "target": "旧約聖書",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "一神教",
+      "target": "キリスト教",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "旧約聖書",
+      "target": "新約聖書",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "エジプト文明",
+      "target": "ファラオ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "エジプト文明",
+      "target": "ピラミッド",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ファラオ",
+      "target": "ピラミッド",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポリス",
+      "target": "スパルタ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アテネ",
+      "target": "アテネの民主政／デモクラシー",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アテネ",
+      "target": "ペリクレス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "スパルタ",
+      "target": "ペロポネソス戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "奴隷／奴隷制度",
+      "target": "ローマ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "奴隷／奴隷制度",
+      "target": "三角貿易",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペルシア戦争",
+      "target": "マラトンの戦い",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペルシア戦争",
+      "target": "サラミスの海戦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペルシア戦争",
+      "target": "アテネ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アテネの民主政／デモクラシー",
+      "target": "ペリクレス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペリクレス",
+      "target": "パルテノン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ソクラテス",
+      "target": "プラトン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "プラトン",
+      "target": "アリストテレス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アリストテレス",
+      "target": "アレクサンドロス大王",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "マラトンの戦い",
+      "target": "サラミスの海戦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ",
+      "target": "ローマ共和政",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "元老院",
+      "target": "カエサル",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポエニ戦争",
+      "target": "カルタゴ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポエニ戦争",
+      "target": "ハンニバル",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ハンニバル",
+      "target": "カルタゴ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "カエサル",
+      "target": "アウグストゥス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "十二表法",
+      "target": "ローマ共和政",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アクティウムの海戦",
+      "target": "アウグストゥス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウグストゥス",
+      "target": "ローマの平和／パックス＝ロマーナ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマの平和／パックス＝ロマーナ",
+      "target": "五賢帝",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "キリスト教",
+      "target": "イエス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "キリスト教",
+      "target": "新約聖書",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "キリスト教",
+      "target": "コンスタンティヌス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "イエス",
+      "target": "新約聖書",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コンスタンティヌス",
+      "target": "コンスタンティノープル",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "西ローマ帝国の滅亡",
+      "target": "ゲルマン人の大移動",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロッセウム",
+      "target": "ローマ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "仏教",
+      "target": "ガウタマ＝シッダールタ／ブッダ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ガウタマ＝シッダールタ／ブッダ",
+      "target": "インダス文明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "黄河文明",
+      "target": "漢字",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "漢字",
+      "target": "文字",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "殷",
+      "target": "周（西周）",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "殷",
+      "target": "黄河文明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "周（西周）",
+      "target": "春秋時代",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "春秋時代",
+      "target": "戦国時代",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "戦国時代",
+      "target": "諸子百家",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "孔子",
+      "target": "儒学・儒教",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "孔子",
+      "target": "諸子百家",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "儒学・儒教",
+      "target": "科挙",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "始皇帝",
+      "target": "皇帝",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "始皇帝",
+      "target": "万里の長城",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "皇帝",
+      "target": "漢／前漢",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "漢／前漢",
+      "target": "劉邦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "漢／前漢",
+      "target": "武帝",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "武帝",
+      "target": "儒学・儒教",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "項羽",
+      "target": "劉邦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "項羽",
+      "target": "始皇帝",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アレクサンドロス大王",
+      "target": "ヘレニズム",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムハンマド",
+      "target": "ヒジュラ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コーラン",
+      "target": "ムハンマド",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヒジュラ",
+      "target": "イスラーム教",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "カリフ",
+      "target": "ウマイヤ朝",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ウマイヤ朝",
+      "target": "アッバース朝",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "スンナ派",
+      "target": "シーア派",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アッバース朝",
+      "target": "バグダード",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "バグダード",
+      "target": "イスラーム文明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゲルマン人の大移動",
+      "target": "フランク王国",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランク王国",
+      "target": "ローマ教皇",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ教皇",
+      "target": "叙任権闘争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "神聖ローマ帝国",
+      "target": "叙任権闘争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "封建社会",
+      "target": "農奴制",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "百年戦争",
+      "target": "マグナ・カルタ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "マグナ・カルタ",
+      "target": "権利の章典",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国時代",
+      "target": "北魏",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "北魏",
+      "target": "隋",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "隋",
+      "target": "唐",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "隋",
+      "target": "科挙",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "科挙",
+      "target": "唐",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "宋",
+      "target": "遼",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンゴル帝国",
+      "target": "チンギス＝ハン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "チンギス＝ハン",
+      "target": "フビライ＝ハン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "フビライ＝ハン",
+      "target": "元",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "元",
+      "target": "明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "明",
+      "target": "清",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "清",
+      "target": "太平天国",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "太平天国",
+      "target": "アヘン戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルネサンス",
+      "target": "活版印刷術",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "活版印刷術",
+      "target": "グーテンベルク",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コペルニクス",
+      "target": "ルネサンス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コペルニクス",
+      "target": "ニュートン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルター",
+      "target": "グーテンベルク",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロンブス",
+      "target": "ヴァスコ＝ダ＝ガマ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロンブス",
+      "target": "マゼラン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヴァスコ＝ダ＝ガマ",
+      "target": "イギリス東インド会社",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "主権国家",
+      "target": "ウェストファリア条約",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "三十年戦争",
+      "target": "ウェストファリア条約",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ピューリタン革命",
+      "target": "名誉革命",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "名誉革命",
+      "target": "権利の章典",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "権利の章典",
+      "target": "アメリカ独立宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "啓蒙思想",
+      "target": "ルソー",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ロック",
+      "target": "社会契約説",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルソー",
+      "target": "社会契約説",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルソー",
+      "target": "フランス革命",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンテスキュー",
+      "target": "啓蒙思想",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンテスキュー",
+      "target": "三権分立",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "蒸気機関",
+      "target": "資本主義",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "資本主義",
+      "target": "マルクス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アメリカ独立戦争",
+      "target": "アメリカ独立宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アメリカ独立宣言",
+      "target": "アメリカ合衆国憲法",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワシントン",
+      "target": "アメリカ独立戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワシントン",
+      "target": "アメリカ合衆国憲法",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アメリカ合衆国憲法",
+      "target": "三権分立",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "バスティーユ牢獄襲撃",
+      "target": "第一共和政",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "第一共和政",
+      "target": "恐怖政治",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ダーウィン",
+      "target": "進化論",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ダーウィン",
+      "target": "産業革命",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "進化論",
+      "target": "ニュートン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "マルクス",
+      "target": "共産党宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "共産党宣言",
+      "target": "レーニン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "普仏戦争",
+      "target": "ドイツ帝国",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "南北戦争",
+      "target": "アメリカ合衆国憲法",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アヘン戦争",
+      "target": "南京条約",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "南京条約",
+      "target": "不平等条約",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "不平等条約",
+      "target": "辛亥革命／第一革命",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "孫文",
+      "target": "辛亥革命／第一革命",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "孫文",
+      "target": "毛沢東",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "毛沢東",
+      "target": "中華人民共和国",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "世界恐慌",
+      "target": "ニューディール政策",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ファシズム",
+      "target": "ヒトラー",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ファシズム",
+      "target": "ムッソリーニ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ナチス＝ドイツ／第三帝国",
+      "target": "ホロコースト",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "日中戦争",
+      "target": "太平洋戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "独ソ戦",
+      "target": "スターリン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヤルタ会談",
+      "target": "冷たい戦争／冷戦／東西冷戦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "原子爆弾",
+      "target": "太平洋戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "非暴力・不服従運動",
+      "target": "インド大反乱",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "常任理事国／Ｐ５",
+      "target": "世界人権宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "世界人権宣言",
+      "target": "人権宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "マーシャル＝プラン",
+      "target": "北大西洋条約機構／ＮＡＴＯ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "キューバ危機",
+      "target": "ベルリンの壁",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "朝鮮戦争",
+      "target": "中華人民共和国",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベトナム戦争",
+      "target": "朝鮮戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "イスラエル",
+      "target": "ユダヤ教",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "EU",
+      "target": "ソ連の解体",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ソクラテス",
+      "target": "ポリス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペロポネソス戦争",
+      "target": "奴隷／奴隷制度",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "アクティウムの海戦",
+      "target": "元老院",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "西ローマ帝国の滅亡",
+      "target": "元老院",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "五賢帝",
+      "target": "ポエニ戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロッセウム",
+      "target": "ポエニ戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "カリフ",
+      "target": "ムハンマド",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "スンナ派",
+      "target": "コーラン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "シーア派",
+      "target": "コーラン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "マゼラン",
+      "target": "ヴァスコ＝ダ＝ガマ",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ピューリタン革命",
+      "target": "権利の章典",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "バスティーユ牢獄襲撃",
+      "target": "人権宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "独ソ戦",
+      "target": "ホロコースト",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヤルタ会談",
+      "target": "独ソ戦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "原子爆弾",
+      "target": "独ソ戦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "北大西洋条約機構／ＮＡＴＯ",
+      "target": "ベルリンの壁",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "キューバ危機",
+      "target": "マーシャル＝プラン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ナポレオン法典",
+      "target": "バスティーユ牢獄襲撃",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "パレスチナ問題",
+      "target": "マーシャル＝プラン",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "三角貿易",
+      "target": "イギリス東インド会社",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "神聖ローマ帝国",
+      "target": "三十年戦争",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "メソポタミア文明",
+      "target": "エジプト文明",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ロック",
+      "target": "人権宣言",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "メソポタミア文明",
+      "target": "貨幣",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "文字",
+      "target": "フェニキア人",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペルシア戦争",
+      "target": "アケメネス朝ペルシア帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペルシア戦争",
+      "target": "ダレイオス１世",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アレクサンドロス大王",
+      "target": "ペルセポリス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "文字",
+      "target": "アルファベット",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アレクサンドロス大王",
+      "target": "マケドニア",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポリス",
+      "target": "ホメロス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ共和政",
+      "target": "グラックス兄弟の改革",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カエサル",
+      "target": "第１回三頭政治",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "元老院",
+      "target": "護民官",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アクティウムの海戦",
+      "target": "クレオパトラ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "五賢帝",
+      "target": "トラヤヌス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "コンスタンティヌス",
+      "target": "ミラノ勅令",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヒンドゥー教",
+      "target": "カースト／カースト制度",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "黄河文明",
+      "target": "長江文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "周（西周）",
+      "target": "封建制",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "諸子百家",
+      "target": "老子",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "始皇帝",
+      "target": "郡県制",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "万里の長城",
+      "target": "匈奴",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国時代",
+      "target": "曹操",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国時代",
+      "target": "諸葛孔明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "北魏",
+      "target": "均田制",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "儒学・儒教",
+      "target": "道教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "隋",
+      "target": "大運河",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "唐",
+      "target": "李白",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "宋",
+      "target": "交子",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "遼",
+      "target": "金",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アッバース朝",
+      "target": "セルジューク朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カリフ",
+      "target": "スルタン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "シーア派",
+      "target": "サファヴィー朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムハンマド",
+      "target": "アクバル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランク王国",
+      "target": "カロリング朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランク王国",
+      "target": "カール大帝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゲルマン人の大移動",
+      "target": "ノルマン人",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "封建社会",
+      "target": "ギルド",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "農奴制",
+      "target": "黒死病",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "百年戦争",
+      "target": "ジャンヌ・ダルク",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マグナ・カルタ",
+      "target": "議会制度",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "神聖ローマ帝国",
+      "target": "ハプスブルク家",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "十字軍運動",
+      "target": "東方貿易",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "封建社会",
+      "target": "ハンザ同盟",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルター",
+      "target": "九十五ヶ条の論題",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルター",
+      "target": "プロテスタント",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロンブス",
+      "target": "コルテス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロンブス",
+      "target": "ピサロ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "イギリス東インド会社",
+      "target": "オランダ東インド会社",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "コロンブス",
+      "target": "トルデシリャス条約",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "三角貿易",
+      "target": "航海法",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ピューリタン革命",
+      "target": "クロムウェル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "社会契約説",
+      "target": "ホッブズ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "バスティーユ牢獄襲撃",
+      "target": "国民議会",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "恐怖政治",
+      "target": "ジャコバン派",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "恐怖政治",
+      "target": "ルイ16世処刑",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南北戦争",
+      "target": "リンカン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南北戦争",
+      "target": "奴隷解放宣言",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "普仏戦争",
+      "target": "ビスマルク",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "蒸気機関",
+      "target": "ワット",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ニュートン",
+      "target": "デカルト",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マルクス",
+      "target": "ヘーゲル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アメリカ独立戦争",
+      "target": "マニフェスト＝デスティニー",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "インド大反乱",
+      "target": "シパーヒーの反乱",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ガンディー",
+      "target": "ネルー",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "非暴力・不服従運動",
+      "target": "塩の行進",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アヘン戦争",
+      "target": "洋務運動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "辛亥革命／第一革命",
+      "target": "五・四運動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "孫文",
+      "target": "中国国民党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "毛沢東",
+      "target": "中国共産党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "孫文",
+      "target": "蔣介石",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "清",
+      "target": "下関条約",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "レーニン",
+      "target": "十月革命／十一月革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "レーニン",
+      "target": "トロツキー",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "世界恐慌",
+      "target": "ブロック経済",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ホロコースト",
+      "target": "強制収容所",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムッソリーニ",
+      "target": "ファシスト党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "日中戦争",
+      "target": "満州事変",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "太平洋戦争",
+      "target": "真珠湾攻撃",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "原子爆弾",
+      "target": "広島・長崎",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "原子爆弾",
+      "target": "水素爆弾",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "常任理事国／Ｐ５",
+      "target": "拒否権",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "パレスチナ問題",
+      "target": "PLO",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スターリン",
+      "target": "スターリン批判",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ニューディール政策",
+      "target": "フランクリン＝ローズヴェルト",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベトナム戦争",
+      "target": "ニクソン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南北戦争",
+      "target": "公民権運動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "非暴力・不服従運動",
+      "target": "キング牧師",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アメリカ独立戦争",
+      "target": "シモン＝ボリバル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "キューバ危機",
+      "target": "キューバ革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "キューバ危機",
+      "target": "カストロ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベトナム戦争",
+      "target": "東南アジア諸国連合／ＡＳＥＡＮ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "毛沢東",
+      "target": "プロレタリア文化大革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "中華人民共和国",
+      "target": "改革開放政策",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "中華人民共和国",
+      "target": "天安門事件（第2次）",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベルリンの壁",
+      "target": "ドイツ統一",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ソ連の解体",
+      "target": "東欧革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "パレスチナ問題",
+      "target": "第１次石油危機／オイル＝ショック",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "EU",
+      "target": "ユーロ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "原子爆弾",
+      "target": "核拡散防止条約／ＮＰＴ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ソ連の解体",
+      "target": "ロシアのウクライナ侵攻",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "明",
+      "target": "朝貢貿易",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "鉄器",
+      "target": "農耕・牧畜",
+      "difficulty": "easy",
+      "reason": "鉄製農具による農業革命"
+    },
+    {
+      "source": "鉄器",
+      "target": "戦国時代",
+      "difficulty": "easy",
+      "reason": "鉄器普及による軍事・農業変革"
+    },
+    {
+      "source": "都市国家",
+      "target": "メソポタミア文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "都市国家",
+      "target": "ポリス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミケーネ文明",
+      "target": "ポリス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミケーネ文明",
+      "target": "アテネ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アルファベット",
+      "target": "楔形文字",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ササン朝ペルシア",
+      "target": "イスラーム教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "護民官",
+      "target": "ローマ共和政",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "クレオパトラ",
+      "target": "カエサル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "東ローマ帝国",
+      "target": "コンスタンティノープル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アショーカ王",
+      "target": "仏教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "グプタ朝",
+      "target": "ヒンドゥー教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゼロの概念",
+      "target": "イスラーム文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "法家",
+      "target": "始皇帝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "法家",
+      "target": "諸子百家",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "司馬遷",
+      "target": "史記",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "史記",
+      "target": "漢／前漢",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "北宋",
+      "target": "宋",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "金",
+      "target": "宋",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ジハード",
+      "target": "イスラーム教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ジハード",
+      "target": "十字軍運動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アクバル",
+      "target": "ムガル帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "セルジューク朝",
+      "target": "十字軍運動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マムルーク朝",
+      "target": "アッバース朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ法大全",
+      "target": "ビザンツ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スラヴ人",
+      "target": "ビザンツ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スラヴ人",
+      "target": "ゲルマン人の大移動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "モスクワ大公国",
+      "target": "モンゴル帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "モスクワ大公国",
+      "target": "ビザンツ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポーランド王国",
+      "target": "神聖ローマ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポーランド王国",
+      "target": "モンゴル帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "黒死病",
+      "target": "百年戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "大学",
+      "target": "ローマ教皇",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヴェネツィア",
+      "target": "東方貿易",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カルヴァン",
+      "target": "プロテスタント",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "予定説",
+      "target": "カルヴァン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "予定説",
+      "target": "宗教改革",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "オランダ独立戦争",
+      "target": "宗教改革",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "無敵艦隊",
+      "target": "スペイン王国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マニュファクチュア",
+      "target": "資本主義",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "重商主義",
+      "target": "絶対王政",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ホッブズ",
+      "target": "啓蒙思想",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アンシャン＝レジーム",
+      "target": "絶対王政",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ロベスピエール",
+      "target": "フランス革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ロベスピエール",
+      "target": "ジャコバン派",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルイ16世処刑",
+      "target": "フランス革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "神聖ローマ帝国の消滅",
+      "target": "神聖ローマ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワーテルローの戦い",
+      "target": "ナポレオン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワーテルローの戦い",
+      "target": "ウィーン会議",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "鉄道",
+      "target": "産業革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "鉄道",
+      "target": "資本主義",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンロー教書",
+      "target": "アメリカ独立宣言",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンロー教書",
+      "target": "アメリカ合衆国憲法",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マニフェスト＝デスティニー",
+      "target": "モンロー教書",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ドストエフスキー",
+      "target": "トルストイ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "イタリア統一",
+      "target": "ナショナリズム",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "イタリア統一",
+      "target": "ムッソリーニ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ビスマルク",
+      "target": "ドイツ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "第２次産業革命",
+      "target": "産業革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南アフリカ戦争／ボーア戦争",
+      "target": "帝国主義",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "洋務運動",
+      "target": "清",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "蔣介石",
+      "target": "中国国民党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "天安門事件（第2次）",
+      "target": "中国共産党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "日清戦争",
+      "target": "清",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "下関条約",
+      "target": "日清戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポーツマス条約",
+      "target": "日露戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "日英同盟",
+      "target": "日露戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "韓国併合",
+      "target": "日露戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "日本国憲法",
+      "target": "ポツダム宣言",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "民族自決",
+      "target": "第一次世界大戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "パリ講和会議",
+      "target": "ヴェルサイユ条約",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "パリ講和会議",
+      "target": "第一次世界大戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヴァイマル憲法／ワイマール憲法",
+      "target": "ドイツ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "全権委任法",
+      "target": "ナチス＝ドイツ／第三帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "独ソ不可侵条約",
+      "target": "ヒトラー",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "独ソ不可侵条約",
+      "target": "スターリン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "宥和政策",
+      "target": "ヒトラー",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "宥和政策",
+      "target": "チャーチル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポツダム宣言",
+      "target": "第二次世界大戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "キング牧師",
+      "target": "公民権運動",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ラテンアメリカの独立",
+      "target": "スペイン王国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "シモン＝ボリバル",
+      "target": "ラテンアメリカの独立",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カストロ",
+      "target": "キューバ革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ナセル",
+      "target": "イスラエル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "イラン革命",
+      "target": "イスラーム教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "イラン革命",
+      "target": "冷たい戦争／冷戦／東西冷戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アフガニスタン戦争",
+      "target": "冷戦の終結",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "シパーヒーの反乱",
+      "target": "イギリス東インド会社",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "塩の行進",
+      "target": "ガンディー",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アンコール＝ワット",
+      "target": "ヒンドゥー教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "東南アジア諸国連合／ＡＳＥＡＮ",
+      "target": "冷たい戦争／冷戦／東西冷戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "プランテーション",
+      "target": "三角貿易",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "非同盟主義",
+      "target": "アジア＝アフリカ会議／バンドン会議",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "非同盟主義",
+      "target": "冷たい戦争／冷戦／東西冷戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サミット/G7",
+      "target": "EU",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "フェニキア人",
+      "target": "アルファベット",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アケメネス朝ペルシア帝国",
+      "target": "アレクサンドロス大王",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ダレイオス１世",
+      "target": "アケメネス朝ペルシア帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペルセポリス",
+      "target": "ダレイオス１世",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "パルティア",
+      "target": "ササン朝ペルシア",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ホメロス",
+      "target": "アテネ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "グラックス兄弟の改革",
+      "target": "元老院",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "トラヤヌス",
+      "target": "ローマ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミラノ勅令",
+      "target": "キリスト教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カースト／カースト制度",
+      "target": "インダス文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "大乗仏教",
+      "target": "シルクロード",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "長江文明",
+      "target": "殷",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "封建制",
+      "target": "戦国時代",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "老子",
+      "target": "孔子",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "郡県制",
+      "target": "漢／前漢",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "諸葛孔明",
+      "target": "曹操",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "均田制",
+      "target": "唐",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "道教",
+      "target": "仏教",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "大運河",
+      "target": "唐",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "李白",
+      "target": "科挙",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スルタン",
+      "target": "オスマン帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カロリング朝",
+      "target": "カール大帝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "カール大帝",
+      "target": "ローマ教皇",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ノルマン人",
+      "target": "フランク王国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ハンザ同盟",
+      "target": "ヴェネツィア",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南宋",
+      "target": "モンゴル帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "交子",
+      "target": "北宋",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サファヴィー朝",
+      "target": "オスマン帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "トルデシリャス条約",
+      "target": "スペイン王国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミケランジェロ",
+      "target": "レオナルド＝ダ＝ヴィンチ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "九十五ヶ条の論題",
+      "target": "ルネサンス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウクスブルクの和議",
+      "target": "三十年戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルイ14世",
+      "target": "ブルボン朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "第三身分",
+      "target": "アンシャン＝レジーム",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "奴隷解放宣言",
+      "target": "リンカン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヘーゲル",
+      "target": "啓蒙思想",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "インド国民会議",
+      "target": "インド帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヴェルサイユ体制",
+      "target": "国際連盟",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムスタファ＝ケマル／ケマル＝アタテュルク",
+      "target": "第一次世界大戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "強制収容所",
+      "target": "ナチス＝ドイツ／第三帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "真珠湾攻撃",
+      "target": "第二次世界大戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "広島・長崎",
+      "target": "第二次世界大戦",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スターリン批判",
+      "target": "ソヴィエト社会主義共和国連邦／ソ連",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "プロレタリア文化大革命",
+      "target": "中国共産党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "PLO",
+      "target": "イスラエル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウステルリッツの戦い",
+      "target": "ナポレオン法典",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サンフランシスコ平和条約",
+      "target": "太平洋戦争",
+      "difficulty": "normal",
+      "reason": "付け替え"
+    },
+    {
+      "source": "ティムール朝",
+      "target": "ティムール",
+      "difficulty": "normal",
+      "reason": "付け替え"
+    },
+    {
+      "source": "クリミア戦争",
+      "target": "ナショナリズム",
+      "difficulty": "normal",
+      "reason": "付け替え"
+    },
+    {
+      "source": "鉄のカーテン",
+      "target": "チャーチル",
+      "difficulty": "normal",
+      "reason": "付け替え補完"
+    },
+    {
+      "source": "水素爆弾",
+      "target": "朝鮮戦争",
+      "difficulty": "normal",
+      "reason": "付け替え補完"
+    },
+    {
+      "source": "核拡散防止条約／ＮＰＴ",
+      "target": "国際連合",
+      "difficulty": "normal",
+      "reason": "付け替え補完"
+    },
+    {
+      "source": "貨幣",
+      "target": "シルクロード",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "コルテス",
+      "target": "スペイン王国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "航海法",
+      "target": "重商主義",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "五・四運動",
+      "target": "中国国民党",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミュンヘン会談／ミュンヘン協定",
+      "target": "ナチス＝ドイツ／第三帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "石油輸出国機構／ＯＰＥＣ",
+      "target": "第１次石油危機／オイル＝ショック",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "レオナルド＝ダ＝ヴィンチ",
+      "target": "ルネサンス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "韓国併合",
+      "target": "日清戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "民族自決",
+      "target": "ヴェルサイユ条約",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "エリザベス1世",
+      "target": "絶対王政",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "オランダ東インド会社",
+      "target": "商業革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ナセル",
+      "target": "パレスチナ問題",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サラディン",
+      "target": "イスラーム文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スレイマン1世",
+      "target": "イスラーム文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ジャンヌ・ダルク",
+      "target": "封建社会",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "議会制度",
+      "target": "名誉革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マキァヴェリ",
+      "target": "主権国家",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "イギリス国教会",
+      "target": "カルヴァン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "クロムウェル",
+      "target": "名誉革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "スワラージ",
+      "target": "インド大反乱",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ネルー",
+      "target": "インド大反乱",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サライェヴォ事件",
+      "target": "ナショナリズム",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "十月革命／十一月革命",
+      "target": "ソヴィエト社会主義共和国連邦／ソ連",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "トロツキー",
+      "target": "ソヴィエト社会主義共和国連邦／ソ連",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ファシスト党",
+      "target": "ナショナリズム",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "満州事変",
+      "target": "国際連盟",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ブレトン＝ウッズ会議／ブレトン＝ウッズ体制",
+      "target": "世界恐慌",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "無敵艦隊",
+      "target": "フェリペ2世",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "大陸封鎖令",
+      "target": "ウィーン会議",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "トラファルガーの海戦",
+      "target": "ウィーン会議",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ドストエフスキー",
+      "target": "ロマン主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポーツマス条約",
+      "target": "帝国主義",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "日英同盟",
+      "target": "帝国主義",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "プランテーション",
+      "target": "奴隷／奴隷制度",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南アフリカ戦争／ボーア戦争",
+      "target": "ヴィクトリア女王",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ピサロ",
+      "target": "スペイン王国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ウィーン体制",
+      "target": "ナショナリズム",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "デカルト",
+      "target": "啓蒙思想",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "改革開放政策",
+      "target": "冷戦の終結",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "朝貢貿易",
+      "target": "永楽帝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "9.11同時多発テロ",
+      "target": "国際連合",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サミット/G7",
+      "target": "世界恐慌",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "オランダ独立戦争",
+      "target": "三十年戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アジア＝アフリカ会議／バンドン会議",
+      "target": "国際連合",
+      "difficulty": "normal",
+      "reason": "度数修正"
+    },
+    {
+      "source": "マンデラ",
+      "target": "ガンディー",
+      "difficulty": "normal",
+      "reason": "度数修正"
+    },
+    {
+      "source": "ロシアのウクライナ侵攻",
+      "target": "EU",
+      "difficulty": "normal",
+      "reason": "度数修正v2"
+    },
+    {
+      "source": "クリミア戦争",
+      "target": "ヴィクトリア女王",
+      "difficulty": "normal",
+      "reason": "度数修正v2"
+    },
+    {
+      "source": "エリザベス1世",
+      "target": "宗教改革",
+      "difficulty": "normal",
+      "reason": "度数修正v2"
+    },
+    {
+      "source": "カルヴァン",
+      "target": "ルター",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヘレニズム時代",
+      "target": "ヘレニズム",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヘレニズム時代",
+      "target": "アレクサンドリア",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ法",
+      "target": "グラックス兄弟の改革",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ法",
+      "target": "第１回三頭政治",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "海の道",
+      "target": "アンコール＝ワット",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "秦（戦国）",
+      "target": "長江文明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "張騫",
+      "target": "司馬遷",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マヤ文明",
+      "target": "アステカ文明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マヤ文明",
+      "target": "アンデス文明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アステカ文明",
+      "target": "トウモロコシ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アンデス文明",
+      "target": "ジャガイモ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "インカ帝国",
+      "target": "マチュピチュ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "遊牧民",
+      "target": "シルクロード",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "遊牧民",
+      "target": "騎馬遊牧民",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "騎馬遊牧民",
+      "target": "シルクロード",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "高句麗",
+      "target": "新羅",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "玄奘",
+      "target": "禅宗",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "杜甫",
+      "target": "李白",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "突厥",
+      "target": "ウイグル",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マンジケルトの戦い",
+      "target": "セルジューク朝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マンジケルトの戦い",
+      "target": "スルタン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マムルーク",
+      "target": "サラディン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マムルーク",
+      "target": "マムルーク朝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ガーナ王国",
+      "target": "マリ王国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "クローヴィス",
+      "target": "カロリング朝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "クローヴィス",
+      "target": "ノルマン人",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "カール・マルテル",
+      "target": "カロリング朝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "カール・マルテル",
+      "target": "カール大帝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ノルマン・コンクェスト",
+      "target": "ノルマン人",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ノルマン・コンクェスト",
+      "target": "カロリング朝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ユスティニアヌス",
+      "target": "ローマ法大全",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ユスティニアヌス",
+      "target": "スラヴ人",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "教会大分裂",
+      "target": "ギルド",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "教会大分裂",
+      "target": "黒死病",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フィリップ4世",
+      "target": "議会制度",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "レコンキスタ",
+      "target": "ハプスブルク家",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "レコンキスタ",
+      "target": "ギルド",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "スコラ学",
+      "target": "大学",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "スコラ学",
+      "target": "トマス・アクィナス",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "トマス・アクィナス",
+      "target": "大学",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゴシック様式",
+      "target": "大学",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゴシック様式",
+      "target": "スコラ学",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "王安石",
+      "target": "南宋",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "王安石",
+      "target": "交子",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "朱子学",
+      "target": "朱熹",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "朱子学",
+      "target": "三大発明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "朱熹",
+      "target": "三大発明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "朱元璋",
+      "target": "朝貢貿易",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "朱元璋",
+      "target": "明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "鄭和",
+      "target": "朝貢貿易",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "鄭和",
+      "target": "明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "永楽帝",
+      "target": "朱元璋",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "康熙帝",
+      "target": "乾隆帝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "商業革命",
+      "target": "コルテス",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "価格革命",
+      "target": "ピサロ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "価格革命",
+      "target": "オランダ東インド会社",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フェリペ2世",
+      "target": "オランダ独立戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "責任内閣制",
+      "target": "立憲君主政",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "立憲君主政",
+      "target": "エカチェリーナ2世",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ピョートル1世",
+      "target": "マリア＝テレジア",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "エカチェリーナ2世",
+      "target": "七年戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マリア＝テレジア",
+      "target": "啓蒙専制主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "七年戦争",
+      "target": "ポーランド分割",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "啓蒙専制主義",
+      "target": "スペイン継承戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ポーランド分割",
+      "target": "外交革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "スペイン継承戦争",
+      "target": "外交革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "科学革命",
+      "target": "デカルト",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "科学革命",
+      "target": "ニュートン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アダム＝スミス",
+      "target": "ホッブズ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アダム＝スミス",
+      "target": "ロック",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "グロティウス",
+      "target": "ホッブズ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "グロティウス",
+      "target": "モンテスキュー",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "徴兵制",
+      "target": "国民議会",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "徴兵制",
+      "target": "ジャコバン派",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "メッテルニヒ",
+      "target": "ウィーン体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "メッテルニヒ",
+      "target": "ウィーン会議",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "正統主義",
+      "target": "ウィーン体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "正統主義",
+      "target": "七月革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "七月革命",
+      "target": "ウィーン体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "選挙法改正（第1回）",
+      "target": "ヴィクトリア女王",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "選挙法改正（第1回）",
+      "target": "チャーティスト運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "チャーティスト運動",
+      "target": "ヴィクトリア女王",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "穀物法の廃止",
+      "target": "二大政党制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "穀物法の廃止",
+      "target": "選挙法改正（第1回）",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "1848年革命",
+      "target": "二月革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "二大政党制",
+      "target": "チャーティスト運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ナポレオン3世",
+      "target": "パリ＝コミューン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "カヴール",
+      "target": "イタリア統一",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "カヴール",
+      "target": "ガリバルディ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ガリバルディ",
+      "target": "イタリア統一",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンロー主義",
+      "target": "マニフェスト＝デスティニー",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "モンロー主義",
+      "target": "モンロー教書",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "西漸運動",
+      "target": "マニフェスト＝デスティニー",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "西漸運動",
+      "target": "モンロー教書",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フロンティア",
+      "target": "マニフェスト＝デスティニー",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フロンティア",
+      "target": "モンロー主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "写実主義",
+      "target": "ドストエフスキー",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "写実主義",
+      "target": "トルストイ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "タンジマート",
+      "target": "ミドハト憲法",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムハンマド＝アリー",
+      "target": "ウラービー運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ウラービー運動",
+      "target": "アフガン戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムガル帝国の滅亡",
+      "target": "シパーヒーの反乱",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムガル帝国の滅亡",
+      "target": "インド帝国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "東インド会社解散",
+      "target": "シパーヒーの反乱",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "東インド会社解散",
+      "target": "インド帝国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "香港島の割譲",
+      "target": "南京条約",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "香港島の割譲",
+      "target": "不平等条約",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "領事裁判権",
+      "target": "アヘン戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "領事裁判権",
+      "target": "南京条約",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "租界",
+      "target": "不平等条約",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "租界",
+      "target": "アヘン戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "北京条約",
+      "target": "南京条約",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "北京条約",
+      "target": "不平等条約",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "李鴻章",
+      "target": "洋務運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヴィルヘルム２世",
+      "target": "ドイツ社会民主党",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "血の日曜日事件",
+      "target": "レーニン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "血の日曜日事件",
+      "target": "ソヴィエト",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ソヴィエト",
+      "target": "レーニン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "米西戦争／アメリカ＝スペイン戦争",
+      "target": "門戸開放宣言／機会均等",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "米西戦争／アメリカ＝スペイン戦争",
+      "target": "パナマ運河",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "門戸開放宣言／機会均等",
+      "target": "パナマ運河",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国干渉",
+      "target": "日英同盟",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国干渉",
+      "target": "三国協商",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国協商",
+      "target": "日英同盟",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "義和団事件／北清事変",
+      "target": "変法／戊戌の変法／変法自強",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "露仏同盟",
+      "target": "日英同盟",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "露仏同盟",
+      "target": "英仏協商",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "英仏協商",
+      "target": "三国干渉",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "三民主義",
+      "target": "辛亥革命／第一革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "三民主義",
+      "target": "孫文",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "中華民国",
+      "target": "辛亥革命／第一革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "中華民国",
+      "target": "袁世凱",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "袁世凱",
+      "target": "三民主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "サイクス・ピコ協定",
+      "target": "サライェヴォ事件",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "サイクス・ピコ協定",
+      "target": "民族自決",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "バルフォア宣言",
+      "target": "サライェヴォ事件",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "バルフォア宣言",
+      "target": "民族自決",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "十四カ条",
+      "target": "サライェヴォ事件",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "十四カ条",
+      "target": "民族自決",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワシントン会議",
+      "target": "ヴェルサイユ体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "九カ国条約",
+      "target": "ヴェルサイユ体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "九カ国条約",
+      "target": "ファシズム",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワシントン体制",
+      "target": "ヴェルサイユ体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワシントン体制",
+      "target": "ファシズム",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "魯迅",
+      "target": "五・四運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "第１次国共合作",
+      "target": "蔣介石",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "第１次国共合作",
+      "target": "中国国民党",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "北伐",
+      "target": "中国共産党",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "北伐",
+      "target": "蔣介石",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "トルコ共和国",
+      "target": "ムスタファ＝ケマル／ケマル＝アタテュルク",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "満州国",
+      "target": "満州事変",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "満州国",
+      "target": "日中戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "日本の国際連盟脱退",
+      "target": "満州事変",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "日本の国際連盟脱退",
+      "target": "日中戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "南京事件／南京虐殺事件",
+      "target": "満州事変",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "南京事件／南京虐殺事件",
+      "target": "日中戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランスの降伏",
+      "target": "ミュンヘン会談／ミュンヘン協定",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランスの降伏",
+      "target": "ポツダム宣言",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "大東亜共栄圏",
+      "target": "真珠湾攻撃",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "大東亜共栄圏",
+      "target": "広島・長崎",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "国際通貨基金／ＩＭＦ",
+      "target": "ブレトン＝ウッズ会議／ブレトン＝ウッズ体制",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "トルーマン＝ドクトリン",
+      "target": "水素爆弾",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "トルーマン＝ドクトリン",
+      "target": "鉄のカーテン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "周恩来",
+      "target": "プロレタリア文化大革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "周恩来",
+      "target": "改革開放政策",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "中ソ友好同盟相互援助条約",
+      "target": "水素爆弾",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "中ソ友好同盟相互援助条約",
+      "target": "鉄のカーテン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "大韓民国／韓国",
+      "target": "朝鮮民主主義人民共和国／北朝鮮",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フルシチョフ",
+      "target": "スターリン批判",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フルシチョフ",
+      "target": "スターリン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "スエズ運河国有化",
+      "target": "石油輸出国機構／ＯＰＥＣ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "スエズ運河国有化",
+      "target": "PLO",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "中ソ対立",
+      "target": "水素爆弾",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "中ソ対立",
+      "target": "鉄のカーテン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "鄧小平",
+      "target": "天安門事件（第2次）",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "鄧小平",
+      "target": "プロレタリア文化大革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベトナム和平協定／パリ和平協定",
+      "target": "ベトナム戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベトナム和平協定／パリ和平協定",
+      "target": "サイゴン陥落",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "公民権法",
+      "target": "ニクソン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "デタント／緊張緩和",
+      "target": "北大西洋条約機構／ＮＡＴＯ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "デタント／緊張緩和",
+      "target": "マーシャル＝プラン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マルタ会談",
+      "target": "北大西洋条約機構／ＮＡＴＯ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マルタ会談",
+      "target": "ベルリンの壁",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ニクソン訪中",
+      "target": "マーシャル＝プラン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ニクソン訪中",
+      "target": "北大西洋条約機構／ＮＡＴＯ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゴルバチョフ",
+      "target": "スターリン批判",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゴルバチョフ",
+      "target": "スターリン",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペレストロイカ",
+      "target": "スターリン批判",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ペレストロイカ",
+      "target": "フルシチョフ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ビロード革命",
+      "target": "ユーゴスラヴィア解体",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワルシャワ条約機構の解散",
+      "target": "ドイツ統一",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワルシャワ条約機構の解散",
+      "target": "東欧革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "香港返還",
+      "target": "改革開放政策",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "香港返還",
+      "target": "天安門事件（第2次）",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ドイモイ",
+      "target": "アンコール＝ワット",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ドイモイ",
+      "target": "東南アジア諸国連合／ＡＳＥＡＮ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "カンボジア和平協定",
+      "target": "アンコール＝ワット",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "カンボジア和平協定",
+      "target": "東南アジア諸国連合／ＡＳＥＡＮ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "第3次中東戦争",
+      "target": "ナセル",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "第3次中東戦争",
+      "target": "イラン革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "第4次中東戦争",
+      "target": "アフガニスタン戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "第4次中東戦争",
+      "target": "石油輸出国機構／ＯＰＥＣ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "オスロ合意",
+      "target": "PLO",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "オスロ合意",
+      "target": "ナセル",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "イラン＝イラク戦争",
+      "target": "イラン革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "イラン＝イラク戦争",
+      "target": "アフガニスタン戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アル＝カーイダ",
+      "target": "9.11同時多発テロ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アラブの春",
+      "target": "石油輸出国機構／ＯＰＥＣ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "シリア内戦",
+      "target": "ナセル",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "シリア内戦",
+      "target": "イラン革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "イスラム国（IS）",
+      "target": "アフガニスタン戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヨーロッパ難民危機",
+      "target": "EU",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "イギリスのEU離脱",
+      "target": "ユーロ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "イギリスのEU離脱",
+      "target": "ヨーロッパ難民危機",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "BRICS",
+      "target": "サミット/G7",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "BRICS",
+      "target": "9.11同時多発テロ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "グローバルサウス",
+      "target": "ロシアのウクライナ侵攻",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "グローバルサウス",
+      "target": "サミット/G7",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "京都議定書",
+      "target": "パリ協定",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アレクサンドリア",
+      "target": "ヘレニズム",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "南北問題",
+      "target": "拒否権",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ帝国",
+      "target": "ローマ共和政",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ローマ帝国",
+      "target": "カエサル",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ローマ帝国",
+      "target": "ローマ",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ローマ帝国",
+      "target": "アウグストゥス",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "インダス文明",
+      "target": "仏教",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "インダス文明",
+      "target": "ヒンドゥー教",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "インダス文明",
+      "target": "黄河文明",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "仏教",
+      "target": "ヒンドゥー教",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "十字軍運動",
+      "target": "ローマ教皇",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "オスマン帝国",
+      "target": "ビザンツ帝国",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "オスマン帝国",
+      "target": "イスラーム文明",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ルネサンス",
+      "target": "宗教改革",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "絶対王政",
+      "target": "三十年戦争",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ナポレオン",
+      "target": "ウィーン会議",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ナポレオン",
+      "target": "恐怖政治",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ナポレオン",
+      "target": "普仏戦争",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ナポレオン",
+      "target": "ナポレオン法典",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "帝国主義",
+      "target": "第一次世界大戦",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "第一次世界大戦",
+      "target": "ヴェルサイユ条約",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ヴェルサイユ条約",
+      "target": "ウィーン会議",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "ヴェルサイユ条約",
+      "target": "国際連盟",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "インド大反乱",
+      "target": "ガンディー",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "第二次世界大戦",
+      "target": "ヒトラー",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "冷たい戦争／冷戦／東西冷戦",
+      "target": "ソヴィエト社会主義共和国連邦／ソ連",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "国際連合",
+      "target": "国際連盟",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "冷戦の終結",
+      "target": "ベルリンの壁",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "冷戦の終結",
+      "target": "ソ連の解体",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "冷戦の終結",
+      "target": "EU",
+      "difficulty": "easy",
+      "reason": "復元"
+    },
+    {
+      "source": "神聖ローマ帝国の消滅",
+      "target": "フランス革命",
+      "difficulty": "normal",
+      "reason": "度数修正"
+    },
+    {
+      "source": "大陸封鎖令",
+      "target": "産業革命",
+      "difficulty": "normal",
+      "reason": "度数修正"
+    },
+    {
+      "source": "トラファルガーの海戦",
+      "target": "イギリス東インド会社",
+      "difficulty": "normal",
+      "reason": "度数修正"
+    },
+    {
+      "source": "万里の長城",
+      "target": "漢字",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "イスラーム教",
+      "target": "カリフ",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "農奴制",
+      "target": "ゲルマン人の大移動",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "宋",
+      "target": "科挙",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "モンゴル帝国",
+      "target": "フビライ＝ハン",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "宗教改革",
+      "target": "ルター",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "絶対王政",
+      "target": "主権国家",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "産業革命",
+      "target": "蒸気機関",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "フランス革命",
+      "target": "第一共和政",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "ガンディー",
+      "target": "非暴力・不服従運動",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "ナチス＝ドイツ／第三帝国",
+      "target": "ヒトラー",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "第二次世界大戦",
+      "target": "ホロコースト",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "パレスチナ問題",
+      "target": "イスラエル",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "十字軍運動",
+      "target": "百年戦争",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "帝国主義",
+      "target": "レーニン",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "国際連合",
+      "target": "常任理事国／Ｐ５",
+      "difficulty": "easy",
+      "reason": "T1度数調整"
+    },
+    {
+      "source": "パルティア",
+      "target": "ペルセポリス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "第１回三頭政治",
+      "target": "東ローマ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "大乗仏教",
+      "target": "アショーカ王",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "匈奴",
+      "target": "司馬遷",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "南宋",
+      "target": "交子",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サラディン",
+      "target": "マムルーク朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ティムール",
+      "target": "スレイマン1世",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ムガル帝国",
+      "target": "ティムール朝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミケランジェロ",
+      "target": "マキァヴェリ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウクスブルクの和議",
+      "target": "イギリス国教会",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ルイ14世",
+      "target": "ウェストファリア条約",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "国民議会",
+      "target": "第三身分",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ワット",
+      "target": "鉄道",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "インド帝国",
+      "target": "シパーヒーの反乱",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "インド国民会議",
+      "target": "スワラージ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "サライェヴォ事件",
+      "target": "民族自決",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヴェルサイユ体制",
+      "target": "ファシズム",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ブロック経済",
+      "target": "ニューディール政策",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ミュンヘン会談／ミュンヘン協定",
+      "target": "ヤルタ会談",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "拒否権",
+      "target": "世界人権宣言",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "石油輸出国機構／ＯＰＥＣ",
+      "target": "アフガニスタン戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランクリン＝ローズヴェルト",
+      "target": "ニクソン",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アンコール＝ワット",
+      "target": "東南アジア諸国連合／ＡＳＥＡＮ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ドイツ統一",
+      "target": "東欧革命",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "9.11同時多発テロ",
+      "target": "ロシアのウクライナ侵攻",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "グプタ朝",
+      "target": "ゼロの概念",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ローマ法大全",
+      "target": "スラヴ人",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マニュファクチュア",
+      "target": "オランダ独立戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウステルリッツの戦い",
+      "target": "神聖ローマ帝国の消滅",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "第２次産業革命",
+      "target": "南アフリカ戦争／ボーア戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "日本国憲法",
+      "target": "サンフランシスコ平和条約",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "全権委任法",
+      "target": "強制収容所",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "鉄のカーテン",
+      "target": "北大西洋条約機構／ＮＡＴＯ",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ウィーン体制",
+      "target": "ヴァイマル憲法／ワイマール憲法",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "七年戦争",
+      "target": "啓蒙思想",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "アステカ文明",
+      "target": "コルテス",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "大韓民国／韓国",
+      "target": "朝鮮戦争",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "遣唐使",
+      "target": "唐",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "朱子学",
+      "target": "宋",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "ムハンマド＝アリー",
+      "target": "オスマン帝国",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "米西戦争／アメリカ＝スペイン戦争",
+      "target": "モンロー教書",
+      "difficulty": "hard",
+      "reason": "クラスタ接続"
+    },
+    {
+      "source": "ヘレニズム",
+      "target": "アリストテレス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "三国時代",
+      "target": "漢／前漢",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ビザンツ帝国",
+      "target": "ローマ帝国",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "南北戦争",
+      "target": "奴隷／奴隷制度",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ベトナム戦争",
+      "target": "冷たい戦争／冷戦／東西冷戦",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヘレニズム",
+      "target": "マケドニア",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "マケドニア",
+      "target": "アリストテレス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "トルストイ",
+      "target": "クリミア戦争",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "オランダ東インド会社",
+      "target": "東方貿易",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "無敵艦隊",
+      "target": "エリザベス1世",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "朝貢貿易",
+      "target": "皇帝",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ドストエフスキー",
+      "target": "農奴制",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "アフガン戦争",
+      "target": "ソ連の解体",
+      "difficulty": "hard",
+      "reason": "修正"
+    },
+    {
+      "source": "魯迅",
+      "target": "中華民国",
+      "difficulty": "hard",
+      "reason": "中華民国時代の代表的文人"
+    },
+    {
+      "source": "京都議定書",
+      "target": "グローバルサウス",
+      "difficulty": "hard",
+      "reason": "途上国の排出削減義務問題"
+    },
+    {
+      "source": "パリ協定",
+      "target": "サミット/G7",
+      "difficulty": "hard",
+      "reason": "国際首脳会議での気候変動合意"
+    },
+    {
+      "source": "クリミア危機",
+      "target": "ワルシャワ条約機構の解散",
+      "difficulty": "hard",
+      "reason": "冷戦後のNATO東方拡大への反発"
+    },
+    {
+      "source": "アジア通貨危機",
+      "target": "新自由主義",
+      "difficulty": "hard",
+      "reason": "金融自由化・資本移動自由化の影響"
+    },
+    {
+      "source": "アラブの春",
+      "target": "シリア内戦",
+      "difficulty": "hard",
+      "reason": "シリア内戦の直接の引き金"
+    },
+    {
+      "source": "イスラム国（IS）",
+      "target": "シリア内戦",
+      "difficulty": "hard",
+      "reason": "シリア内戦で台頭"
+    },
+    {
+      "source": "ヨーロッパ難民危機",
+      "target": "シリア内戦",
+      "difficulty": "hard",
+      "reason": "シリア内戦からの難民流入が主因"
+    },
+    {
+      "source": "新自由主義",
+      "target": "グローバルサウス",
+      "difficulty": "hard",
+      "reason": "途上国への構造調整政策の影響"
+    },
+    {
+      "source": "ビロード革命",
+      "target": "東欧革命",
+      "difficulty": "hard",
+      "reason": "東欧革命の一部"
+    },
+    {
+      "source": "南北問題",
+      "target": "アジア＝アフリカ会議／バンドン会議",
+      "difficulty": "hard",
+      "reason": "第三世界の連帯・南北問題議論の出発点"
+    },
+    {
+      "source": "ワシントン会議",
+      "target": "九カ国条約",
+      "difficulty": "hard",
+      "reason": "ワシントン会議で締結"
+    },
+    {
+      "source": "ファシズム",
+      "target": "ピカソ",
+      "difficulty": "normal",
+      "reason": "ゲルニカ - 反ファシズム芸術"
+    },
+    {
+      "source": "遼",
+      "target": "モンゴル帝国",
+      "difficulty": "easy",
+      "reason": "契丹族とモンゴル高原の関連"
+    },
+    {
+      "source": "ドイツ帝国",
+      "target": "帝国主義",
+      "difficulty": "easy",
+      "reason": "ドイツ帝国の植民地政策"
+    },
+    {
+      "source": "コンスタンティノープル",
+      "target": "ビザンツ帝国",
+      "difficulty": "easy",
+      "reason": "ビザンツ帝国の首都"
+    },
+    {
+      "source": "ソヴィエト社会主義共和国連邦／ソ連",
+      "target": "レーニン",
+      "difficulty": "easy",
+      "reason": "ソ連建国の指導者"
+    },
+    {
+      "source": "ムッソリーニ",
+      "target": "第二次世界大戦",
+      "difficulty": "easy",
+      "reason": "枢軸国として参戦"
+    },
+    {
+      "source": "スターリン",
+      "target": "第二次世界大戦",
+      "difficulty": "easy",
+      "reason": "第二次世界大戦の主要指導者"
+    },
+    {
+      "source": "世界恐慌",
+      "target": "ファシズム",
+      "difficulty": "easy",
+      "reason": "世界恐慌がファシズム台頭の背景"
+    },
+    {
+      "source": "ニューディール政策",
+      "target": "ヤルタ会談",
+      "difficulty": "easy",
+      "reason": "ローズヴェルトがヤルタ会談に出席"
+    },
+    {
+      "source": "日中戦争",
+      "target": "毛沢東",
+      "difficulty": "easy",
+      "reason": "毛沢東が抗日戦争を指導"
+    },
+    {
+      "source": "ユーロ",
+      "target": "ドイツ統一",
+      "difficulty": "normal",
+      "reason": "ドイツ統一後のEU統合深化とユーロ導入"
+    },
+    {
+      "source": "ピカソ",
+      "target": "ミケランジェロ",
+      "difficulty": "normal",
+      "reason": "西洋美術の系譜（ルネサンスから現代美術への影響）"
+    },
+    {
+      "source": "大学",
+      "target": "叙任権闘争",
+      "difficulty": "normal",
+      "reason": "中世大学は教会と深く結びつき、叙任権闘争の時代に発展"
+    },
+    {
+      "source": "マンデラ",
+      "target": "アジア＝アフリカ会議／バンドン会議",
+      "difficulty": "normal",
+      "reason": "第三世界の連帯とアフリカ独立運動への影響"
+    },
+    {
+      "source": "ムスタファ＝ケマル／ケマル＝アタテュルク",
+      "target": "ナセル",
+      "difficulty": "normal",
+      "reason": "中東の世俗化・近代化を推進した指導者"
+    },
+    {
+      "source": "ブレトン＝ウッズ会議／ブレトン＝ウッズ体制",
+      "target": "フランクリン＝ローズヴェルト",
+      "difficulty": "normal",
+      "reason": "ローズヴェルト政権下でブレトンウッズ会議開催"
+    },
+    {
+      "source": "ブルボン朝",
+      "target": "アンシャン＝レジーム",
+      "difficulty": "normal",
+      "reason": "ブルボン朝がアンシャンレジーム（旧体制）の中心的存在"
+    },
+    {
+      "source": "航海法",
+      "target": "クロムウェル",
+      "difficulty": "normal",
+      "reason": "クロムウェル政権下で航海法制定（1651年）"
+    },
+    {
+      "source": "ハプスブルク家",
+      "target": "ウェストファリア条約",
+      "difficulty": "normal",
+      "reason": "三十年戦争でハプスブルク家敗北、主権国家体制確立"
+    },
+    {
+      "source": "ギルド",
+      "target": "ハンザ同盟",
+      "difficulty": "normal",
+      "reason": "北ドイツの都市同盟、ギルド的商業組織"
+    },
+    {
+      "source": "玄宗",
+      "target": "李白",
+      "difficulty": "hard",
+      "reason": "玄宗の治世に李白が活躍"
+    },
+    {
+      "source": "玄宗",
+      "target": "科挙",
+      "difficulty": "hard",
+      "reason": "玄宗の開元の治で科挙制度発展"
+    },
+    {
+      "source": "デリー＝スルタン朝",
+      "target": "ムガル帝国",
+      "difficulty": "hard",
+      "reason": "デリー＝スルタン朝がインドのイスラーム化を進め、ムガル帝国の前身"
+    },
+    {
+      "source": "デリー＝スルタン朝",
+      "target": "アクバル",
+      "difficulty": "hard",
+      "reason": "インドのイスラーム支配の系譜"
+    },
+    {
+      "source": "ペルセポリス",
+      "target": "ヘレニズム時代",
+      "difficulty": "hard",
+      "reason": "アレクサンドロスのペルセポリス征服がヘレニズム時代の象徴"
+    },
+    {
+      "source": "パルティア",
+      "target": "アレクサンドリア",
+      "difficulty": "hard",
+      "reason": "ヘレニズム時代のパルティア勃興"
+    },
+    {
+      "source": "千夜一夜物語",
+      "target": "アッバース朝",
+      "difficulty": "hard",
+      "reason": "千夜一夜物語はアッバース朝バグダードを舞台とする"
+    },
+    {
+      "source": "千夜一夜物語",
+      "target": "バグダード",
+      "difficulty": "hard",
+      "reason": "千夜一夜物語の主要舞台都市"
+    },
+    {
+      "source": "トラヤヌス",
+      "target": "ローマ法",
+      "difficulty": "hard",
+      "reason": "五賢帝時代のローマ法発展"
+    },
+    {
+      "source": "ミラノ勅令",
+      "target": "アウグスティヌス",
+      "difficulty": "hard",
+      "reason": "キリスト教公認後のキリスト教教父"
+    },
+    {
+      "source": "ソグド人",
+      "target": "シルクロード",
+      "difficulty": "hard",
+      "reason": "ソグド人はシルクロードの主要な商人"
+    },
+    {
+      "source": "ソグド人",
+      "target": "突厥",
+      "difficulty": "hard",
+      "reason": "ソグド人は突厥との交易で活躍"
+    },
+    {
+      "source": "大乗仏教",
+      "target": "玄奘",
+      "difficulty": "hard",
+      "reason": "玄奘がインドから大乗仏教の経典を持ち帰る"
+    },
+    {
+      "source": "カースト／カースト制度",
+      "target": "デリー＝スルタン朝",
+      "difficulty": "hard",
+      "reason": "イスラーム支配下でもカースト制度は存続"
+    },
+    {
+      "source": "陽明学",
+      "target": "明",
+      "difficulty": "hard",
+      "reason": "陽明学は明代に発展した儒学思想"
+    },
+    {
+      "source": "マテオ＝リッチ",
+      "target": "朝貢貿易",
+      "difficulty": "hard",
+      "reason": "マテオ＝リッチは明の朝貢体制下で活動"
+    },
+    {
+      "source": "康熙帝",
+      "target": "清",
+      "difficulty": "hard",
+      "reason": "康熙帝は清の最盛期を築いた皇帝"
+    },
+    {
+      "source": "乾隆帝",
+      "target": "清",
+      "difficulty": "hard",
+      "reason": "乾隆帝は清の全盛期の皇帝"
+    },
+    {
+      "source": "均田制",
+      "target": "玄宗",
+      "difficulty": "hard",
+      "reason": "唐の玄宗時代に均田制が衰退"
+    },
+    {
+      "source": "道教",
+      "target": "朱子学",
+      "difficulty": "hard",
+      "reason": "宋代における儒教（朱子学）と道教の思想的関係"
+    },
+    {
+      "source": "パルテノン",
+      "target": "ペリクレス",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "封建社会",
+      "target": "農奴制",
+      "difficulty": "easy",
+      "reason": "未定義"
+    },
+    {
+      "source": "コンスタンティノープル",
+      "target": "コンスタンティヌス",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ギルド",
+      "target": "黒死病",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "メフメト2世",
+      "target": "東ローマ帝国",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "メフメト2世",
+      "target": "コンスタンティノープル",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "封建制",
+      "target": "長江文明",
+      "difficulty": "normal",
+      "reason": "未定義"
+    },
+    {
+      "source": "ロマン主義",
+      "target": "1848年革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヘロドトス",
+      "target": "マラトンの戦い",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ヘロドトス",
+      "target": "サラミスの海戦",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウグスティヌス",
+      "target": "西ローマ帝国の滅亡",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アウグスティヌス",
+      "target": "キリスト教",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "海の道",
+      "target": "鄭和",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "秦（戦国）",
+      "target": "戦国時代",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "秦（戦国）",
+      "target": "漢／前漢",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "鉄製農具",
+      "target": "春秋時代",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "鉄製農具",
+      "target": "新石器革命／農業革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "張騫",
+      "target": "武帝",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "トウモロコシ",
+      "target": "マヤ文明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "インカ帝国",
+      "target": "アンデス文明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ジャガイモ",
+      "target": "インカ帝国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マチュピチュ",
+      "target": "アンデス文明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "高句麗",
+      "target": "新羅",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "百済",
+      "target": "高句麗",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "百済",
+      "target": "新羅",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "朝鮮民主主義人民共和国／北朝鮮",
+      "target": "朝鮮戦争",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "禅宗",
+      "target": "大乗仏教",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "杜甫",
+      "target": "玄宗",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ウイグル",
+      "target": "元",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "遣唐使",
+      "target": "唐",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "金と塩の交易",
+      "target": "マリ王国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "金と塩の交易",
+      "target": "ガーナ王国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アフリカ諸国の独立／アフリカの年",
+      "target": "ファショダ事件",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "インノケンティウス3世",
+      "target": "十字軍運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "インノケンティウス3世",
+      "target": "教会大分裂",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フィリップ4世",
+      "target": "教会大分裂",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "金印勅書",
+      "target": "ハプスブルク家",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "金印勅書",
+      "target": "神聖ローマ帝国",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "陽明学",
+      "target": "朱子学",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "マテオ＝リッチ",
+      "target": "明",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "責任内閣制",
+      "target": "名誉革命",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ピョートル1世",
+      "target": "啓蒙専制主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "印象派",
+      "target": "写実主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "印象派",
+      "target": "ゴッホ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "ゴッホ",
+      "target": "ロマン主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "フランス領インドシナ連邦",
+      "target": "ドイモイ",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "シオニズム",
+      "target": "バルフォア宣言",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "シンガポール",
+      "target": "プランテーション",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "シオニズム",
+      "target": "パレスチナ問題",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "メキシコ革命",
+      "target": "ラテンアメリカの独立",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "メキシコ革命",
+      "target": "モンロー主義",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アフリカ諸国の独立／アフリカの年",
+      "target": "アジア＝アフリカ会議／バンドン会議",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "公民権法",
+      "target": "公民権運動",
+      "difficulty": "hard",
+      "reason": "未定義"
+    },
+    {
+      "source": "アル＝カーイダ",
+      "target": "アフガニスタン戦争",
+      "difficulty": "hard",
+      "reason": "9.11テロ後の対アル＝カーイダ戦争"
+    },
+    {
+      "source": "フロイト",
+      "target": "ダーウィン",
+      "difficulty": "hard",
+      "reason": "ダーウィン進化論がフロイト理論に影響"
+    },
+    {
+      "source": "実存主義",
+      "target": "社会契約説",
+      "difficulty": "hard",
+      "reason": "啓蒙思想の理性主義への反発から実存主義が生まれた"
+    },
+    {
+      "source": "チャップリン",
+      "target": "ヒトラー",
+      "difficulty": "hard",
+      "reason": "『独裁者』でヒトラーを風刺"
+    },
+    {
+      "source": "チャップリン",
+      "target": "ファシズム",
+      "difficulty": "hard",
+      "reason": "『独裁者』でファシズムを批判"
+    },
+    {
+      "source": "二月革命",
+      "target": "ナポレオン3世",
+      "difficulty": "hard",
+      "reason": "二月革命後にナポレオン3世が大統領に就任"
+    },
+    {
+      "source": "パリ＝コミューン",
+      "target": "徴兵制",
+      "difficulty": "hard",
+      "reason": "普仏戦争の敗北と徴兵制への反発から成立"
+    },
+    {
+      "source": "フランス領インドシナ連邦",
+      "target": "大東亜共栄圏",
+      "difficulty": "hard",
+      "reason": "日本の南進政策で占領"
+    },
+    {
+      "source": "シンガポール",
+      "target": "大東亜共栄圏",
+      "difficulty": "hard",
+      "reason": "1942年シンガポール陥落"
+    },
+    {
+      "source": "シオニズム",
+      "target": "血の日曜日事件",
+      "difficulty": "hard",
+      "reason": "ロシア帝国の弾圧とユダヤ人迫害がシオニズム運動を促進"
+    },
+    {
+      "source": "メキシコ革命",
+      "target": "米西戦争／アメリカ＝スペイン戦争",
+      "difficulty": "hard",
+      "reason": "米国の帝国主義的介入への反発"
+    },
+    {
+      "source": "アフリカ諸国の独立／アフリカの年",
+      "target": "ファショダ事件",
+      "difficulty": "hard",
+      "reason": "アフリカ分割から独立へ"
+    },
+    {
+      "source": "公民権法",
+      "target": "キング牧師",
+      "difficulty": "hard",
+      "reason": "キング牧師の公民権運動が法制定を推進"
+    },
+    {
+      "source": "三国同盟",
+      "target": "ヴィルヘルム２世",
+      "difficulty": "hard",
+      "reason": "ビスマルク外交をヴィルヘルム2世が継承"
+    },
+    {
+      "source": "三国同盟",
+      "target": "サイクス・ピコ協定",
+      "difficulty": "hard",
+      "reason": "WWI期の同盟外交関係"
+    },
+    {
+      "source": "タンジマート",
+      "target": "青年トルコ革命",
+      "difficulty": "hard",
+      "reason": "タンジマート改革の不十分さが青年トルコ革命を促進"
+    },
+    {
+      "source": "ミドハト憲法",
+      "target": "青年トルコ革命",
+      "difficulty": "hard",
+      "reason": "青年トルコ革命でミドハト憲法が復活"
+    },
+    {
+      "source": "李鴻章",
+      "target": "義和団事件／北清事変",
+      "difficulty": "hard",
+      "reason": "李鴻章が北京議定書締結を担当"
+    },
+    {
+      "source": "日米修好通商条約",
+      "target": "領事裁判権",
+      "difficulty": "hard",
+      "reason": "不平等条約に領事裁判権が含まれる"
+    },
+    {
+      "source": "日米修好通商条約",
+      "target": "サンフランシスコ平和条約",
+      "difficulty": "hard",
+      "reason": "日米関係の歴史的展開"
+    },
+    {
+      "source": "ドレフュス事件",
+      "target": "シオニズム",
+      "difficulty": "hard",
+      "reason": "ドレフュス事件がシオニズム運動を促進"
+    },
+    {
+      "source": "ドレフュス事件",
+      "target": "フランスの降伏",
+      "difficulty": "hard",
+      "reason": "第三共和政の弱体化が降伏につながる"
+    },
+    {
+      "source": "ドイツ社会民主党",
+      "target": "ヴァイマル憲法／ワイマール憲法",
+      "difficulty": "hard",
+      "reason": "SPDがワイマール共和国で主導的役割を果たす"
+    },
+    {
+      "source": "変法／戊戌の変法／変法自強",
+      "target": "日清戦争",
+      "difficulty": "hard",
+      "reason": "日清戦争敗北が変法運動を引き起こす"
+    },
+    {
+      "source": "コミンテルン／第三インターナショナル",
+      "target": "十月革命／十一月革命",
+      "difficulty": "hard",
+      "reason": "十月革命後にコミンテルンが設立される"
+    },
+    {
+      "source": "コミンテルン／第三インターナショナル",
+      "target": "ソヴィエト",
+      "difficulty": "hard",
+      "reason": "ソヴィエト政権がコミンテルンを主導"
+    },
+    {
+      "source": "トルコ共和国",
+      "target": "青年トルコ革命",
+      "difficulty": "hard",
+      "reason": "青年トルコ革命がトルコ共和国樹立につながる"
+    },
+    {
+      "source": "スペイン内戦／スペイン戦争",
+      "target": "フランスの降伏",
+      "difficulty": "hard",
+      "reason": "スペイン内戦でのファシズム勝利が欧州情勢に影響"
+    },
+    {
+      "source": "スペイン内戦／スペイン戦争",
+      "target": "ファシズム",
+      "difficulty": "hard",
+      "reason": "スペイン内戦はファシズム勢力の勝利に終わる"
+    },
+    {
+      "source": "国際通貨基金／ＩＭＦ",
+      "target": "ブレトン＝ウッズ会議／ブレトン＝ウッズ体制",
+      "difficulty": "hard",
+      "reason": "ブレトン・ウッズ会議でIMF設立が決定"
+    },
+    {
+      "source": "ヨーロッパ経済共同体／ＥＥＣ",
+      "target": "EU",
+      "difficulty": "hard",
+      "reason": "EECがEUに発展する"
+    },
+    {
+      "source": "ヨーロッパ経済共同体／ＥＥＣ",
+      "target": "ユーロ",
+      "difficulty": "hard",
+      "reason": "EECから発展したEUがユーロを導入"
+    },
+    {
+      "source": "サイゴン陥落",
+      "target": "ベトナム戦争",
+      "difficulty": "hard",
+      "reason": "サイゴン陥落でベトナム戦争が終結"
+    },
+    {
+      "source": "日中国交正常化",
+      "target": "中華人民共和国",
+      "difficulty": "hard",
+      "reason": "日本が中華人民共和国と国交を樹立"
+    },
+    {
+      "source": "日中国交正常化",
+      "target": "ニクソン訪中",
+      "difficulty": "hard",
+      "reason": "ニクソン訪中が日中国交正常化の契機となる"
+    },
+    {
+      "source": "アジア通貨危機",
+      "target": "大韓民国／韓国",
+      "difficulty": "hard",
+      "reason": "韓国はアジア通貨危機で大打撃を受けIMF支援を受けた"
+    },
+    {
+      "source": "ユーゴスラヴィア解体",
+      "target": "ヨーロッパ難民危機",
+      "difficulty": "hard",
+      "reason": "ユーゴ紛争が難民問題の一因となる"
+    },
+    {
+      "source": "クリミア危機",
+      "target": "ロシアのウクライナ侵攻",
+      "difficulty": "hard",
+      "reason": "クリミア危機がウクライナ侵攻の前兆となる"
+    },
+    {
+      "source": "DNA/分子生物学",
+      "target": "進化論",
+      "difficulty": "hard",
+      "reason": "DNAが進化の分子的証拠を提供"
+    },
+    {
+      "source": "DNA/分子生物学",
+      "target": "ダーウィン",
+      "difficulty": "hard",
+      "reason": "DNAが進化論を分子レベルで裏付け"
+    },
+    {
+      "source": "DNA/分子生物学",
+      "target": "科学革命",
+      "difficulty": "hard",
+      "reason": "DNA発見は20世紀の科学革命"
+    },
+    {
+      "source": "実存主義",
+      "target": "フロイト",
+      "difficulty": "hard",
+      "reason": "精神分析が実存主義の人間理解に影響"
+    }
+  ]
+}

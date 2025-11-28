@@ -1,0 +1,4207 @@
+{
+  "metadata": {
+    "source": "Merged from relation.json with updated degrees",
+    "totalTerms": 600,
+    "created": "2025-11-28T05:12:10.897Z",
+    "distribution": {
+
+    },
+    "lastUpdated": "2025-11-28T05:43:40.843Z",
+    "updated": "2025-11-28T14:00:44.415978+00:00"
+  },
+  "terms": [
+    {
+      "name": "ホモ＝サピエンス",
+      "tier": 1,
+      "category": "先史時代",
+      "description": "現生人類そのもの",
+      "degree": 2
+    },
+    {
+      "name": "農耕・牧畜",
+      "tier": 1,
+      "category": "先史時代",
+      "description": "人類文明の最大の転換点、定住生活の始まり",
+      "degree": 3
+    },
+    {
+      "name": "新石器革命／農業革命",
+      "tier": 1,
+      "category": "先史時代",
+      "description": "食料生産革命、人類社会の質的変化",
+      "degree": 3
+    },
+    {
+      "name": "文明",
+      "tier": 1,
+      "category": "先史時代",
+      "description": "都市・文字・国家を持つ人類社会の段階",
+      "degree": 3
+    },
+    {
+      "name": "文字",
+      "tier": 1,
+      "category": "先史時代",
+      "description": "情報の記録・伝達の革命、歴史時代の始まり",
+      "degree": 5
+    },
+    {
+      "name": "メソポタミア文明",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "世界最古の文明の一つ、都市・文字・法の発祥",
+      "degree": 5
+    },
+    {
+      "name": "ハンムラビ法典",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "最古の成文法典の一つ、「目には目を」で有名",
+      "degree": 2
+    },
+    {
+      "name": "鉄器",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "青銅器に代わる金属器、文明・軍事の革命",
+      "degree": 2
+    },
+    {
+      "name": "都市国家",
+      "tier": 2,
+      "category": "古代オリエント",
+      "description": "政治組織の原型、シュメール・ギリシアで発展",
+      "degree": 2
+    },
+    {
+      "name": "楔形文字",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "メソポタミアの文字体系、最古の文字の一つ",
+      "degree": 3
+    },
+    {
+      "name": "エジプト文明",
+      "tier": 1,
+      "category": "古代エジプト",
+      "description": "ナイル川流域の古代文明、四大文明の一つ",
+      "degree": 3
+    },
+    {
+      "name": "ファラオ",
+      "tier": 1,
+      "category": "古代エジプト",
+      "description": "エジプトの王、神の化身とされた",
+      "degree": 2
+    },
+    {
+      "name": "ピラミッド",
+      "tier": 1,
+      "category": "古代エジプト",
+      "description": "エジプト王の墓、世界七不思議の一つ",
+      "degree": 2
+    },
+    {
+      "name": "ユダヤ教",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "一神教の始祖、キリスト教・イスラム教の源流",
+      "degree": 3
+    },
+    {
+      "name": "一神教",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "唯一神を信仰、世界宗教の基盤",
+      "degree": 2
+    },
+    {
+      "name": "旧約聖書",
+      "tier": 1,
+      "category": "古代オリエント",
+      "description": "ユダヤ教・キリスト教の聖典",
+      "degree": 2
+    },
+    {
+      "name": "アケメネス朝ペルシア帝国",
+      "tier": 2,
+      "category": "古代ペルシア",
+      "description": "最初の世界帝国、オリエントを統一",
+      "degree": 3
+    },
+    {
+      "name": "ダレイオス１世",
+      "tier": 2,
+      "category": "古代ペルシア",
+      "description": "ペルシア帝国最盛期の王、中央集権体制を確立",
+      "degree": 3
+    },
+    {
+      "name": "貨幣",
+      "tier": 2,
+      "category": "古代オリエント",
+      "description": "リディアで発明、経済革命をもたらす",
+      "degree": 2
+    },
+    {
+      "name": "フェニキア人",
+      "tier": 2,
+      "category": "古代オリエント",
+      "description": "地中海貿易の担い手、アルファベットの原型を発明",
+      "degree": 2
+    },
+    {
+      "name": "ペルセポリス",
+      "tier": 2,
+      "category": "古代ペルシア",
+      "description": "ペルシア帝国の儀礼的首都",
+      "degree": 4
+    },
+    {
+      "name": "アレクサンドロス大王",
+      "tier": 1,
+      "category": "ヘレニズム",
+      "description": "史上最大の征服者、ヘレニズム文化を生む",
+      "degree": 5
+    },
+    {
+      "name": "ヘレニズム時代",
+      "tier": 3,
+      "category": "ヘレニズム",
+      "description": "ギリシア文化と東方文化の融合期",
+      "degree": 3
+    },
+    {
+      "name": "ポリス",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "ギリシアの都市国家、民主政の基盤",
+      "degree": 5
+    },
+    {
+      "name": "アルファベット",
+      "tier": 2,
+      "category": "古代ギリシア",
+      "description": "フェニキア起源、西洋文字体系の基礎",
+      "degree": 3
+    },
+    {
+      "name": "アテネ",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "民主政発祥の地、ギリシア文化の中心",
+      "degree": 5
+    },
+    {
+      "name": "スパルタ",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "軍国主義の都市国家、アテネのライバル",
+      "degree": 2
+    },
+    {
+      "name": "奴隷／奴隷制度",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "古代社会の経済基盤、近代まで継続",
+      "degree": 5
+    },
+    {
+      "name": "ササン朝ペルシア",
+      "tier": 2,
+      "category": "古代ペルシア",
+      "description": "ローマと対峙したイラン帝国",
+      "degree": 2
+    },
+    {
+      "name": "ミケーネ文明",
+      "tier": 2,
+      "category": "古代ギリシア",
+      "description": "ギリシア最初の文明、トロイア戦争の時代",
+      "degree": 2
+    },
+    {
+      "name": "パルティア",
+      "tier": 2,
+      "category": "古代ペルシア",
+      "description": "イランの王朝、シルクロード貿易で繁栄",
+      "degree": 3
+    },
+    {
+      "name": "ペルシア戦争",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "ギリシア対ペルシア、西洋文明を守った戦い",
+      "degree": 5
+    },
+    {
+      "name": "アテネの民主政／デモクラシー",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "市民による直接民主制、民主主義の原型",
+      "degree": 2
+    },
+    {
+      "name": "ペリクレス",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "アテネ民主政の完成者、黄金時代の指導者",
+      "degree": 4
+    },
+    {
+      "name": "ソクラテス",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "哲学の祖、「無知の知」を説く",
+      "degree": 2
+    },
+    {
+      "name": "プラトン",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "イデア論、西洋哲学の基礎を築く",
+      "degree": 2
+    },
+    {
+      "name": "アリストテレス",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "万学の祖、論理学・自然学を体系化",
+      "degree": 4
+    },
+    {
+      "name": "マケドニア",
+      "tier": 2,
+      "category": "古代ギリシア",
+      "description": "ギリシア北方の王国、アレクサンドロスの祖国",
+      "degree": 3
+    },
+    {
+      "name": "ペロポネソス戦争",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "アテネ対スパルタ、ギリシア世界を二分した戦争",
+      "degree": 2
+    },
+    {
+      "name": "ホメロス",
+      "tier": 2,
+      "category": "古代ギリシア",
+      "description": "イリアス・オデュッセイアの作者、西洋文学の祖",
+      "degree": 2
+    },
+    {
+      "name": "ヘロドトス",
+      "tier": 3,
+      "category": "古代ギリシア",
+      "description": "「歴史の父」、ペルシア戦争を記録",
+      "degree": 2
+    },
+    {
+      "name": "マラトンの戦い",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "ペルシア戦争の勝利、マラソンの語源",
+      "degree": 3
+    },
+    {
+      "name": "サラミスの海戦",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "ペルシア艦隊を撃破、ギリシアの独立を守る",
+      "degree": 3
+    },
+    {
+      "name": "パルテノン",
+      "tier": 1,
+      "category": "古代ギリシア",
+      "description": "アテネのアクロポリスの神殿、ギリシア建築の傑作",
+      "degree": 2
+    },
+    {
+      "name": "ヘレニズム",
+      "tier": 1,
+      "category": "ヘレニズム",
+      "description": "ギリシア文化と東方文化の融合、世界市民主義",
+      "degree": 5
+    },
+    {
+      "name": "ローマ",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "古代最大の帝国、西洋文明の基盤",
+      "degree": 4
+    },
+    {
+      "name": "元老院",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマの最高議決機関、共和政の中核",
+      "degree": 5
+    },
+    {
+      "name": "ローマ共和政",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "市民による統治、帝政以前のローマ",
+      "degree": 5
+    },
+    {
+      "name": "ポエニ戦争",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマ対カルタゴ、地中海覇権をかけた戦い",
+      "degree": 4
+    },
+    {
+      "name": "ハンニバル",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "カルタゴの名将、アルプス越えでローマを脅かす",
+      "degree": 2
+    },
+    {
+      "name": "カエサル",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマの独裁者、暗殺されるも帝政への道を開く",
+      "degree": 5
+    },
+    {
+      "name": "グラックス兄弟の改革",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "土地改革の試み、共和政末期の内乱の発端",
+      "degree": 3
+    },
+    {
+      "name": "第１回三頭政治",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "カエサル・ポンペイウス・クラッスス、共和政の終焉へ",
+      "degree": 3
+    },
+    {
+      "name": "ローマ帝国",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "地中海世界を統一、パックス・ロマーナの時代",
+      "degree": 6
+    },
+    {
+      "name": "十二表法",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマ最初の成文法、平民の権利保障",
+      "degree": 2
+    },
+    {
+      "name": "護民官",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "平民の権利を守る役職",
+      "degree": 2
+    },
+    {
+      "name": "カルタゴ",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "フェニキア人の植民都市、ローマのライバル",
+      "degree": 2
+    },
+    {
+      "name": "クレオパトラ",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "プトレマイオス朝最後の女王",
+      "degree": 2
+    },
+    {
+      "name": "アクティウムの海戦",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "オクタウィアヌスがアントニウスを破る",
+      "degree": 3
+    },
+    {
+      "name": "アウグストゥス",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマ初代皇帝、帝政を確立",
+      "degree": 4
+    },
+    {
+      "name": "ローマの平和／パックス＝ロマーナ",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "約200年の平和と繁栄の時代",
+      "degree": 2
+    },
+    {
+      "name": "キリスト教",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "世界最大の宗教、ローマ帝国で誕生",
+      "degree": 6
+    },
+    {
+      "name": "イエス",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "キリスト教の創始者、十字架刑に処される",
+      "degree": 2
+    },
+    {
+      "name": "新約聖書",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "キリスト教の聖典",
+      "degree": 3
+    },
+    {
+      "name": "コンスタンティヌス",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "キリスト教を公認、コンスタンティノープル建設",
+      "degree": 4
+    },
+    {
+      "name": "コンスタンティノープル",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "東ローマ帝国の首都、東西交通の要衝",
+      "degree": 5
+    },
+    {
+      "name": "ローマ法",
+      "tier": 3,
+      "category": "古代ローマ",
+      "description": "近代法の基礎、市民法から万民法へ発展",
+      "degree": 3
+    },
+    {
+      "name": "東ローマ帝国",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "1000年続いた帝国、ビザンツ帝国とも",
+      "degree": 3
+    },
+    {
+      "name": "西ローマ帝国の滅亡",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "476年、古代の終わりと中世の始まり",
+      "degree": 3
+    },
+    {
+      "name": "五賢帝",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマ帝国最盛期の5人の皇帝",
+      "degree": 3
+    },
+    {
+      "name": "トラヤヌス",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "帝国最大版図を実現した皇帝",
+      "degree": 3
+    },
+    {
+      "name": "ミラノ勅令",
+      "tier": 2,
+      "category": "古代ローマ",
+      "description": "キリスト教公認の勅令",
+      "degree": 3
+    },
+    {
+      "name": "コロッセウム",
+      "tier": 1,
+      "category": "古代ローマ",
+      "description": "ローマの円形闘技場",
+      "degree": 2
+    },
+    {
+      "name": "アウグスティヌス",
+      "tier": 3,
+      "category": "古代ローマ",
+      "description": "キリスト教最大の教父、『神の国』を著す",
+      "degree": 3
+    },
+    {
+      "name": "インダス文明",
+      "tier": 1,
+      "category": "古代インド",
+      "description": "四大文明の一つ、計画都市モエンジョ=ダーロ",
+      "degree": 5
+    },
+    {
+      "name": "カースト／カースト制度",
+      "tier": 2,
+      "category": "古代インド",
+      "description": "インド社会の身分制度、現代まで影響",
+      "degree": 3
+    },
+    {
+      "name": "仏教",
+      "tier": 1,
+      "category": "古代インド",
+      "description": "ブッダが開いた世界宗教、東アジアに広がる",
+      "degree": 5
+    },
+    {
+      "name": "ガウタマ＝シッダールタ／ブッダ",
+      "tier": 1,
+      "category": "古代インド",
+      "description": "仏教の開祖、悟りを開いた覚者",
+      "degree": 2
+    },
+    {
+      "name": "アショーカ王",
+      "tier": 2,
+      "category": "古代インド",
+      "description": "マウリヤ朝の王、仏教を保護し広める",
+      "degree": 2
+    },
+    {
+      "name": "大乗仏教",
+      "tier": 2,
+      "category": "古代インド",
+      "description": "衆生救済を説く仏教、東アジアに広がる",
+      "degree": 4
+    },
+    {
+      "name": "ヒンドゥー教",
+      "tier": 1,
+      "category": "古代インド",
+      "description": "インドの民族宗教、多神教",
+      "degree": 5
+    },
+    {
+      "name": "グプタ朝",
+      "tier": 2,
+      "category": "古代インド",
+      "description": "インド古典文化の黄金期",
+      "degree": 2
+    },
+    {
+      "name": "ゼロの概念",
+      "tier": 2,
+      "category": "古代インド",
+      "description": "インドで発明、数学・科学に革命",
+      "degree": 2
+    },
+    {
+      "name": "アンコール＝ワット",
+      "tier": 2,
+      "category": "東南アジア",
+      "description": "カンボジアの巨大寺院、世界遺産",
+      "degree": 5
+    },
+    {
+      "name": "海の道",
+      "tier": 3,
+      "category": "東南アジア",
+      "description": "インド洋・東南アジアの海上交易路",
+      "degree": 2
+    },
+    {
+      "name": "黄河文明",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "中国文明の発祥地、四大文明の一つ",
+      "degree": 4
+    },
+    {
+      "name": "長江文明",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "稲作文明、黄河文明と並ぶ中国文明の源流",
+      "degree": 4
+    },
+    {
+      "name": "漢字",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "中国発祥の表意文字、東アジア文化圏の基盤",
+      "degree": 3
+    },
+    {
+      "name": "殷",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "中国最古の王朝、甲骨文字を使用",
+      "degree": 3
+    },
+    {
+      "name": "周（西周）",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "封建制を敷いた王朝、儒教の理想時代",
+      "degree": 3
+    },
+    {
+      "name": "封建制",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "周の統治制度、諸侯に土地を分封",
+      "degree": 3
+    },
+    {
+      "name": "春秋時代",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "周の東遷後の時代、覇者が台頭",
+      "degree": 3
+    },
+    {
+      "name": "戦国時代",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "七雄が争った時代、諸子百家が活躍",
+      "degree": 5
+    },
+    {
+      "name": "孔子",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "儒教の創始者、東アジア思想の基盤",
+      "degree": 3
+    },
+    {
+      "name": "儒学・儒教",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "孔子の教え、東アジアの支配思想",
+      "degree": 4
+    },
+    {
+      "name": "諸子百家",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "戦国時代の思想家たち、百花繚乱",
+      "degree": 4
+    },
+    {
+      "name": "老子",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "道家の創始者、無為自然を説く",
+      "degree": 2
+    },
+    {
+      "name": "法家",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "法による統治を説く、秦の基盤",
+      "degree": 2
+    },
+    {
+      "name": "秦（戦国）",
+      "tier": 3,
+      "category": "古代中国",
+      "description": "戦国の七雄、後に中国を統一",
+      "degree": 3
+    },
+    {
+      "name": "鉄製農具",
+      "tier": 3,
+      "category": "古代中国",
+      "description": "農業生産力を飛躍的に向上させた",
+      "degree": 2
+    },
+    {
+      "name": "始皇帝",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "中国を統一した最初の皇帝、皇帝の称号を創始",
+      "degree": 5
+    },
+    {
+      "name": "皇帝",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "中国の最高支配者の称号",
+      "degree": 3
+    },
+    {
+      "name": "郡県制",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "中央集権的な地方統治制度",
+      "degree": 2
+    },
+    {
+      "name": "万里の長城",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "北方民族防御の大建造物、世界遺産",
+      "degree": 3
+    },
+    {
+      "name": "漢／前漢",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "約400年続いた大帝国、中国の代名詞に",
+      "degree": 7
+    },
+    {
+      "name": "武帝",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "前漢最盛期の皇帝、匈奴を討伐",
+      "degree": 3
+    },
+    {
+      "name": "匈奴",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "北方の遊牧民族、漢の最大の脅威",
+      "degree": 2
+    },
+    {
+      "name": "張騫",
+      "tier": 3,
+      "category": "古代中国",
+      "description": "西域への使者、シルクロード開拓者",
+      "degree": 2
+    },
+    {
+      "name": "司馬遷",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "『史記』の著者、中国歴史学の祖",
+      "degree": 3
+    },
+    {
+      "name": "史記",
+      "tier": 2,
+      "category": "古代中国",
+      "description": "紀伝体の歴史書、中国正史の模範",
+      "degree": 2
+    },
+    {
+      "name": "項羽",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "秦末の武将、劉邦のライバル",
+      "degree": 2
+    },
+    {
+      "name": "劉邦",
+      "tier": 1,
+      "category": "古代中国",
+      "description": "漢の建国者、農民出身の皇帝",
+      "degree": 2
+    },
+    {
+      "name": "マヤ文明",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "中米の古代文明、暦法・文字を発達",
+      "degree": 3
+    },
+    {
+      "name": "アステカ文明",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "メキシコの古代文明、スペインに征服される",
+      "degree": 3
+    },
+    {
+      "name": "アンデス文明",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "南米の古代文明、インカ帝国に発展",
+      "degree": 4
+    },
+    {
+      "name": "トウモロコシ",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "アメリカ大陸原産の主食作物",
+      "degree": 2
+    },
+    {
+      "name": "ジャガイモ",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "アンデス原産、世界の食糧革命をもたらす",
+      "degree": 2
+    },
+    {
+      "name": "インカ帝国",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "南米最大の帝国、スペインに征服される",
+      "degree": 3
+    },
+    {
+      "name": "マチュピチュ",
+      "tier": 3,
+      "category": "アメリカ古代文明",
+      "description": "インカの空中都市、世界遺産",
+      "degree": 2
+    },
+    {
+      "name": "遊牧民",
+      "tier": 3,
+      "category": "遊牧民・中央アジア",
+      "description": "農耕民と並ぶ人類の生活様式",
+      "degree": 2
+    },
+    {
+      "name": "騎馬遊牧民",
+      "tier": 3,
+      "category": "遊牧民・中央アジア",
+      "description": "ユーラシア史を動かした存在",
+      "degree": 2
+    },
+    {
+      "name": "シルクロード",
+      "tier": 2,
+      "category": "遊牧民・中央アジア",
+      "description": "東西交易路、文明を繋ぐ",
+      "degree": 5
+    },
+    {
+      "name": "三国時代",
+      "tier": 1,
+      "category": "魏晋南北朝",
+      "description": "魏呉蜀の鼎立、三国志の時代",
+      "degree": 4
+    },
+    {
+      "name": "曹操",
+      "tier": 2,
+      "category": "魏晋南北朝",
+      "description": "三国時代の英雄、魏の基礎を築く",
+      "degree": 2
+    },
+    {
+      "name": "諸葛孔明",
+      "tier": 2,
+      "category": "魏晋南北朝",
+      "description": "蜀の軍師、知略の象徴",
+      "degree": 2
+    },
+    {
+      "name": "北魏",
+      "tier": 1,
+      "category": "魏晋南北朝",
+      "description": "鮮卑族の国、均田制を創始",
+      "degree": 3
+    },
+    {
+      "name": "均田制",
+      "tier": 2,
+      "category": "魏晋南北朝",
+      "description": "土地制度の基本、隋唐に継承",
+      "degree": 3
+    },
+    {
+      "name": "道教",
+      "tier": 2,
+      "category": "魏晋南北朝",
+      "description": "中国三大宗教の一つ、民間信仰と融合",
+      "degree": 3
+    },
+    {
+      "name": "高句麗",
+      "tier": 3,
+      "category": "朝鮮",
+      "description": "朝鮮半島北部の古代王国",
+      "degree": 3
+    },
+    {
+      "name": "新羅",
+      "tier": 3,
+      "category": "朝鮮",
+      "description": "朝鮮半島を統一した王国",
+      "degree": 3
+    },
+    {
+      "name": "百済",
+      "tier": 3,
+      "category": "朝鮮",
+      "description": "日本と深い関係を持つ朝鮮の国",
+      "degree": 2
+    },
+    {
+      "name": "隋",
+      "tier": 1,
+      "category": "隋唐",
+      "description": "中国を再統一、唐の基礎を築く",
+      "degree": 4
+    },
+    {
+      "name": "科挙",
+      "tier": 1,
+      "category": "隋唐",
+      "description": "官吏登用試験、1300年続く制度",
+      "degree": 6
+    },
+    {
+      "name": "大運河",
+      "tier": 2,
+      "category": "隋唐",
+      "description": "南北を結ぶ大水路、経済の動脈",
+      "degree": 2
+    },
+    {
+      "name": "唐",
+      "tier": 1,
+      "category": "隋唐",
+      "description": "中国史上最盛期の帝国、国際的大国",
+      "degree": 7
+    },
+    {
+      "name": "玄奘",
+      "tier": 3,
+      "category": "唐代文化",
+      "description": "西遊記のモデル、大唐西域記を著す",
+      "degree": 2
+    },
+    {
+      "name": "禅宗",
+      "tier": 3,
+      "category": "唐代文化",
+      "description": "東アジアに広がった仏教宗派",
+      "degree": 2
+    },
+    {
+      "name": "李白",
+      "tier": 2,
+      "category": "唐代文化",
+      "description": "唐代最高の詩人、詩仙",
+      "degree": 4
+    },
+    {
+      "name": "杜甫",
+      "tier": 3,
+      "category": "唐代文化",
+      "description": "唐代最高の詩人、詩聖",
+      "degree": 2
+    },
+    {
+      "name": "突厥",
+      "tier": 3,
+      "category": "唐と周辺",
+      "description": "最初のトルコ系遊牧帝国",
+      "degree": 2
+    },
+    {
+      "name": "ウイグル",
+      "tier": 3,
+      "category": "唐と周辺",
+      "description": "突厥に代わるトルコ系帝国",
+      "degree": 2
+    },
+    {
+      "name": "遣唐使",
+      "tier": 3,
+      "category": "唐と周辺",
+      "description": "日本から唐への使節",
+      "degree": 2
+    },
+    {
+      "name": "玄宗",
+      "tier": 3,
+      "category": "唐",
+      "description": "開元の治、唐の最盛期",
+      "degree": 4
+    },
+    {
+      "name": "ムハンマド",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "イスラームの預言者、創始者",
+      "degree": 4
+    },
+    {
+      "name": "イスラーム教",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "世界三大宗教の一つ",
+      "degree": 5
+    },
+    {
+      "name": "コーラン",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "イスラームの聖典",
+      "degree": 3
+    },
+    {
+      "name": "ヒジュラ",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "聖遷、イスラーム暦の紀元",
+      "degree": 2
+    },
+    {
+      "name": "カリフ",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "イスラーム共同体の指導者",
+      "degree": 4
+    },
+    {
+      "name": "ウマイヤ朝",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "最初のイスラーム王朝",
+      "degree": 2
+    },
+    {
+      "name": "スンナ派",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "イスラーム最大の宗派",
+      "degree": 2
+    },
+    {
+      "name": "シーア派",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "イスラーム第二の宗派",
+      "degree": 3
+    },
+    {
+      "name": "アッバース朝",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "イスラーム帝国の黄金期",
+      "degree": 5
+    },
+    {
+      "name": "バグダード",
+      "tier": 1,
+      "category": "イスラーム",
+      "description": "アッバース朝の首都、世界最大の都市",
+      "degree": 3
+    },
+    {
+      "name": "ジハード",
+      "tier": 2,
+      "category": "イスラーム",
+      "description": "聖戦の概念",
+      "degree": 2
+    },
+    {
+      "name": "セルジューク朝",
+      "tier": 2,
+      "category": "イスラーム諸王朝",
+      "description": "トルコ系イスラーム国家、十字軍の契機",
+      "degree": 3
+    },
+    {
+      "name": "スルタン",
+      "tier": 2,
+      "category": "イスラーム諸王朝",
+      "description": "イスラーム君主の称号",
+      "degree": 3
+    },
+    {
+      "name": "マンジケルトの戦い",
+      "tier": 3,
+      "category": "イスラーム諸王朝",
+      "description": "ビザンツ帝国に大打撃",
+      "degree": 2
+    },
+    {
+      "name": "マムルーク",
+      "tier": 3,
+      "category": "イスラーム諸王朝",
+      "description": "奴隷軍人、後に王朝を建てる",
+      "degree": 2
+    },
+    {
+      "name": "サラディン",
+      "tier": 2,
+      "category": "イスラーム諸王朝",
+      "description": "アイユーブ朝の創始者、十字軍と戦う",
+      "degree": 3
+    },
+    {
+      "name": "マムルーク朝",
+      "tier": 2,
+      "category": "イスラーム諸王朝",
+      "description": "エジプトの奴隷王朝",
+      "degree": 3
+    },
+    {
+      "name": "デリー＝スルタン朝",
+      "tier": 3,
+      "category": "インド・イスラーム",
+      "description": "インドのイスラーム政権の総称",
+      "degree": 3
+    },
+    {
+      "name": "ガーナ王国",
+      "tier": 3,
+      "category": "アフリカ",
+      "description": "西アフリカ最初の黒人王国",
+      "degree": 2
+    },
+    {
+      "name": "マリ王国",
+      "tier": 3,
+      "category": "アフリカ",
+      "description": "西アフリカのイスラーム国家",
+      "degree": 2
+    },
+    {
+      "name": "金と塩の交易",
+      "tier": 3,
+      "category": "アフリカ",
+      "description": "サハラ縦断交易の基盤",
+      "degree": 2
+    },
+    {
+      "name": "イスラーム文明",
+      "tier": 1,
+      "category": "イスラーム文明",
+      "description": "イスラーム世界の総合的文化体系",
+      "degree": 5
+    },
+    {
+      "name": "ゲルマン人の大移動",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "西ローマ帝国崩壊と中世欧州形成の契機",
+      "degree": 5
+    },
+    {
+      "name": "フランク王国",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "西欧中世国家の基礎",
+      "degree": 5
+    },
+    {
+      "name": "クローヴィス",
+      "tier": 3,
+      "category": "中世ヨーロッパ",
+      "description": "フランク王国建国者、カトリック改宗",
+      "degree": 2
+    },
+    {
+      "name": "カール・マルテル",
+      "tier": 3,
+      "category": "中世ヨーロッパ",
+      "description": "トゥール・ポワティエ間の戦いの英雄",
+      "degree": 2
+    },
+    {
+      "name": "カロリング朝",
+      "tier": 2,
+      "category": "中世ヨーロッパ",
+      "description": "フランク王国第二王朝",
+      "degree": 5
+    },
+    {
+      "name": "ローマ教皇",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "西方キリスト教世界の最高権威",
+      "degree": 5
+    },
+    {
+      "name": "千夜一夜物語",
+      "tier": 3,
+      "category": "イスラーム文明",
+      "description": "イスラーム文学の傑作",
+      "degree": 2
+    },
+    {
+      "name": "カール大帝",
+      "tier": 2,
+      "category": "中世ヨーロッパ",
+      "description": "西ヨーロッパ世界の父、西ローマ帝国復興",
+      "degree": 4
+    },
+    {
+      "name": "神聖ローマ帝国",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "中世ドイツの枠組み、962年成立",
+      "degree": 6
+    },
+    {
+      "name": "ノルマン人",
+      "tier": 2,
+      "category": "中世ヨーロッパ",
+      "description": "第二次民族大移動、ヴァイキング",
+      "degree": 4
+    },
+    {
+      "name": "ノルマン・コンクェスト",
+      "tier": 3,
+      "category": "中世ヨーロッパ",
+      "description": "イングランド征服、1066年",
+      "degree": 2
+    },
+    {
+      "name": "封建社会",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "中世ヨーロッパの社会体制",
+      "degree": 5
+    },
+    {
+      "name": "農奴制",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "中世の身分制度、荘園の労働力",
+      "degree": 5
+    },
+    {
+      "name": "叙任権闘争",
+      "tier": 1,
+      "category": "中世ヨーロッパ",
+      "description": "教皇と皇帝の対立",
+      "degree": 3
+    },
+    {
+      "name": "インノケンティウス3世",
+      "tier": 3,
+      "category": "中世ヨーロッパ",
+      "description": "教皇権最盛期の教皇",
+      "degree": 2
+    },
+    {
+      "name": "ビザンツ帝国",
+      "tier": 1,
+      "category": "ビザンツ・東欧",
+      "description": "東ローマ帝国、1000年の継続",
+      "degree": 6
+    },
+    {
+      "name": "ユスティニアヌス",
+      "tier": 3,
+      "category": "ビザンツ・東欧",
+      "description": "ローマ法大全を編纂",
+      "degree": 2
+    },
+    {
+      "name": "ローマ法大全",
+      "tier": 2,
+      "category": "ビザンツ・東欧",
+      "description": "近代法の基礎",
+      "degree": 3
+    },
+    {
+      "name": "スラヴ人",
+      "tier": 2,
+      "category": "ビザンツ・東欧",
+      "description": "東欧の主要民族",
+      "degree": 4
+    },
+    {
+      "name": "十字軍運動",
+      "tier": 1,
+      "category": "十字軍・中世商業",
+      "description": "中世最大の宗教戦争",
+      "degree": 6
+    },
+    {
+      "name": "東方貿易",
+      "tier": 2,
+      "category": "十字軍・中世商業",
+      "description": "十字軍後の商業発展",
+      "degree": 3
+    },
+    {
+      "name": "ヴェネツィア",
+      "tier": 2,
+      "category": "十字軍・中世商業",
+      "description": "地中海商業の覇者",
+      "degree": 2
+    },
+    {
+      "name": "モスクワ大公国",
+      "tier": 2,
+      "category": "ビザンツ・東欧",
+      "description": "ロシア統一の核",
+      "degree": 2
+    },
+    {
+      "name": "ポーランド王国",
+      "tier": 2,
+      "category": "ビザンツ・東欧",
+      "description": "東欧の大国",
+      "degree": 2
+    },
+    {
+      "name": "ハンザ同盟",
+      "tier": 2,
+      "category": "十字軍・中世商業",
+      "description": "北ドイツの商業同盟",
+      "degree": 3
+    },
+    {
+      "name": "ギルド",
+      "tier": 2,
+      "category": "中世後期",
+      "description": "中世都市の同業組合",
+      "degree": 5
+    },
+    {
+      "name": "黒死病",
+      "tier": 2,
+      "category": "中世後期",
+      "description": "14世紀のペスト大流行、人口激減",
+      "degree": 4
+    },
+    {
+      "name": "教会大分裂",
+      "tier": 3,
+      "category": "中世後期",
+      "description": "教皇権の危機、14-15世紀",
+      "degree": 4
+    },
+    {
+      "name": "百年戦争",
+      "tier": 1,
+      "category": "中世後期",
+      "description": "英仏間の長期戦争",
+      "degree": 4
+    },
+    {
+      "name": "ジャンヌ・ダルク",
+      "tier": 2,
+      "category": "中世後期",
+      "description": "フランス救国の聖女",
+      "degree": 2
+    },
+    {
+      "name": "マグナ・カルタ",
+      "tier": 1,
+      "category": "中世後期",
+      "description": "イギリス立憲政治の原点",
+      "degree": 3
+    },
+    {
+      "name": "議会制度",
+      "tier": 2,
+      "category": "中世後期",
+      "description": "イギリスの政治制度の基礎",
+      "degree": 3
+    },
+    {
+      "name": "フィリップ4世",
+      "tier": 3,
+      "category": "中世後期",
+      "description": "フランス王権強化",
+      "degree": 2
+    },
+    {
+      "name": "レコンキスタ",
+      "tier": 3,
+      "category": "中世後期",
+      "description": "イベリア半島のキリスト教徒による国土回復運動",
+      "degree": 2
+    },
+    {
+      "name": "スペイン王国",
+      "tier": 2,
+      "category": "中世後期",
+      "description": "イサベルとフェルナンドの統一",
+      "degree": 5
+    },
+    {
+      "name": "ハプスブルク家",
+      "tier": 2,
+      "category": "中世後期",
+      "description": "欧州最大の王家",
+      "degree": 4
+    },
+    {
+      "name": "金印勅書",
+      "tier": 3,
+      "category": "中世後期",
+      "description": "神聖ローマ帝国の選挙制度確立",
+      "degree": 2
+    },
+    {
+      "name": "スコラ学",
+      "tier": 3,
+      "category": "中世文化",
+      "description": "中世キリスト教哲学",
+      "degree": 3
+    },
+    {
+      "name": "トマス・アクィナス",
+      "tier": 3,
+      "category": "中世文化",
+      "description": "スコラ学の大成者",
+      "degree": 2
+    },
+    {
+      "name": "大学",
+      "tier": 2,
+      "category": "中世文化",
+      "description": "中世ヨーロッパの高等教育機関",
+      "degree": 5
+    },
+    {
+      "name": "ゴシック様式",
+      "tier": 3,
+      "category": "中世文化",
+      "description": "中世盛期の建築様式",
+      "degree": 2
+    },
+    {
+      "name": "ソグド人",
+      "tier": 3,
+      "category": "中央アジア",
+      "description": "シルクロード交易の担い手",
+      "degree": 2
+    },
+    {
+      "name": "宋",
+      "tier": 1,
+      "category": "宋代中国",
+      "description": "中国文化の成熟期を代表する王朝",
+      "degree": 6
+    },
+    {
+      "name": "北宋",
+      "tier": 2,
+      "category": "宋代中国",
+      "description": "開封を都とした宋の前半期",
+      "degree": 2
+    },
+    {
+      "name": "王安石",
+      "tier": 3,
+      "category": "宋代中国",
+      "description": "新法を推進した改革者",
+      "degree": 2
+    },
+    {
+      "name": "南宋",
+      "tier": 2,
+      "category": "宋代中国",
+      "description": "杭州に遷都後の宋",
+      "degree": 3
+    },
+    {
+      "name": "交子",
+      "tier": 2,
+      "category": "宋代中国",
+      "description": "世界初の紙幣",
+      "degree": 4
+    },
+    {
+      "name": "遼",
+      "tier": 1,
+      "category": "宋代中国",
+      "description": "契丹族の征服王朝",
+      "degree": 3
+    },
+    {
+      "name": "金",
+      "tier": 2,
+      "category": "宋代中国",
+      "description": "女真族の征服王朝",
+      "degree": 2
+    },
+    {
+      "name": "朱子学",
+      "tier": 3,
+      "category": "宋代文化",
+      "description": "宋学の集大成、東アジアの思想的基盤",
+      "degree": 5
+    },
+    {
+      "name": "朱熹",
+      "tier": 3,
+      "category": "宋代文化",
+      "description": "朱子学を大成した儒学者",
+      "degree": 2
+    },
+    {
+      "name": "三大発明",
+      "tier": 3,
+      "category": "宋代文化",
+      "description": "火薬・羅針盤・印刷術",
+      "degree": 2
+    },
+    {
+      "name": "モンゴル帝国",
+      "tier": 1,
+      "category": "モンゴル",
+      "description": "史上最大の陸上帝国",
+      "degree": 6
+    },
+    {
+      "name": "チンギス＝ハン",
+      "tier": 1,
+      "category": "モンゴル",
+      "description": "モンゴル帝国の創設者",
+      "degree": 2
+    },
+    {
+      "name": "フビライ＝ハン",
+      "tier": 1,
+      "category": "モンゴル",
+      "description": "元を建国した大ハン",
+      "degree": 3
+    },
+    {
+      "name": "元",
+      "tier": 1,
+      "category": "モンゴル",
+      "description": "モンゴル人の中国支配王朝",
+      "degree": 3
+    },
+    {
+      "name": "朱元璋",
+      "tier": 3,
+      "category": "明",
+      "description": "明を建国した洪武帝",
+      "degree": 3
+    },
+    {
+      "name": "明",
+      "tier": 1,
+      "category": "明",
+      "description": "漢民族による統一王朝の復興",
+      "degree": 7
+    },
+    {
+      "name": "鄭和",
+      "tier": 3,
+      "category": "明",
+      "description": "大航海を率いた宦官",
+      "degree": 3
+    },
+    {
+      "name": "永楽帝",
+      "tier": 3,
+      "category": "明",
+      "description": "明の最盛期を築いた皇帝",
+      "degree": 2
+    },
+    {
+      "name": "朝貢貿易",
+      "tier": 2,
+      "category": "明",
+      "description": "中華世界秩序に基づく貿易体制",
+      "degree": 6
+    },
+    {
+      "name": "陽明学",
+      "tier": 3,
+      "category": "明後期",
+      "description": "心即理を説く儒学の一派",
+      "degree": 2
+    },
+    {
+      "name": "マテオ＝リッチ",
+      "tier": 3,
+      "category": "明後期",
+      "description": "中国でキリスト教を布教したイエズス会士",
+      "degree": 2
+    },
+    {
+      "name": "清",
+      "tier": 1,
+      "category": "清",
+      "description": "中国最後の統一王朝",
+      "degree": 7
+    },
+    {
+      "name": "康熙帝",
+      "tier": 3,
+      "category": "清",
+      "description": "清の最盛期を築いた名君",
+      "degree": 2
+    },
+    {
+      "name": "乾隆帝",
+      "tier": 3,
+      "category": "清",
+      "description": "清朝最大版図を実現した皇帝",
+      "degree": 2
+    },
+    {
+      "name": "ティムール",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "中央アジアの大帝国建設者",
+      "degree": 2
+    },
+    {
+      "name": "ティムール朝",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "中央アジア・イランの帝国",
+      "degree": 2
+    },
+    {
+      "name": "オスマン帝国",
+      "tier": 1,
+      "category": "イスラーム帝国",
+      "description": "600年続いたイスラーム大帝国",
+      "degree": 5
+    },
+    {
+      "name": "メフメト2世",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "コンスタンティノープルを征服した皇帝",
+      "degree": 2
+    },
+    {
+      "name": "スレイマン1世",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "オスマン帝国最盛期の皇帝",
+      "degree": 2
+    },
+    {
+      "name": "サファヴィー朝",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "シーア派国教化したイラン王朝",
+      "degree": 2
+    },
+    {
+      "name": "ムガル帝国",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "インド・イスラーム文化を発展させた帝国",
+      "degree": 3
+    },
+    {
+      "name": "アクバル",
+      "tier": 2,
+      "category": "イスラーム帝国",
+      "description": "ムガル帝国最盛期の皇帝",
+      "degree": 3
+    },
+    {
+      "name": "コロンブス",
+      "tier": 1,
+      "category": "大航海時代",
+      "description": "新大陸到達、世界史の転換点",
+      "degree": 5
+    },
+    {
+      "name": "ヴァスコ＝ダ＝ガマ",
+      "tier": 1,
+      "category": "大航海時代",
+      "description": "インド航路開拓者",
+      "degree": 3
+    },
+    {
+      "name": "マゼラン",
+      "tier": 1,
+      "category": "大航海時代",
+      "description": "世界周航の達成者",
+      "degree": 2
+    },
+    {
+      "name": "コルテス",
+      "tier": 2,
+      "category": "大航海時代",
+      "description": "アステカ征服者",
+      "degree": 4
+    },
+    {
+      "name": "ピサロ",
+      "tier": 2,
+      "category": "大航海時代",
+      "description": "インカ征服者",
+      "degree": 3
+    },
+    {
+      "name": "オランダ東インド会社",
+      "tier": 2,
+      "category": "大航海時代",
+      "description": "最初の株式会社、近代資本主義の先駆",
+      "degree": 4
+    },
+    {
+      "name": "イギリス東インド会社",
+      "tier": 1,
+      "category": "大航海時代",
+      "description": "後のインド植民地化の主体",
+      "degree": 5
+    },
+    {
+      "name": "トルデシリャス条約",
+      "tier": 2,
+      "category": "大航海時代",
+      "description": "世界分割の起点",
+      "degree": 2
+    },
+    {
+      "name": "商業革命",
+      "tier": 3,
+      "category": "大航海時代",
+      "description": "世界経済の構造転換",
+      "degree": 2
+    },
+    {
+      "name": "価格革命",
+      "tier": 3,
+      "category": "大航海時代",
+      "description": "ヨーロッパ経済への衝撃",
+      "degree": 2
+    },
+    {
+      "name": "ルネサンス",
+      "tier": 1,
+      "category": "ルネサンス",
+      "description": "近代ヨーロッパ文化の出発点",
+      "degree": 5
+    },
+    {
+      "name": "宗教改革",
+      "tier": 1,
+      "category": "宗教改革",
+      "description": "キリスト教世界の分裂、近代への転換",
+      "degree": 5
+    },
+    {
+      "name": "ルター",
+      "tier": 1,
+      "category": "宗教改革",
+      "description": "宗教改革の創始者",
+      "degree": 5
+    },
+    {
+      "name": "カルヴァン",
+      "tier": 2,
+      "category": "宗教改革",
+      "description": "プロテスタント第二の潮流",
+      "degree": 4
+    },
+    {
+      "name": "レオナルド＝ダ＝ヴィンチ",
+      "tier": 2,
+      "category": "ルネサンス",
+      "description": "ルネサンスの象徴的天才",
+      "degree": 2
+    },
+    {
+      "name": "ミケランジェロ",
+      "tier": 2,
+      "category": "ルネサンス",
+      "description": "ルネサンス芸術の巨匠",
+      "degree": 3
+    },
+    {
+      "name": "九十五ヶ条の論題",
+      "tier": 2,
+      "category": "宗教改革",
+      "description": "宗教改革の発端",
+      "degree": 2
+    },
+    {
+      "name": "予定説",
+      "tier": 2,
+      "category": "宗教改革",
+      "description": "カルヴァン派の核心教義",
+      "degree": 2
+    },
+    {
+      "name": "マキァヴェリ",
+      "tier": 2,
+      "category": "ルネサンス",
+      "description": "近代政治学の父",
+      "degree": 2
+    },
+    {
+      "name": "活版印刷術",
+      "tier": 1,
+      "category": "ルネサンス",
+      "description": "知識革命の基盤",
+      "degree": 2
+    },
+    {
+      "name": "コペルニクス",
+      "tier": 1,
+      "category": "ルネサンス",
+      "description": "地動説提唱、科学革命の先駆",
+      "degree": 2
+    },
+    {
+      "name": "グーテンベルク",
+      "tier": 1,
+      "category": "ルネサンス",
+      "description": "活版印刷の発明者",
+      "degree": 2
+    },
+    {
+      "name": "アウクスブルクの和議",
+      "tier": 2,
+      "category": "宗教改革",
+      "description": "宗教的領邦主権の確立",
+      "degree": 2
+    },
+    {
+      "name": "絶対王政",
+      "tier": 1,
+      "category": "主権国家形成",
+      "description": "近代国家形成の重要段階",
+      "degree": 5
+    },
+    {
+      "name": "主権国家",
+      "tier": 1,
+      "category": "主権国家形成",
+      "description": "国際政治の基本単位",
+      "degree": 3
+    },
+    {
+      "name": "イギリス国教会",
+      "tier": 2,
+      "category": "宗教改革",
+      "description": "英国宗教改革の結果",
+      "degree": 2
+    },
+    {
+      "name": "プロテスタント",
+      "tier": 2,
+      "category": "宗教改革",
+      "description": "新教の総称",
+      "degree": 2
+    },
+    {
+      "name": "フェリペ2世",
+      "tier": 3,
+      "category": "主権国家形成",
+      "description": "スペイン黄金時代の君主",
+      "degree": 2
+    },
+    {
+      "name": "オランダ独立戦争",
+      "tier": 2,
+      "category": "主権国家形成",
+      "description": "市民革命の先駆",
+      "degree": 4
+    },
+    {
+      "name": "エリザベス1世",
+      "tier": 2,
+      "category": "主権国家形成",
+      "description": "イギリス絶対王政の頂点",
+      "degree": 3
+    },
+    {
+      "name": "無敵艦隊",
+      "tier": 2,
+      "category": "主権国家形成",
+      "description": "スペイン海上覇権の象徴",
+      "degree": 3
+    },
+    {
+      "name": "マニュファクチュア",
+      "tier": 2,
+      "category": "主権国家形成",
+      "description": "産業革命前の生産形態",
+      "degree": 2
+    },
+    {
+      "name": "三十年戦争",
+      "tier": 1,
+      "category": "17世紀ヨーロッパ",
+      "description": "ヨーロッパ最後の宗教戦争",
+      "degree": 5
+    },
+    {
+      "name": "ウェストファリア条約",
+      "tier": 1,
+      "category": "17世紀ヨーロッパ",
+      "description": "主権国家体制の確立",
+      "degree": 4
+    },
+    {
+      "name": "ルイ14世",
+      "tier": 2,
+      "category": "17世紀ヨーロッパ",
+      "description": "絶対王政の典型",
+      "degree": 2
+    },
+    {
+      "name": "ピューリタン革命",
+      "tier": 1,
+      "category": "イギリス革命",
+      "description": "市民革命の先駆",
+      "degree": 3
+    },
+    {
+      "name": "クロムウェル",
+      "tier": 2,
+      "category": "イギリス革命",
+      "description": "イギリス共和政の指導者",
+      "degree": 3
+    },
+    {
+      "name": "名誉革命",
+      "tier": 1,
+      "category": "イギリス革命",
+      "description": "立憲君主政確立の革命",
+      "degree": 5
+    },
+    {
+      "name": "権利の章典",
+      "tier": 1,
+      "category": "イギリス革命",
+      "description": "議会主権の確立",
+      "degree": 4
+    },
+    {
+      "name": "航海法",
+      "tier": 2,
+      "category": "17世紀ヨーロッパ",
+      "description": "イギリス重商主義政策",
+      "degree": 3
+    },
+    {
+      "name": "ブルボン朝",
+      "tier": 2,
+      "category": "17世紀ヨーロッパ",
+      "description": "フランス絶対王政の王朝",
+      "degree": 2
+    },
+    {
+      "name": "重商主義",
+      "tier": 2,
+      "category": "17世紀ヨーロッパ",
+      "description": "近代初期の経済政策",
+      "degree": 2
+    },
+    {
+      "name": "責任内閣制",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "議会民主主義の核心",
+      "degree": 2
+    },
+    {
+      "name": "立憲君主政",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "近代政治体制の一形態",
+      "degree": 2
+    },
+    {
+      "name": "ピョートル1世",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "ロシア近代化の推進者",
+      "degree": 2
+    },
+    {
+      "name": "エカチェリーナ2世",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "啓蒙専制君主の代表",
+      "degree": 2
+    },
+    {
+      "name": "マリア＝テレジア",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "オーストリア改革の女帝",
+      "degree": 2
+    },
+    {
+      "name": "七年戦争",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "最初の世界戦争",
+      "degree": 3
+    },
+    {
+      "name": "啓蒙専制主義",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "18世紀の改革君主制",
+      "degree": 3
+    },
+    {
+      "name": "ポーランド分割",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "東欧の勢力再編",
+      "degree": 2
+    },
+    {
+      "name": "スペイン継承戦争",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "ヨーロッパ勢力均衡の戦い",
+      "degree": 2
+    },
+    {
+      "name": "外交革命",
+      "tier": 3,
+      "category": "18世紀ヨーロッパ",
+      "description": "同盟関係の大転換",
+      "degree": 2
+    },
+    {
+      "name": "三角貿易",
+      "tier": 1,
+      "category": "植民地時代",
+      "description": "大西洋経済圏の形成",
+      "degree": 4
+    },
+    {
+      "name": "プランテーション",
+      "tier": 2,
+      "category": "植民地時代",
+      "description": "植民地経済の基盤",
+      "degree": 3
+    },
+    {
+      "name": "科学革命",
+      "tier": 3,
+      "category": "科学革命",
+      "description": "近代科学の成立",
+      "degree": 3
+    },
+    {
+      "name": "ニュートン",
+      "tier": 1,
+      "category": "科学革命",
+      "description": "古典力学の確立者",
+      "degree": 4
+    },
+    {
+      "name": "啓蒙思想",
+      "tier": 1,
+      "category": "啓蒙思想",
+      "description": "近代思想の基盤",
+      "degree": 6
+    },
+    {
+      "name": "ロック",
+      "tier": 1,
+      "category": "啓蒙思想",
+      "description": "近代政治思想の父",
+      "degree": 3
+    },
+    {
+      "name": "ルソー",
+      "tier": 1,
+      "category": "啓蒙思想",
+      "description": "社会契約論、フランス革命に影響",
+      "degree": 3
+    },
+    {
+      "name": "モンテスキュー",
+      "tier": 1,
+      "category": "啓蒙思想",
+      "description": "三権分立の提唱者",
+      "degree": 3
+    },
+    {
+      "name": "アダム＝スミス",
+      "tier": 3,
+      "category": "啓蒙思想",
+      "description": "古典派経済学の創始者",
+      "degree": 2
+    },
+    {
+      "name": "デカルト",
+      "tier": 2,
+      "category": "科学革命",
+      "description": "近代哲学の父",
+      "degree": 3
+    },
+    {
+      "name": "ホッブズ",
+      "tier": 2,
+      "category": "啓蒙思想",
+      "description": "社会契約説の先駆者",
+      "degree": 4
+    },
+    {
+      "name": "グロティウス",
+      "tier": 3,
+      "category": "啓蒙思想",
+      "description": "国際法の父",
+      "degree": 2
+    },
+    {
+      "name": "社会契約説",
+      "tier": 1,
+      "category": "啓蒙思想",
+      "description": "近代政治思想の基盤",
+      "degree": 4
+    },
+    {
+      "name": "産業革命",
+      "tier": 1,
+      "category": "産業革命",
+      "description": "人類史の最大の転換点の一つ",
+      "degree": 5
+    },
+    {
+      "name": "蒸気機関",
+      "tier": 1,
+      "category": "産業革命",
+      "description": "産業革命の動力源",
+      "degree": 3
+    },
+    {
+      "name": "ワット",
+      "tier": 2,
+      "category": "産業革命",
+      "description": "蒸気機関の改良者",
+      "degree": 2
+    },
+    {
+      "name": "鉄道",
+      "tier": 2,
+      "category": "産業革命",
+      "description": "交通革命の中核",
+      "degree": 3
+    },
+    {
+      "name": "アメリカ独立戦争",
+      "tier": 1,
+      "category": "アメリカ独立革命",
+      "description": "近代民主主義の出発点",
+      "degree": 4
+    },
+    {
+      "name": "アメリカ独立宣言",
+      "tier": 1,
+      "category": "アメリカ独立革命",
+      "description": "近代民主主義の基本文書",
+      "degree": 4
+    },
+    {
+      "name": "ワシントン",
+      "tier": 1,
+      "category": "アメリカ独立革命",
+      "description": "アメリカ建国の父",
+      "degree": 2
+    },
+    {
+      "name": "アメリカ合衆国憲法",
+      "tier": 1,
+      "category": "アメリカ独立革命",
+      "description": "近代成文憲法の模範",
+      "degree": 5
+    },
+    {
+      "name": "三権分立",
+      "tier": 1,
+      "category": "アメリカ独立革命",
+      "description": "近代政治制度の基本原理",
+      "degree": 2
+    },
+    {
+      "name": "資本主義",
+      "tier": 1,
+      "category": "産業革命",
+      "description": "近代経済システム",
+      "degree": 4
+    },
+    {
+      "name": "フランス革命",
+      "tier": 1,
+      "category": "フランス革命",
+      "description": "近代市民社会の出発点",
+      "degree": 5
+    },
+    {
+      "name": "アンシャン＝レジーム",
+      "tier": 2,
+      "category": "フランス革命",
+      "description": "フランス革命前の社会体制",
+      "degree": 3
+    },
+    {
+      "name": "バスティーユ牢獄襲撃",
+      "tier": 1,
+      "category": "フランス革命",
+      "description": "フランス革命の象徴的開始",
+      "degree": 4
+    },
+    {
+      "name": "人権宣言",
+      "tier": 1,
+      "category": "フランス革命",
+      "description": "近代人権思想の基本文書",
+      "degree": 3
+    },
+    {
+      "name": "国民議会",
+      "tier": 2,
+      "category": "フランス革命",
+      "description": "第三身分による議会",
+      "degree": 3
+    },
+    {
+      "name": "ジャコバン派",
+      "tier": 2,
+      "category": "フランス革命",
+      "description": "革命急進派",
+      "degree": 3
+    },
+    {
+      "name": "ロベスピエール",
+      "tier": 2,
+      "category": "フランス革命",
+      "description": "ジャコバン派指導者",
+      "degree": 2
+    },
+    {
+      "name": "第一共和政",
+      "tier": 1,
+      "category": "フランス革命",
+      "description": "フランス最初の共和政",
+      "degree": 3
+    },
+    {
+      "name": "恐怖政治",
+      "tier": 1,
+      "category": "フランス革命",
+      "description": "革命の急進化",
+      "degree": 4
+    },
+    {
+      "name": "徴兵制",
+      "tier": 3,
+      "category": "フランス革命",
+      "description": "国民軍の形成",
+      "degree": 3
+    },
+    {
+      "name": "第三身分",
+      "tier": 2,
+      "category": "フランス革命",
+      "description": "平民階級",
+      "degree": 2
+    },
+    {
+      "name": "ルイ16世処刑",
+      "tier": 2,
+      "category": "フランス革命",
+      "description": "王政の終焉",
+      "degree": 2
+    },
+    {
+      "name": "ナポレオン",
+      "tier": 1,
+      "category": "ナポレオン時代",
+      "description": "フランス革命の継承者・覇者",
+      "degree": 5
+    },
+    {
+      "name": "ナポレオン法典",
+      "tier": 1,
+      "category": "ナポレオン時代",
+      "description": "近代民法の模範",
+      "degree": 3
+    },
+    {
+      "name": "神聖ローマ帝国の消滅",
+      "tier": 2,
+      "category": "ナポレオン時代",
+      "description": "千年帝国の終焉",
+      "degree": 3
+    },
+    {
+      "name": "大陸封鎖令",
+      "tier": 2,
+      "category": "ナポレオン時代",
+      "description": "ナポレオンの経済戦争",
+      "degree": 2
+    },
+    {
+      "name": "ウィーン会議",
+      "tier": 1,
+      "category": "ウィーン体制",
+      "description": "ヨーロッパ秩序の再編",
+      "degree": 6
+    },
+    {
+      "name": "ウィーン体制",
+      "tier": 2,
+      "category": "ウィーン体制",
+      "description": "19世紀前半の国際秩序",
+      "degree": 5
+    },
+    {
+      "name": "メッテルニヒ",
+      "tier": 3,
+      "category": "ウィーン体制",
+      "description": "ウィーン体制の立役者",
+      "degree": 2
+    },
+    {
+      "name": "正統主義",
+      "tier": 3,
+      "category": "ウィーン体制",
+      "description": "ウィーン体制の原理",
+      "degree": 2
+    },
+    {
+      "name": "ナショナリズム",
+      "tier": 2,
+      "category": "ウィーン体制",
+      "description": "19世紀の政治原理",
+      "degree": 5
+    },
+    {
+      "name": "七月革命",
+      "tier": 3,
+      "category": "ウィーン体制",
+      "description": "ウィーン体制への最初の打撃",
+      "degree": 2
+    },
+    {
+      "name": "トラファルガーの海戦",
+      "tier": 2,
+      "category": "ナポレオン時代",
+      "description": "イギリス海上覇権の確立",
+      "degree": 2
+    },
+    {
+      "name": "アウステルリッツの戦い",
+      "tier": 2,
+      "category": "ナポレオン時代",
+      "description": "ナポレオンの決定的勝利",
+      "degree": 2
+    },
+    {
+      "name": "ワーテルローの戦い",
+      "tier": 2,
+      "category": "ナポレオン時代",
+      "description": "ナポレオン最後の敗北",
+      "degree": 2
+    },
+    {
+      "name": "選挙法改正（第1回）",
+      "tier": 3,
+      "category": "19世紀イギリス",
+      "description": "イギリス議会改革の出発点",
+      "degree": 3
+    },
+    {
+      "name": "チャーティスト運動",
+      "tier": 3,
+      "category": "19世紀イギリス",
+      "description": "労働者の参政権運動",
+      "degree": 3
+    },
+    {
+      "name": "穀物法の廃止",
+      "tier": 3,
+      "category": "19世紀イギリス",
+      "description": "自由貿易の勝利",
+      "degree": 2
+    },
+    {
+      "name": "マルクス",
+      "tier": 1,
+      "category": "社会主義",
+      "description": "科学的社会主義の創始者",
+      "degree": 3
+    },
+    {
+      "name": "共産党宣言",
+      "tier": 1,
+      "category": "社会主義",
+      "description": "マルクス主義の基本文書",
+      "degree": 2
+    },
+    {
+      "name": "1848年革命",
+      "tier": 3,
+      "category": "1848年革命",
+      "description": "諸国民の春",
+      "degree": 2
+    },
+    {
+      "name": "二月革命",
+      "tier": 3,
+      "category": "1848年革命",
+      "description": "フランス第二共和政の成立",
+      "degree": 2
+    },
+    {
+      "name": "クリミア戦争",
+      "tier": 2,
+      "category": "19世紀国際関係",
+      "description": "ウィーン体制崩壊の契機",
+      "degree": 3
+    },
+    {
+      "name": "ヴィクトリア女王",
+      "tier": 2,
+      "category": "19世紀イギリス",
+      "description": "大英帝国最盛期の君主",
+      "degree": 4
+    },
+    {
+      "name": "二大政党制",
+      "tier": 3,
+      "category": "19世紀イギリス",
+      "description": "イギリス議会政治の特徴",
+      "degree": 2
+    },
+    {
+      "name": "ナポレオン3世",
+      "tier": 3,
+      "category": "第二帝政",
+      "description": "第二帝政の皇帝",
+      "degree": 2
+    },
+    {
+      "name": "普仏戦争",
+      "tier": 1,
+      "category": "ドイツ統一",
+      "description": "ドイツ統一の完成",
+      "degree": 3
+    },
+    {
+      "name": "パリ＝コミューン",
+      "tier": 3,
+      "category": "第二帝政",
+      "description": "史上初の労働者政府",
+      "degree": 2
+    },
+    {
+      "name": "イタリア統一",
+      "tier": 2,
+      "category": "イタリア統一",
+      "description": "リソルジメント運動",
+      "degree": 4
+    },
+    {
+      "name": "カヴール",
+      "tier": 3,
+      "category": "イタリア統一",
+      "description": "イタリア統一の立役者",
+      "degree": 2
+    },
+    {
+      "name": "ガリバルディ",
+      "tier": 3,
+      "category": "イタリア統一",
+      "description": "イタリア統一の英雄",
+      "degree": 2
+    },
+    {
+      "name": "ビスマルク",
+      "tier": 2,
+      "category": "ドイツ統一",
+      "description": "ドイツ統一の推進者",
+      "degree": 2
+    },
+    {
+      "name": "ドイツ帝国",
+      "tier": 1,
+      "category": "ドイツ統一",
+      "description": "統一ドイツの成立",
+      "degree": 4
+    },
+    {
+      "name": "三国同盟",
+      "tier": 3,
+      "category": "ビスマルク外交",
+      "description": "ビスマルク体制の中核",
+      "degree": 2
+    },
+    {
+      "name": "ラテンアメリカの独立",
+      "tier": 2,
+      "category": "ラテンアメリカ独立",
+      "description": "南米諸国の独立運動",
+      "degree": 3
+    },
+    {
+      "name": "シモン＝ボリバル",
+      "tier": 2,
+      "category": "ラテンアメリカ独立",
+      "description": "南米独立の英雄",
+      "degree": 2
+    },
+    {
+      "name": "モンロー教書",
+      "tier": 2,
+      "category": "19世紀アメリカ",
+      "description": "アメリカ外交の基本方針",
+      "degree": 6
+    },
+    {
+      "name": "モンロー主義",
+      "tier": 3,
+      "category": "19世紀アメリカ",
+      "description": "アメリカ孤立主義の原点",
+      "degree": 4
+    },
+    {
+      "name": "マニフェスト＝デスティニー",
+      "tier": 2,
+      "category": "19世紀アメリカ",
+      "description": "アメリカ膨張主義の理念",
+      "degree": 5
+    },
+    {
+      "name": "西漸運動",
+      "tier": 3,
+      "category": "19世紀アメリカ",
+      "description": "アメリカの西部開拓",
+      "degree": 2
+    },
+    {
+      "name": "フロンティア",
+      "tier": 3,
+      "category": "19世紀アメリカ",
+      "description": "アメリカ発展の象徴",
+      "degree": 2
+    },
+    {
+      "name": "南北戦争",
+      "tier": 1,
+      "category": "南北戦争",
+      "description": "アメリカ史の転換点",
+      "degree": 5
+    },
+    {
+      "name": "リンカン",
+      "tier": 2,
+      "category": "南北戦争",
+      "description": "奴隷解放の大統領",
+      "degree": 2
+    },
+    {
+      "name": "奴隷解放宣言",
+      "tier": 2,
+      "category": "南北戦争",
+      "description": "黒人奴隷制の終焉",
+      "degree": 2
+    },
+    {
+      "name": "ロマン主義",
+      "tier": 3,
+      "category": "19世紀文化",
+      "description": "19世紀文化の主要潮流",
+      "degree": 3
+    },
+    {
+      "name": "写実主義",
+      "tier": 3,
+      "category": "19世紀文化",
+      "description": "文学・芸術の潮流",
+      "degree": 3
+    },
+    {
+      "name": "ダーウィン",
+      "tier": 1,
+      "category": "19世紀科学",
+      "description": "進化論の提唱者",
+      "degree": 4
+    },
+    {
+      "name": "進化論",
+      "tier": 1,
+      "category": "19世紀科学",
+      "description": "生物学の革命",
+      "degree": 3
+    },
+    {
+      "name": "印象派",
+      "tier": 3,
+      "category": "19世紀文化",
+      "description": "近代美術の革命",
+      "degree": 2
+    },
+    {
+      "name": "ヘーゲル",
+      "tier": 2,
+      "category": "19世紀思想",
+      "description": "ドイツ観念論の大成者",
+      "degree": 2
+    },
+    {
+      "name": "ドストエフスキー",
+      "tier": 2,
+      "category": "19世紀文化",
+      "description": "ロシア文学の巨匠",
+      "degree": 4
+    },
+    {
+      "name": "トルストイ",
+      "tier": 2,
+      "category": "19世紀文化",
+      "description": "「戦争と平和」の作者",
+      "degree": 3
+    },
+    {
+      "name": "ゴッホ",
+      "tier": 3,
+      "category": "19世紀文化",
+      "description": "後期印象派の代表",
+      "degree": 2
+    },
+    {
+      "name": "タンジマート",
+      "tier": 3,
+      "category": "オスマン改革",
+      "description": "オスマン帝国の近代化改革",
+      "degree": 2
+    },
+    {
+      "name": "ミドハト憲法",
+      "tier": 3,
+      "category": "オスマン改革",
+      "description": "オスマン最初の憲法",
+      "degree": 2
+    },
+    {
+      "name": "ムハンマド＝アリー",
+      "tier": 3,
+      "category": "西アジア近代",
+      "description": "エジプト近代化の父",
+      "degree": 2
+    },
+    {
+      "name": "ウラービー運動",
+      "tier": 3,
+      "category": "西アジア近代",
+      "description": "エジプト民族運動",
+      "degree": 2
+    },
+    {
+      "name": "アフガン戦争",
+      "tier": 3,
+      "category": "西アジア近代",
+      "description": "英露のグレートゲーム",
+      "degree": 2
+    },
+    {
+      "name": "インド大反乱",
+      "tier": 1,
+      "category": "インド植民地化",
+      "description": "植民地支配への大反乱",
+      "degree": 5
+    },
+    {
+      "name": "ムガル帝国の滅亡",
+      "tier": 3,
+      "category": "インド植民地化",
+      "description": "インド最後のイスラーム王朝の終焉",
+      "degree": 2
+    },
+    {
+      "name": "インド帝国",
+      "tier": 2,
+      "category": "インド植民地化",
+      "description": "イギリス直接統治の開始",
+      "degree": 4
+    },
+    {
+      "name": "シパーヒーの反乱",
+      "tier": 2,
+      "category": "インド植民地化",
+      "description": "インド大反乱の別名",
+      "degree": 5
+    },
+    {
+      "name": "東インド会社解散",
+      "tier": 3,
+      "category": "インド植民地化",
+      "description": "植民地支配の転換",
+      "degree": 2
+    },
+    {
+      "name": "アヘン戦争",
+      "tier": 1,
+      "category": "アヘン戦争",
+      "description": "中国近代史の転換点",
+      "degree": 5
+    },
+    {
+      "name": "南京条約",
+      "tier": 1,
+      "category": "アヘン戦争",
+      "description": "不平等条約の始まり",
+      "degree": 5
+    },
+    {
+      "name": "不平等条約",
+      "tier": 1,
+      "category": "アヘン戦争",
+      "description": "列強の中国進出",
+      "degree": 5
+    },
+    {
+      "name": "太平天国",
+      "tier": 1,
+      "category": "清末",
+      "description": "清朝を揺るがした大反乱",
+      "degree": 2
+    },
+    {
+      "name": "香港島の割譲",
+      "tier": 3,
+      "category": "アヘン戦争",
+      "description": "イギリスの中国拠点",
+      "degree": 2
+    },
+    {
+      "name": "領事裁判権",
+      "tier": 3,
+      "category": "アヘン戦争",
+      "description": "不平等条約の核心",
+      "degree": 3
+    },
+    {
+      "name": "租界",
+      "tier": 3,
+      "category": "アヘン戦争",
+      "description": "列強の半植民地支配",
+      "degree": 2
+    },
+    {
+      "name": "北京条約",
+      "tier": 3,
+      "category": "アヘン戦争",
+      "description": "第二次アヘン戦争の講和",
+      "degree": 2
+    },
+    {
+      "name": "フランス領インドシナ連邦",
+      "tier": 3,
+      "category": "東南アジア植民地化",
+      "description": "仏領インドシナ",
+      "degree": 2
+    },
+    {
+      "name": "シンガポール",
+      "tier": 3,
+      "category": "東南アジア植民地化",
+      "description": "イギリスの東南アジア拠点",
+      "degree": 2
+    },
+    {
+      "name": "李鴻章",
+      "tier": 3,
+      "category": "洋務運動",
+      "description": "洋務運動の中心人物、近代中国外交の立役者",
+      "degree": 2
+    },
+    {
+      "name": "洋務運動",
+      "tier": 2,
+      "category": "洋務運動",
+      "description": "中国近代化の最初の試み",
+      "degree": 3
+    },
+    {
+      "name": "日米修好通商条約",
+      "tier": 3,
+      "category": "日本開国",
+      "description": "日本の開国・不平等条約体制の始まり",
+      "degree": 2
+    },
+    {
+      "name": "日清戦争",
+      "tier": 2,
+      "category": "日清戦争",
+      "description": "東アジア国際秩序の転換点",
+      "degree": 4
+    },
+    {
+      "name": "下関条約",
+      "tier": 2,
+      "category": "日清戦争",
+      "description": "日清戦争の講和条約、台湾割譲・朝鮮独立",
+      "degree": 2
+    },
+    {
+      "name": "第２次産業革命",
+      "tier": 2,
+      "category": "帝国主義時代",
+      "description": "石油・電気による産業構造の転換",
+      "degree": 2
+    },
+    {
+      "name": "帝国主義",
+      "tier": 1,
+      "category": "帝国主義時代",
+      "description": "19世紀末〜20世紀の国際関係を規定",
+      "degree": 6
+    },
+    {
+      "name": "南アフリカ戦争／ボーア戦争",
+      "tier": 2,
+      "category": "帝国主義時代",
+      "description": "イギリス帝国主義の象徴的戦争",
+      "degree": 3
+    },
+    {
+      "name": "ドレフュス事件",
+      "tier": 3,
+      "category": "フランス第三共和政",
+      "description": "反ユダヤ主義・人権問題の象徴",
+      "degree": 2
+    },
+    {
+      "name": "シオニズム",
+      "tier": 3,
+      "category": "帝国主義時代",
+      "description": "ユダヤ人国家建設運動、現代中東問題の起源",
+      "degree": 4
+    },
+    {
+      "name": "ヴィルヘルム２世",
+      "tier": 3,
+      "category": "ドイツ帝国主義",
+      "description": "ドイツ世界政策、第一次大戦への道",
+      "degree": 2
+    },
+    {
+      "name": "ドイツ社会民主党",
+      "tier": 3,
+      "category": "ドイツ帝国主義",
+      "description": "最大の社会主義政党、マルクス主義政党の典型",
+      "degree": 2
+    },
+    {
+      "name": "レーニン",
+      "tier": 1,
+      "category": "ロシア帝国主義",
+      "description": "ロシア革命の指導者、20世紀共産主義の創始者",
+      "degree": 7
+    },
+    {
+      "name": "日露戦争",
+      "tier": 2,
+      "category": "日露戦争",
+      "description": "アジアの新興国が欧州列強に勝利、世界史的転換点",
+      "degree": 3
+    },
+    {
+      "name": "血の日曜日事件",
+      "tier": 3,
+      "category": "ロシア帝国主義",
+      "description": "第1次ロシア革命の発端",
+      "degree": 3
+    },
+    {
+      "name": "ソヴィエト",
+      "tier": 3,
+      "category": "ロシア帝国主義",
+      "description": "ロシア革命の基盤となる評議会組織",
+      "degree": 3
+    },
+    {
+      "name": "米西戦争／アメリカ＝スペイン戦争",
+      "tier": 3,
+      "category": "アメリカ帝国主義",
+      "description": "アメリカの帝国主義的膨張の始まり",
+      "degree": 4
+    },
+    {
+      "name": "門戸開放宣言／機会均等",
+      "tier": 3,
+      "category": "アメリカ帝国主義",
+      "description": "アメリカの中国政策の基本原則",
+      "degree": 2
+    },
+    {
+      "name": "パナマ運河",
+      "tier": 3,
+      "category": "アメリカ帝国主義",
+      "description": "世界交通・戦略の要衝",
+      "degree": 2
+    },
+    {
+      "name": "ファショダ事件",
+      "tier": 3,
+      "category": "アフリカ分割",
+      "description": "英仏対立の頂点、その後の協商への転換点",
+      "degree": 2
+    },
+    {
+      "name": "三国干渉",
+      "tier": 3,
+      "category": "列強対立",
+      "description": "日清戦争後の国際政治、日露対立の契機",
+      "degree": 3
+    },
+    {
+      "name": "日英同盟",
+      "tier": 2,
+      "category": "列強対立",
+      "description": "日本の列強入り、国際関係の転換",
+      "degree": 5
+    },
+    {
+      "name": "三国協商",
+      "tier": 3,
+      "category": "列強対立",
+      "description": "第一次世界大戦の連合国側の原型",
+      "degree": 2
+    },
+    {
+      "name": "義和団事件／北清事変",
+      "tier": 3,
+      "category": "中国分割",
+      "description": "列強の中国分割、清朝の弱体化",
+      "degree": 2
+    },
+    {
+      "name": "ポーツマス条約",
+      "tier": 2,
+      "category": "日露戦争",
+      "description": "日露戦争の講和条約",
+      "degree": 2
+    },
+    {
+      "name": "韓国併合",
+      "tier": 2,
+      "category": "韓国併合",
+      "description": "日本の植民地帝国化、朝鮮近代史の転換点",
+      "degree": 2
+    },
+    {
+      "name": "メキシコ革命",
+      "tier": 3,
+      "category": "ラテンアメリカ",
+      "description": "ラテンアメリカ初の社会革命",
+      "degree": 3
+    },
+    {
+      "name": "露仏同盟",
+      "tier": 3,
+      "category": "列強対立",
+      "description": "ビスマルク体制の崩壊、三国協商の基礎",
+      "degree": 2
+    },
+    {
+      "name": "英仏協商",
+      "tier": 3,
+      "category": "列強対立",
+      "description": "英仏和解、三国協商への布石",
+      "degree": 2
+    },
+    {
+      "name": "変法／戊戌の変法／変法自強",
+      "tier": 3,
+      "category": "中国分割",
+      "description": "中国近代改革の試み",
+      "degree": 2
+    },
+    {
+      "name": "孫文",
+      "tier": 1,
+      "category": "辛亥革命",
+      "description": "中国革命の父、三民主義の提唱者",
+      "degree": 5
+    },
+    {
+      "name": "三民主義",
+      "tier": 3,
+      "category": "辛亥革命",
+      "description": "民族・民権・民生、中国近代革命思想の基本",
+      "degree": 3
+    },
+    {
+      "name": "辛亥革命／第一革命",
+      "tier": 1,
+      "category": "辛亥革命",
+      "description": "清朝の滅亡、中華民国の成立",
+      "degree": 5
+    },
+    {
+      "name": "中華民国",
+      "tier": 3,
+      "category": "辛亥革命",
+      "description": "アジア初の共和国",
+      "degree": 3
+    },
+    {
+      "name": "袁世凱",
+      "tier": 3,
+      "category": "辛亥革命",
+      "description": "辛亥革命後の実権者、軍閥時代への橋渡し",
+      "degree": 2
+    },
+    {
+      "name": "インド国民会議",
+      "tier": 2,
+      "category": "インド民族運動",
+      "description": "インド独立運動の中心組織",
+      "degree": 2
+    },
+    {
+      "name": "サライェヴォ事件",
+      "tier": 2,
+      "category": "第一次世界大戦",
+      "description": "第一次世界大戦の引き金",
+      "degree": 5
+    },
+    {
+      "name": "第一次世界大戦",
+      "tier": 1,
+      "category": "第一次世界大戦",
+      "description": "20世紀を規定した大戦争",
+      "degree": 5
+    },
+    {
+      "name": "スワラージ",
+      "tier": 2,
+      "category": "インド民族運動",
+      "description": "インド自治・独立要求の基本概念",
+      "degree": 2
+    },
+    {
+      "name": "青年トルコ革命",
+      "tier": 3,
+      "category": "オスマン帝国",
+      "description": "オスマン帝国の立憲制復活",
+      "degree": 3
+    },
+    {
+      "name": "サイクス・ピコ協定",
+      "tier": 3,
+      "category": "第一次世界大戦",
+      "description": "戦後中東秩序を決定した秘密協定",
+      "degree": 3
+    },
+    {
+      "name": "バルフォア宣言",
+      "tier": 3,
+      "category": "第一次世界大戦",
+      "description": "イスラエル建国につながるユダヤ人国家約束",
+      "degree": 3
+    },
+    {
+      "name": "十四カ条",
+      "tier": 3,
+      "category": "第一次世界大戦",
+      "description": "ウィルソンの戦後構想、民族自決の原則",
+      "degree": 2
+    },
+    {
+      "name": "十月革命／十一月革命",
+      "tier": 2,
+      "category": "ロシア革命",
+      "description": "世界初の社会主義革命",
+      "degree": 3
+    },
+    {
+      "name": "民族自決",
+      "tier": 2,
+      "category": "第一次世界大戦",
+      "description": "20世紀の国際秩序の基本原則",
+      "degree": 6
+    },
+    {
+      "name": "コミンテルン／第三インターナショナル",
+      "tier": 3,
+      "category": "ソヴィエト連邦",
+      "description": "世界共産主義運動の中心",
+      "degree": 2
+    },
+    {
+      "name": "ソヴィエト社会主義共和国連邦／ソ連",
+      "tier": 1,
+      "category": "ソヴィエト連邦",
+      "description": "世界初の社会主義国家連邦",
+      "degree": 5
+    },
+    {
+      "name": "パリ講和会議",
+      "tier": 2,
+      "category": "戦後処理",
+      "description": "第一次世界大戦後の国際秩序形成",
+      "degree": 2
+    },
+    {
+      "name": "ヴェルサイユ条約",
+      "tier": 1,
+      "category": "戦後処理",
+      "description": "対ドイツ講和条約、戦間期国際秩序の基礎",
+      "degree": 5
+    },
+    {
+      "name": "国際連盟",
+      "tier": 1,
+      "category": "戦後処理",
+      "description": "史上初の集団安全保障機構",
+      "degree": 4
+    },
+    {
+      "name": "トロツキー",
+      "tier": 2,
+      "category": "ロシア革命",
+      "description": "ロシア革命の指導者の一人",
+      "degree": 2
+    },
+    {
+      "name": "ヴェルサイユ体制",
+      "tier": 2,
+      "category": "戦間期",
+      "description": "戦間期ヨーロッパの国際秩序",
+      "degree": 5
+    },
+    {
+      "name": "ワシントン会議",
+      "tier": 3,
+      "category": "戦間期",
+      "description": "東アジア・太平洋の国際秩序形成",
+      "degree": 2
+    },
+    {
+      "name": "九カ国条約",
+      "tier": 3,
+      "category": "戦間期",
+      "description": "中国に関する国際合意",
+      "degree": 3
+    },
+    {
+      "name": "ワシントン体制",
+      "tier": 3,
+      "category": "戦間期",
+      "description": "戦間期アジア太平洋の国際秩序",
+      "degree": 2
+    },
+    {
+      "name": "ヴァイマル憲法／ワイマール憲法",
+      "tier": 2,
+      "category": "ヴァイマル共和国",
+      "description": "民主的憲法の典型",
+      "degree": 3
+    },
+    {
+      "name": "ヒトラー",
+      "tier": 1,
+      "category": "ナチス・ドイツ",
+      "description": "ナチス・ドイツの独裁者",
+      "degree": 6
+    },
+    {
+      "name": "ファシスト党",
+      "tier": 2,
+      "category": "イタリア・ファシズム",
+      "description": "イタリアのファシズム運動",
+      "degree": 2
+    },
+    {
+      "name": "ムッソリーニ",
+      "tier": 1,
+      "category": "イタリア・ファシズム",
+      "description": "イタリアのファシズム指導者",
+      "degree": 4
+    },
+    {
+      "name": "ファシズム",
+      "tier": 1,
+      "category": "戦間期",
+      "description": "20世紀の全体主義イデオロギー",
+      "degree": 9
+    },
+    {
+      "name": "スターリン",
+      "tier": 1,
+      "category": "ソ連",
+      "description": "ソ連の独裁者",
+      "degree": 6
+    },
+    {
+      "name": "魯迅",
+      "tier": 3,
+      "category": "中国近代",
+      "description": "中国近代文学の父",
+      "degree": 2
+    },
+    {
+      "name": "五・四運動",
+      "tier": 2,
+      "category": "中国近代",
+      "description": "中国近代民族運動の転換点",
+      "degree": 3
+    },
+    {
+      "name": "中国国民党",
+      "tier": 2,
+      "category": "中国革命",
+      "description": "中国革命の主要政党",
+      "degree": 4
+    },
+    {
+      "name": "中国共産党",
+      "tier": 2,
+      "category": "中国革命",
+      "description": "中国現代史を規定する政党",
+      "degree": 4
+    },
+    {
+      "name": "第１次国共合作",
+      "tier": 3,
+      "category": "中国革命",
+      "description": "国民革命の基盤",
+      "degree": 2
+    },
+    {
+      "name": "蔣介石",
+      "tier": 2,
+      "category": "中国革命",
+      "description": "中国国民党・国民政府の指導者",
+      "degree": 4
+    },
+    {
+      "name": "北伐",
+      "tier": 3,
+      "category": "中国革命",
+      "description": "中国統一への軍事行動",
+      "degree": 2
+    },
+    {
+      "name": "毛沢東",
+      "tier": 1,
+      "category": "中国革命",
+      "description": "中国共産党の指導者",
+      "degree": 5
+    },
+    {
+      "name": "ガンディー",
+      "tier": 1,
+      "category": "インド独立運動",
+      "description": "インド独立運動の指導者、非暴力主義",
+      "degree": 5
+    },
+    {
+      "name": "ネルー",
+      "tier": 2,
+      "category": "インド独立運動",
+      "description": "インド独立運動の指導者、初代首相",
+      "degree": 2
+    },
+    {
+      "name": "非暴力・不服従運動",
+      "tier": 1,
+      "category": "インド独立運動",
+      "description": "ガンディーの抵抗方法",
+      "degree": 4
+    },
+    {
+      "name": "塩の行進",
+      "tier": 2,
+      "category": "インド独立運動",
+      "description": "ガンディーの象徴的運動",
+      "degree": 2
+    },
+    {
+      "name": "ムスタファ＝ケマル／ケマル＝アタテュルク",
+      "tier": 2,
+      "category": "トルコ革命",
+      "description": "トルコ共和国建国の父",
+      "degree": 3
+    },
+    {
+      "name": "トルコ共和国",
+      "tier": 3,
+      "category": "トルコ革命",
+      "description": "オスマン帝国解体後の近代国家",
+      "degree": 2
+    },
+    {
+      "name": "世界恐慌",
+      "tier": 1,
+      "category": "世界恐慌",
+      "description": "20世紀最大の経済危機",
+      "degree": 5
+    },
+    {
+      "name": "ニューディール政策",
+      "tier": 1,
+      "category": "世界恐慌",
+      "description": "恐慌対策、政府介入の先例",
+      "degree": 4
+    },
+    {
+      "name": "フランクリン＝ローズヴェルト",
+      "tier": 2,
+      "category": "アメリカ",
+      "description": "世界恐慌・第二次大戦のアメリカ大統領",
+      "degree": 3
+    },
+    {
+      "name": "ブロック経済",
+      "tier": 2,
+      "category": "世界恐慌",
+      "description": "恐慌期の保護主義経済圏",
+      "degree": 2
+    },
+    {
+      "name": "満州事変",
+      "tier": 2,
+      "category": "日中戦争",
+      "description": "日本の中国侵略の始まり、15年戦争の発端",
+      "degree": 5
+    },
+    {
+      "name": "満州国",
+      "tier": 3,
+      "category": "日中戦争",
+      "description": "日本の傀儡国家",
+      "degree": 2
+    },
+    {
+      "name": "日中戦争",
+      "tier": 1,
+      "category": "日中戦争",
+      "description": "日本の全面的中国侵略",
+      "degree": 6
+    },
+    {
+      "name": "日本の国際連盟脱退",
+      "tier": 3,
+      "category": "日中戦争",
+      "description": "国際協調体制からの離脱",
+      "degree": 2
+    },
+    {
+      "name": "南京事件／南京虐殺事件",
+      "tier": 3,
+      "category": "日中戦争",
+      "description": "日中戦争の象徴的事件",
+      "degree": 2
+    },
+    {
+      "name": "ナチス＝ドイツ／第三帝国",
+      "tier": 1,
+      "category": "ナチス・ドイツ",
+      "description": "ヒトラー独裁体制",
+      "degree": 5
+    },
+    {
+      "name": "全権委任法",
+      "tier": 2,
+      "category": "ナチス・ドイツ",
+      "description": "ナチス独裁の法的基盤",
+      "degree": 2
+    },
+    {
+      "name": "強制収容所",
+      "tier": 2,
+      "category": "ナチス・ドイツ",
+      "description": "ナチスの迫害・ホロコーストの場",
+      "degree": 3
+    },
+    {
+      "name": "独ソ不可侵条約",
+      "tier": 2,
+      "category": "第二次世界大戦",
+      "description": "第二次大戦開戦への布石",
+      "degree": 2
+    },
+    {
+      "name": "第二次世界大戦",
+      "tier": 1,
+      "category": "第二次世界大戦",
+      "description": "人類史上最大の戦争",
+      "degree": 7
+    },
+    {
+      "name": "宥和政策",
+      "tier": 2,
+      "category": "第二次世界大戦",
+      "description": "イギリスの対独融和",
+      "degree": 2
+    },
+    {
+      "name": "ミュンヘン会談／ミュンヘン協定",
+      "tier": 2,
+      "category": "第二次世界大戦",
+      "description": "宥和政策の頂点",
+      "degree": 3
+    },
+    {
+      "name": "スペイン内戦／スペイン戦争",
+      "tier": 3,
+      "category": "スペイン",
+      "description": "第二次大戦の前哨戦",
+      "degree": 2
+    },
+    {
+      "name": "フランスの降伏",
+      "tier": 3,
+      "category": "第二次世界大戦",
+      "description": "西ヨーロッパ大陸のドイツ支配",
+      "degree": 4
+    },
+    {
+      "name": "チャーチル",
+      "tier": 2,
+      "category": "第二次世界大戦",
+      "description": "イギリスの戦時首相",
+      "degree": 2
+    },
+    {
+      "name": "独ソ戦",
+      "tier": 1,
+      "category": "第二次世界大戦",
+      "description": "第二次大戦の東部戦線",
+      "degree": 4
+    },
+    {
+      "name": "ホロコースト",
+      "tier": 1,
+      "category": "第二次世界大戦",
+      "description": "ナチスのユダヤ人大量虐殺",
+      "degree": 4
+    },
+    {
+      "name": "太平洋戦争",
+      "tier": 1,
+      "category": "太平洋戦争",
+      "description": "日米間の戦争",
+      "degree": 4
+    },
+    {
+      "name": "真珠湾攻撃",
+      "tier": 2,
+      "category": "太平洋戦争",
+      "description": "太平洋戦争の開戦",
+      "degree": 3
+    },
+    {
+      "name": "大東亜共栄圏",
+      "tier": 3,
+      "category": "太平洋戦争",
+      "description": "日本のアジア支配構想",
+      "degree": 4
+    },
+    {
+      "name": "ヤルタ会談",
+      "tier": 1,
+      "category": "第二次世界大戦",
+      "description": "戦後秩序形成の会議",
+      "degree": 4
+    },
+    {
+      "name": "ポツダム宣言",
+      "tier": 2,
+      "category": "第二次世界大戦",
+      "description": "日本への降伏勧告",
+      "degree": 3
+    },
+    {
+      "name": "原子爆弾",
+      "tier": 1,
+      "category": "第二次世界大戦",
+      "description": "核兵器の登場",
+      "degree": 5
+    },
+    {
+      "name": "国際連合",
+      "tier": 1,
+      "category": "戦後秩序",
+      "description": "戦後国際秩序の中核機構",
+      "degree": 5
+    },
+    {
+      "name": "広島・長崎",
+      "tier": 2,
+      "category": "太平洋戦争",
+      "description": "原爆投下",
+      "degree": 3
+    },
+    {
+      "name": "常任理事国／Ｐ５",
+      "tier": 1,
+      "category": "国連",
+      "description": "国連安保理の中核",
+      "degree": 3
+    },
+    {
+      "name": "拒否権",
+      "tier": 2,
+      "category": "国連",
+      "description": "安保理の意思決定の要",
+      "degree": 3
+    },
+    {
+      "name": "世界人権宣言",
+      "tier": 1,
+      "category": "国連",
+      "description": "人権の国際基準",
+      "degree": 3
+    },
+    {
+      "name": "ブレトン＝ウッズ会議／ブレトン＝ウッズ体制",
+      "tier": 2,
+      "category": "戦後秩序",
+      "description": "戦後国際経済秩序",
+      "degree": 4
+    },
+    {
+      "name": "国際通貨基金／ＩＭＦ",
+      "tier": 3,
+      "category": "戦後秩序",
+      "description": "国際金融の中核機関",
+      "degree": 2
+    },
+    {
+      "name": "日本国憲法",
+      "tier": 2,
+      "category": "日本",
+      "description": "戦後日本の基本法",
+      "degree": 2
+    },
+    {
+      "name": "冷たい戦争／冷戦／東西冷戦",
+      "tier": 1,
+      "category": "冷戦",
+      "description": "戦後国際関係を規定",
+      "degree": 6
+    },
+    {
+      "name": "トルーマン＝ドクトリン",
+      "tier": 3,
+      "category": "冷戦",
+      "description": "封じ込め政策の宣言",
+      "degree": 2
+    },
+    {
+      "name": "マーシャル＝プラン",
+      "tier": 1,
+      "category": "冷戦",
+      "description": "西欧復興計画、冷戦の経済的側面",
+      "degree": 5
+    },
+    {
+      "name": "北大西洋条約機構／ＮＡＴＯ",
+      "tier": 1,
+      "category": "冷戦",
+      "description": "西側軍事同盟",
+      "degree": 6
+    },
+    {
+      "name": "鉄のカーテン",
+      "tier": 2,
+      "category": "冷戦",
+      "description": "東西分断の象徴",
+      "degree": 5
+    },
+    {
+      "name": "中華人民共和国",
+      "tier": 1,
+      "category": "中国",
+      "description": "社会主義中国の成立",
+      "degree": 5
+    },
+    {
+      "name": "周恩来",
+      "tier": 3,
+      "category": "中国",
+      "description": "中国の首相・外交の要",
+      "degree": 2
+    },
+    {
+      "name": "中ソ友好同盟相互援助条約",
+      "tier": 3,
+      "category": "冷戦",
+      "description": "冷戦期の中ソ関係",
+      "degree": 2
+    },
+    {
+      "name": "大韓民国／韓国",
+      "tier": 3,
+      "category": "朝鮮",
+      "description": "朝鮮半島南部の国家",
+      "degree": 3
+    },
+    {
+      "name": "朝鮮民主主義人民共和国／北朝鮮",
+      "tier": 3,
+      "category": "朝鮮",
+      "description": "朝鮮半島北部の国家",
+      "degree": 2
+    },
+    {
+      "name": "パレスチナ問題",
+      "tier": 1,
+      "category": "中東",
+      "description": "現代中東問題の根源",
+      "degree": 6
+    },
+    {
+      "name": "イスラエル",
+      "tier": 1,
+      "category": "中東",
+      "description": "ユダヤ人国家の建国",
+      "degree": 4
+    },
+    {
+      "name": "ナセル",
+      "tier": 2,
+      "category": "中東",
+      "description": "エジプトの指導者、アラブ民族主義",
+      "degree": 6
+    },
+    {
+      "name": "朝鮮戦争",
+      "tier": 1,
+      "category": "朝鮮",
+      "description": "冷戦最初の大規模戦争",
+      "degree": 5
+    },
+    {
+      "name": "サンフランシスコ平和条約",
+      "tier": 2,
+      "category": "日本",
+      "description": "日本の主権回復",
+      "degree": 3
+    },
+    {
+      "name": "水素爆弾",
+      "tier": 2,
+      "category": "冷戦",
+      "description": "核兵器の新段階",
+      "degree": 5
+    },
+    {
+      "name": "スターリン批判",
+      "tier": 2,
+      "category": "ソ連",
+      "description": "ソ連の非スターリン化",
+      "degree": 5
+    },
+    {
+      "name": "フルシチョフ",
+      "tier": 3,
+      "category": "ソ連",
+      "description": "ソ連指導者、平和共存路線",
+      "degree": 3
+    },
+    {
+      "name": "ベルリンの壁",
+      "tier": 1,
+      "category": "冷戦",
+      "description": "東西分断の象徴",
+      "degree": 5
+    },
+    {
+      "name": "キューバ危機",
+      "tier": 1,
+      "category": "冷戦",
+      "description": "核戦争の瀬戸際",
+      "degree": 4
+    },
+    {
+      "name": "ヨーロッパ経済共同体／ＥＥＣ",
+      "tier": 3,
+      "category": "欧州統合",
+      "description": "欧州統合の中核",
+      "degree": 2
+    },
+    {
+      "name": "アジア＝アフリカ会議／バンドン会議",
+      "tier": 2,
+      "category": "第三世界",
+      "description": "第三世界の連帯",
+      "degree": 5
+    },
+    {
+      "name": "非同盟主義",
+      "tier": 2,
+      "category": "第三世界",
+      "description": "第三世界の外交路線",
+      "degree": 2
+    },
+    {
+      "name": "スエズ運河国有化",
+      "tier": 3,
+      "category": "中東",
+      "description": "ナセルの民族主義外交",
+      "degree": 2
+    },
+    {
+      "name": "アフリカ諸国の独立／アフリカの年",
+      "tier": 3,
+      "category": "アフリカ",
+      "description": "1960年の大量独立",
+      "degree": 3
+    },
+    {
+      "name": "キューバ革命",
+      "tier": 2,
+      "category": "ラテンアメリカ",
+      "description": "ラテンアメリカの社会主義革命",
+      "degree": 2
+    },
+    {
+      "name": "カストロ",
+      "tier": 2,
+      "category": "ラテンアメリカ",
+      "description": "キューバ革命の指導者",
+      "degree": 2
+    },
+    {
+      "name": "中ソ対立",
+      "tier": 3,
+      "category": "冷戦",
+      "description": "社会主義陣営の分裂",
+      "degree": 2
+    },
+    {
+      "name": "プロレタリア文化大革命",
+      "tier": 2,
+      "category": "中国",
+      "description": "毛沢東の政治運動",
+      "degree": 4
+    },
+    {
+      "name": "鄧小平",
+      "tier": 3,
+      "category": "中国",
+      "description": "中国改革開放の指導者",
+      "degree": 2
+    },
+    {
+      "name": "ベトナム戦争",
+      "tier": 1,
+      "category": "ベトナム",
+      "description": "冷戦期最大の地域戦争",
+      "degree": 6
+    },
+    {
+      "name": "ニクソン",
+      "tier": 2,
+      "category": "アメリカ",
+      "description": "アメリカ大統領、対中接近",
+      "degree": 3
+    },
+    {
+      "name": "ベトナム和平協定／パリ和平協定",
+      "tier": 3,
+      "category": "ベトナム",
+      "description": "ベトナム戦争の終結",
+      "degree": 2
+    },
+    {
+      "name": "サイゴン陥落",
+      "tier": 3,
+      "category": "ベトナム",
+      "description": "南ベトナムの崩壊",
+      "degree": 2
+    },
+    {
+      "name": "公民権運動",
+      "tier": 2,
+      "category": "アメリカ",
+      "description": "アメリカの人種差別撤廃運動",
+      "degree": 3
+    },
+    {
+      "name": "キング牧師",
+      "tier": 2,
+      "category": "アメリカ",
+      "description": "公民権運動の指導者",
+      "degree": 3
+    },
+    {
+      "name": "公民権法",
+      "tier": 3,
+      "category": "アメリカ",
+      "description": "アメリカの差別撤廃法",
+      "degree": 3
+    },
+    {
+      "name": "東南アジア諸国連合／ＡＳＥＡＮ",
+      "tier": 2,
+      "category": "東南アジア",
+      "description": "東南アジアの地域機構",
+      "degree": 5
+    },
+    {
+      "name": "第１次石油危機／オイル＝ショック",
+      "tier": 2,
+      "category": "経済",
+      "description": "世界経済の転換点",
+      "degree": 2
+    },
+    {
+      "name": "石油輸出国機構／ＯＰＥＣ",
+      "tier": 2,
+      "category": "中東",
+      "description": "産油国の国際機構",
+      "degree": 5
+    },
+    {
+      "name": "核拡散防止条約／ＮＰＴ",
+      "tier": 2,
+      "category": "核軍縮",
+      "description": "核軍縮の基本条約",
+      "degree": 2
+    },
+    {
+      "name": "デタント／緊張緩和",
+      "tier": 3,
+      "category": "冷戦",
+      "description": "冷戦の緩和期",
+      "degree": 2
+    },
+    {
+      "name": "マルタ会談",
+      "tier": 3,
+      "category": "冷戦",
+      "description": "冷戦終結の象徴",
+      "degree": 2
+    },
+    {
+      "name": "冷戦の終結",
+      "tier": 1,
+      "category": "冷戦",
+      "description": "戦後国際秩序の転換",
+      "degree": 5
+    },
+    {
+      "name": "ニクソン訪中",
+      "tier": 3,
+      "category": "冷戦",
+      "description": "米中和解の歴史的転換点",
+      "degree": 3
+    },
+    {
+      "name": "日中国交正常化",
+      "tier": 3,
+      "category": "東アジア",
+      "description": "日本と中国の国交回復",
+      "degree": 2
+    },
+    {
+      "name": "サミット/G7",
+      "tier": 2,
+      "category": "国際政治",
+      "description": "先進国首脳会議",
+      "degree": 5
+    },
+    {
+      "name": "新自由主義",
+      "tier": 3,
+      "category": "経済思想",
+      "description": "市場原理を重視する経済思想",
+      "degree": 2
+    },
+    {
+      "name": "ドイツ統一",
+      "tier": 2,
+      "category": "冷戦終結",
+      "description": "東西ドイツの再統一",
+      "degree": 4
+    },
+    {
+      "name": "EU",
+      "tier": 1,
+      "category": "欧州",
+      "description": "欧州統合の到達点",
+      "degree": 7
+    },
+    {
+      "name": "ユーロ",
+      "tier": 2,
+      "category": "欧州",
+      "description": "欧州単一通貨",
+      "degree": 4
+    },
+    {
+      "name": "ゴルバチョフ",
+      "tier": 3,
+      "category": "ソ連",
+      "description": "ソ連改革と冷戦終結の立役者",
+      "degree": 2
+    },
+    {
+      "name": "ペレストロイカ",
+      "tier": 3,
+      "category": "ソ連",
+      "description": "ソ連の体制改革",
+      "degree": 2
+    },
+    {
+      "name": "ソ連の解体",
+      "tier": 1,
+      "category": "冷戦終結",
+      "description": "冷戦構造の最終的崩壊",
+      "degree": 5
+    },
+    {
+      "name": "東欧革命",
+      "tier": 2,
+      "category": "冷戦終結",
+      "description": "1989年の社会主義体制の連鎖的崩壊",
+      "degree": 4
+    },
+    {
+      "name": "ビロード革命",
+      "tier": 3,
+      "category": "東欧",
+      "description": "チェコスロヴァキアの平和的民主化革命",
+      "degree": 2
+    },
+    {
+      "name": "ユーゴスラヴィア解体",
+      "tier": 3,
+      "category": "東欧",
+      "description": "民族紛争を伴う連邦国家の解体",
+      "degree": 2
+    },
+    {
+      "name": "ワルシャワ条約機構の解散",
+      "tier": 3,
+      "category": "冷戦終結",
+      "description": "冷戦終結を象徴する東側軍事同盟の終焉",
+      "degree": 3
+    },
+    {
+      "name": "改革開放政策",
+      "tier": 2,
+      "category": "中国",
+      "description": "中国の経済近代化路線",
+      "degree": 4
+    },
+    {
+      "name": "天安門事件（第2次）",
+      "tier": 2,
+      "category": "中国",
+      "description": "1989年の民主化運動弾圧",
+      "degree": 4
+    },
+    {
+      "name": "香港返還",
+      "tier": 3,
+      "category": "中国",
+      "description": "イギリスから中国への主権移譲",
+      "degree": 2
+    },
+    {
+      "name": "ドイモイ",
+      "tier": 3,
+      "category": "東南アジア",
+      "description": "ベトナムの市場経済化政策",
+      "degree": 3
+    },
+    {
+      "name": "カンボジア和平協定",
+      "tier": 3,
+      "category": "東南アジア",
+      "description": "内戦終結への国際的合意",
+      "degree": 2
+    },
+    {
+      "name": "南北問題",
+      "tier": 3,
+      "category": "国際経済",
+      "description": "先進国と発展途上国の経済格差問題",
+      "degree": 2
+    },
+    {
+      "name": "第3次中東戦争",
+      "tier": 3,
+      "category": "中東",
+      "description": "イスラエルが6日で周辺国に勝利した戦争",
+      "degree": 2
+    },
+    {
+      "name": "PLO",
+      "tier": 2,
+      "category": "中東",
+      "description": "パレスチナ人の民族解放運動組織",
+      "degree": 4
+    },
+    {
+      "name": "第4次中東戦争",
+      "tier": 3,
+      "category": "中東",
+      "description": "石油危機を引き起こした中東戦争",
+      "degree": 2
+    },
+    {
+      "name": "オスロ合意",
+      "tier": 3,
+      "category": "中東",
+      "description": "イスラエルとPLOの歴史的和平合意",
+      "degree": 2
+    },
+    {
+      "name": "イラン革命",
+      "tier": 2,
+      "category": "中東",
+      "description": "ホメイニによるイスラーム共和国樹立",
+      "degree": 5
+    },
+    {
+      "name": "イラン＝イラク戦争",
+      "tier": 3,
+      "category": "中東",
+      "description": "1980年代の中東大規模戦争",
+      "degree": 2
+    },
+    {
+      "name": "9.11同時多発テロ",
+      "tier": 2,
+      "category": "国際政治",
+      "description": "世界史を変えたアメリカ同時テロ",
+      "degree": 4
+    },
+    {
+      "name": "アル＝カーイダ",
+      "tier": 3,
+      "category": "国際政治",
+      "description": "国際テロ組織",
+      "degree": 2
+    },
+    {
+      "name": "アフガニスタン戦争",
+      "tier": 2,
+      "category": "中東",
+      "description": "対テロ戦争としてのアメリカ軍事介入",
+      "degree": 6
+    },
+    {
+      "name": "アジア通貨危機",
+      "tier": 3,
+      "category": "東アジア",
+      "description": "1997年の東アジア経済危機",
+      "degree": 2
+    },
+    {
+      "name": "マンデラ",
+      "tier": 2,
+      "category": "アフリカ",
+      "description": "南アフリカのアパルトヘイト撤廃の象徴",
+      "degree": 2
+    },
+    {
+      "name": "アラブの春",
+      "tier": 3,
+      "category": "中東",
+      "description": "2010年代の中東民主化運動",
+      "degree": 2
+    },
+    {
+      "name": "シリア内戦",
+      "tier": 3,
+      "category": "中東",
+      "description": "中東の大規模内戦と難民危機",
+      "degree": 5
+    },
+    {
+      "name": "イスラム国（IS）",
+      "tier": 3,
+      "category": "中東",
+      "description": "国際テロの脅威となった過激派組織",
+      "degree": 2
+    },
+    {
+      "name": "ヨーロッパ難民危機",
+      "tier": 3,
+      "category": "欧州",
+      "description": "シリア内戦等による大量難民流入",
+      "degree": 4
+    },
+    {
+      "name": "イギリスのEU離脱",
+      "tier": 3,
+      "category": "欧州",
+      "description": "欧州統合の転換点",
+      "degree": 2
+    },
+    {
+      "name": "ロシアのウクライナ侵攻",
+      "tier": 2,
+      "category": "国際政治",
+      "description": "2022年の国際秩序を揺るがす侵略",
+      "degree": 5
+    },
+    {
+      "name": "クリミア危機",
+      "tier": 3,
+      "category": "旧ソ連",
+      "description": "ロシアによるクリミア半島併合",
+      "degree": 2
+    },
+    {
+      "name": "BRICS",
+      "tier": 3,
+      "category": "国際政治",
+      "description": "新興国グループの台頭",
+      "degree": 2
+    },
+    {
+      "name": "グローバルサウス",
+      "tier": 3,
+      "category": "国際政治",
+      "description": "新興・発展途上国の国際的発言力増大",
+      "degree": 4
+    },
+    {
+      "name": "DNA/分子生物学",
+      "tier": 3,
+      "category": "科学技術",
+      "description": "生命科学の基礎を変えた発見",
+      "degree": 3
+    },
+    {
+      "name": "京都議定書",
+      "tier": 3,
+      "category": "環境問題",
+      "description": "温暖化対策の国際的枠組み",
+      "degree": 2
+    },
+    {
+      "name": "パリ協定",
+      "tier": 3,
+      "category": "環境問題",
+      "description": "2015年の気候変動対策国際合意",
+      "degree": 2
+    },
+    {
+      "name": "実存主義",
+      "tier": 3,
+      "category": "現代思想",
+      "description": "20世紀を代表する哲学思潮",
+      "degree": 2
+    },
+    {
+      "name": "フロイト",
+      "tier": 3,
+      "category": "現代思想",
+      "description": "精神分析学の創始者",
+      "degree": 2
+    },
+    {
+      "name": "ピカソ",
+      "tier": 2,
+      "category": "現代文化",
+      "description": "20世紀美術を代表する芸術家",
+      "degree": 2
+    },
+    {
+      "name": "チャップリン",
+      "tier": 3,
+      "category": "現代文化",
+      "description": "映画芸術を確立した喜劇王",
+      "degree": 2
+    },
+    {
+      "name": "アレクサンドリア",
+      "tier": 3,
+      "category": "ヘレニズム",
+      "description": "ヘレニズム文化の中心、ムセイオンの所在地",
+      "degree": 3
+    }
+  ]
+}

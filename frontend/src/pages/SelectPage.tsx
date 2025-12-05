@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, Button, Container, Typography, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
+import BackgroundImage from '../components/BackgroundImage';
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 type TotalStages = 10 | 30 | 50;
@@ -34,12 +35,18 @@ export default function SelectPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      <BackgroundImage />
+
       <Container
         maxWidth="sm"
         sx={{
           py: 4,
+          position: 'relative',
+          zIndex: 1,
         }}
       >
       <Box sx={{ textAlign: 'center', width: '100%' }}>

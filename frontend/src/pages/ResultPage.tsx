@@ -3,6 +3,7 @@ import { Box, Container, Button, Fade } from '@mui/material';
 import ResultHeader from '../components/ResultHeader';
 import RankingTable from '../components/RankingTable';
 import RouteReviewModal from '../components/RouteReviewModal';
+import BackgroundImage from '../components/BackgroundImage';
 import { useGameStore } from '../stores/gameStore';
 
 const BONUS_POINTS = {
@@ -144,9 +145,13 @@ export default function ResultPage() {
         display: 'flex',
         flexDirection: 'column',
         py: 2,
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <Container maxWidth="md">
+      <BackgroundImage />
+
+      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
         {/* 結果ヘッダー */}
         <ResultHeader
           lives={lives}

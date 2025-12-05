@@ -6,6 +6,7 @@ import GameCard from '../components/GameCard';
 import ChoiceCard from '../components/ChoiceCard';
 import GameHeader from '../components/GameHeader';
 import RelationDisplay from '../components/RelationDisplay';
+import BackgroundImage from '../components/BackgroundImage';
 
 export default function GamePage() {
   const {
@@ -195,9 +196,13 @@ export default function GamePage() {
         display: 'flex',
         flexDirection: 'column',
         py: 2,
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <Container maxWidth="md">
+      <BackgroundImage />
+
+      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
         {/* ゲーム情報ヘッダー */}
         <GameHeader
           lives={lives}

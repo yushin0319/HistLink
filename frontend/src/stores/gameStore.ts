@@ -192,11 +192,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
 
     // 最終ステージをクリアしたらゲーム完了
-    if (isCorrect && newStage >= state.totalStages - 1) {
+    if (isCorrect && newStage >= state.totalStages) {
       set({
         score: newScore,
         lives: newLives,
-        currentStage: newStage,
+        currentStage: state.totalStages - 1, // 最終ステージのまま（COMPLETE表示用）
         isPlaying: false,
         isCompleted: true,
         isFeedbackPhase: false,

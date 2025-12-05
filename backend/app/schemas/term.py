@@ -6,8 +6,8 @@ class TermResponse(BaseModel):
     """用語レスポンス"""
     id: int
     name: str
-    era: str
-    tags: list[str]
+    tier: int
+    category: str
     description: str
 
     class Config:

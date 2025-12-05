@@ -32,8 +32,13 @@ async def start_game(
     全ルート+全選択肢を一括返却し、ゲームロジックはフロントエンドで実行。
     ゲーム終了後に /games/{game_id}/result で結果を送信する。
 
+    難易度別のデータ範囲:
+    - easy: Tier1のみ + easyエッジのみ
+    - normal: Tier1-2 + easy/normalエッジ
+    - hard: 全Tier + 全エッジ
+
     Args:
-        request: ゲーム開始リクエスト（difficulty, era, target_length）
+        request: ゲーム開始リクエスト（difficulty, target_length）
         db: データベースセッション
 
     Returns:
@@ -42,17 +47,18 @@ async def start_game(
     Raises:
         HTTPException: スタート地点が見つからない場合（400）
     """
-    # ランダムスタート地点を選択
+    # ランダムスタート地点を選択（難易度に応じたTierでフィルタ）
     try:
-        start_term_id = select_random_start(db, era=request.era)
+        start_term_id = select_random_start(db, difficulty=request.difficulty)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    # ルートを生成
+    # ルートを生成（難易度に応じたフィルタ付き）
     route = generate_route(
         start_term_id=start_term_id,
         target_length=request.target_length,
-        db=db
+        db=db,
+        difficulty=request.difficulty
     )
 
     # routesテーブルに保存
@@ -104,7 +110,7 @@ async def start_game(
         # 現在のステップの用語情報を取得
         term_result = db.execute(
             text("""
-                SELECT id, name, era, tags, description
+                SELECT id, name, tier, category, description
                 FROM terms
                 WHERE id = :term_id
             """),
@@ -115,8 +121,8 @@ async def start_game(
         term = TermResponse(
             id=term_row[0],
             name=term_row[1],
-            era=term_row[2],
-            tags=term_row[3],
+            tier=term_row[2],
+            category=term_row[3],
             description=term_row[4]
         )
 
@@ -128,36 +134,36 @@ async def start_game(
             # リレーション情報を取得（双方向で検索）
             relation_result = db.execute(
                 text("""
-                    SELECT relation_type, keyword, explanation
+                    SELECT difficulty, keyword, explanation
                     FROM relations
-                    WHERE (src_id = :src_id AND dst_id = :dst_id)
-                       OR (src_id = :dst_id AND dst_id = :src_id)
+                    WHERE (source = :source AND target = :target)
+                       OR (source = :target AND target = :source)
                     LIMIT 1
                 """),
-                {"src_id": term_id, "dst_id": correct_next_id}
+                {"source": term_id, "target": correct_next_id}
             )
             relation_row = relation_result.fetchone()
 
             if not relation_row:
-                print(f"[WARNING] No relation found for src_id={term_id}, dst_id={correct_next_id}")
-                relation_type = ""
+                print(f"[WARNING] No relation found for source={term_id}, target={correct_next_id}")
+                edge_difficulty = "normal"
                 keyword = ""
                 explanation = ""
             else:
-                relation_type = relation_row[0] or ""
+                edge_difficulty = relation_row[0] or "normal"
                 keyword = relation_row[1] or ""
                 explanation = relation_row[2] or ""
-                print(f"[DEBUG] Relation found: src_id={term_id}, dst_id={correct_next_id}, type={relation_type}, keyword={keyword}, explanation={explanation}")
+                print(f"[DEBUG] Relation found: source={term_id}, target={correct_next_id}, difficulty={edge_difficulty}, keyword={keyword}")
 
             # explanationのみを説明文として使用（keywordは別フィールドで返す）
             relation_description = explanation
 
-            # ダミーを3つ生成
+            # ダミーを3つ生成（難易度に応じたTierフィルタ）
             distractors = generate_distractors(
                 correct_id=correct_next_id,
                 current_id=term_id,
                 visited=visited,
-                difficulty=request.difficulty or "standard",
+                difficulty=request.difficulty,
                 count=3,
                 db=db
             )
@@ -170,7 +176,7 @@ async def start_game(
             for choice_id in all_choice_ids:
                 choice_result = db.execute(
                     text("""
-                        SELECT id, name, era
+                        SELECT id, name, tier
                         FROM terms
                         WHERE id = :term_id
                     """),
@@ -181,7 +187,7 @@ async def start_game(
                     ChoiceResponse(
                         term_id=choice_row[0],
                         name=choice_row[1],
-                        era=choice_row[2]
+                        tier=choice_row[2]
                     )
                 )
 
@@ -193,7 +199,7 @@ async def start_game(
                 term=term,
                 correct_next_id=correct_next_id,
                 choices=choices,
-                relation_type=relation_type,
+                edge_difficulty=edge_difficulty,
                 keyword=keyword,
                 relation_description=relation_description
             ))
@@ -204,7 +210,7 @@ async def start_game(
                 term=term,
                 correct_next_id=None,
                 choices=[],
-                relation_type="",
+                edge_difficulty="",
                 keyword="",
                 relation_description=""
             ))
@@ -212,7 +218,7 @@ async def start_game(
     return FullRouteStartResponse(
         game_id=game_row[0],
         route_id=route_id,
-        difficulty=request.difficulty or "standard",
+        difficulty=request.difficulty,
         total_steps=len(route),
         steps=steps,
         created_at=game_row[1]

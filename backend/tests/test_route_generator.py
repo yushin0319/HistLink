@@ -1,58 +1,46 @@
 """
-ルート生成アルゴリズムのテスト
+ルート生成アルゴリズムのテスト（ランダムウォーク版）
 
-TDD (Test-Driven Development) で実装:
-1. BFS距離計算
-2. スコアリング式：+2*dist_up + 1*residual_deg_capped - 3*triangle_hit
-3. バックトラック
-4. プロパティベーステスト（hypothesis）
+難易度システム:
+- easy: Tier1のみ + easyエッジのみ
+- normal: Tier1-2 + easy/normalエッジ
+- hard: 全Tier + 全エッジ
+
+ランダムウォーク方式：
+- 行き止まり回避付きランダムウォーク
+- BFSより高速で同等の品質
 """
 
 import pytest
 from hypothesis import given, strategies as st, settings, HealthCheck
 from app.services.route_generator import (
-    calculate_bfs_distances,
     generate_route,
     count_unvisited_neighbors,
-    count_triangle_hits,
     select_random_start,
+    get_difficulty_filter,
 )
 
 
-class TestBFSDistances:
-    """BFS距離計算のテスト"""
+class TestDifficultyFilter:
+    """難易度フィルタのテスト"""
 
-    def test_bfs_start_distance_is_zero(self, db_session):
-        """スタート地点からの距離は0"""
-        distances = calculate_bfs_distances(1, db_session)
-        assert distances[1] == 0
+    def test_easy_filter(self):
+        """Easy難易度のフィルタ"""
+        max_tier, allowed = get_difficulty_filter('easy')
+        assert max_tier == 1
+        assert allowed == ['easy']
 
-    def test_bfs_neighbor_distance_is_one(self, db_session):
-        """直接繋がっているノードの距離は1"""
-        # term 1 と繋がっているノードを取得
-        from sqlalchemy import text
-        result = db_session.execute(
-            text("""
-            SELECT dst_id FROM relations WHERE src_id = 1
-            UNION
-            SELECT src_id FROM relations WHERE dst_id = 1
-            """)
-        )
-        neighbors = [row[0] for row in result]
+    def test_normal_filter(self):
+        """Normal難易度のフィルタ"""
+        max_tier, allowed = get_difficulty_filter('normal')
+        assert max_tier == 2
+        assert allowed == ['easy', 'normal']
 
-        distances = calculate_bfs_distances(1, db_session)
-        for neighbor_id in neighbors:
-            assert distances[neighbor_id] == 1
-
-    def test_bfs_unreachable_nodes(self, db_session):
-        """到達不可能なノードの距離はNoneまたは無限大"""
-        # 孤立ノードを作成（テスト用）
-        from sqlalchemy import text
-        db_session.execute(text("INSERT INTO terms (id, name, era, tags, description) VALUES (999, 'isolated', '古代', '[]'::jsonb, 'test description')"))
-        db_session.commit()
-
-        distances = calculate_bfs_distances(1, db_session)
-        assert 999 not in distances or distances.get(999) is None
+    def test_hard_filter(self):
+        """Hard難易度のフィルタ"""
+        max_tier, allowed = get_difficulty_filter('hard')
+        assert max_tier == 3
+        assert allowed == ['easy', 'normal', 'hard']
 
 
 class TestRouteGeneration:
@@ -63,7 +51,8 @@ class TestRouteGeneration:
         route = generate_route(
             start_term_id=1,
             target_length=10,
-            db=db_session
+            db=db_session,
+            difficulty='hard'
         )
 
         # ルートが生成されている
@@ -75,17 +64,25 @@ class TestRouteGeneration:
         # 重複なし（全て異なるノード）
         assert len(route) == len(set(route))
 
-    def test_generate_route_reaches_target_length(self, db_session):
-        """目標長さに到達する"""
-        target = 15
-        route = generate_route(
-            start_term_id=1,
-            target_length=target,
-            db=db_session
-        )
+    def test_generate_route_easy_difficulty(self, db_session):
+        """Easy難易度でのルート生成"""
+        from sqlalchemy import text
 
-        # 目標長さに到達、または詰まるまで進む
-        assert len(route) > 0
+        # Tier1の用語を取得
+        result = db_session.execute(text("SELECT id FROM terms WHERE tier = 1 LIMIT 1"))
+        tier1_id = result.fetchone()
+
+        if tier1_id:
+            route = generate_route(
+                start_term_id=tier1_id[0],
+                target_length=5,
+                db=db_session,
+                difficulty='easy'
+            )
+
+            # ルートが生成されている
+            assert len(route) > 0
+            assert route[0] == tier1_id[0]
 
     def test_route_follows_relations(self, db_session):
         """生成されたルートは実際のリレーションに従っている"""
@@ -93,7 +90,8 @@ class TestRouteGeneration:
         route = generate_route(
             start_term_id=1,
             target_length=10,
-            db=db_session
+            db=db_session,
+            difficulty='hard'
         )
 
         # 各ステップが実際に繋がっているか確認
@@ -103,8 +101,8 @@ class TestRouteGeneration:
             result = db_session.execute(
                 text("""
                 SELECT COUNT(*) FROM relations
-                WHERE (src_id = :src AND dst_id = :dst)
-                   OR (src_id = :dst AND dst_id = :src)
+                WHERE (source = :src AND target = :dst)
+                   OR (source = :dst AND target = :src)
                 """),
                 {"src": src, "dst": dst}
             ).fetchone()
@@ -125,47 +123,33 @@ class TestScoringFunction:
         # 少なくとも0以上
         assert count >= 0
 
-    def test_count_triangle_hits(self, db_session):
-        """三角形ヒット数のカウント"""
-        # recent_route = [1, 2, 3] のとき、
-        # candidate 4 が 1,2,3 のいずれかと繋がっている数
-        recent_route = [1, 2, 3]
-
-        count = count_triangle_hits(4, recent_route, db_session)
-
-        # 0〜3の範囲
-        assert 0 <= count <= 3
-
-    def test_triangle_hits_empty_route(self, db_session):
-        """recent_routeが空の場合は0を返す"""
-        count = count_triangle_hits(4, [], db_session)
-        assert count == 0
-
 
 class TestEdgeCases:
     """エッジケースのテスト"""
 
     def test_single_node_route(self, db_session):
         """長さ1のルート（スタートのみ）"""
-        route = generate_route(1, 1, db_session)
+        route = generate_route(1, 1, db_session, difficulty='hard')
         assert route == [1]
 
     def test_isolated_node_fails_gracefully(self, db_session):
         """孤立ノードから開始した場合"""
-        # 孤立ノードを作成
         from sqlalchemy import text
-        db_session.execute(text("INSERT INTO terms (id, name, era, tags, description) VALUES (998, 'isolated2', '古代', '[]'::jsonb, 'test description')"))
+        db_session.execute(text(
+            "INSERT INTO terms (id, name, tier, category, description) "
+            "VALUES (998, 'isolated2', 1, 'テスト', 'test description')"
+        ))
         db_session.commit()
 
-        route = generate_route(998, 10, db_session)
+        route = generate_route(998, 10, db_session, difficulty='hard')
 
         # 長さ1（スタートのみ）のルートが返る
         assert route == [998]
 
     def test_generate_route_with_seed(self, db_session):
         """seedパラメータで決定的なルート生成"""
-        route1 = generate_route(1, 10, db_session, seed=42)
-        route2 = generate_route(1, 10, db_session, seed=42)
+        route1 = generate_route(1, 10, db_session, difficulty='hard', seed=42)
+        route2 = generate_route(1, 10, db_session, difficulty='hard', seed=42)
 
         # 同じseedなら同じルートが生成される
         assert route1 == route2
@@ -176,33 +160,40 @@ class TestRandomStart:
 
     def test_select_random_start_basic(self, db_session):
         """ランダムスタート地点を選択"""
-        start_id = select_random_start(db_session)
+        start_id = select_random_start(db_session, difficulty='hard')
 
         assert isinstance(start_id, int)
         assert start_id >= 1
 
-    def test_select_random_start_with_era(self, db_session):
-        """時代指定でランダムスタート地点を選択"""
-        start_id = select_random_start(db_session, era='古代')
-
-        # 選ばれた用語が実際に古代か確認
+    def test_select_random_start_easy(self, db_session):
+        """Easy難易度でランダムスタート地点を選択（Tier1のみ）"""
         from sqlalchemy import text
+        start_id = select_random_start(db_session, difficulty='easy')
+
+        # 選ばれた用語がTier1か確認
         result = db_session.execute(
-            text("SELECT era FROM terms WHERE id = :id"),
+            text("SELECT tier FROM terms WHERE id = :id"),
             {"id": start_id}
         ).fetchone()
-        assert result[0] == '古代'
+        assert result[0] == 1
+
+    def test_select_random_start_normal(self, db_session):
+        """Normal難易度でランダムスタート地点を選択（Tier1-2）"""
+        from sqlalchemy import text
+        start_id = select_random_start(db_session, difficulty='normal')
+
+        # 選ばれた用語がTier1-2か確認
+        result = db_session.execute(
+            text("SELECT tier FROM terms WHERE id = :id"),
+            {"id": start_id}
+        ).fetchone()
+        assert result[0] <= 2
 
     def test_select_random_start_deterministic(self, db_session):
         """seedで決定的になる"""
-        start1 = select_random_start(db_session, seed=42)
-        start2 = select_random_start(db_session, seed=42)
+        start1 = select_random_start(db_session, difficulty='hard', seed=42)
+        start2 = select_random_start(db_session, difficulty='hard', seed=42)
         assert start1 == start2
-
-    def test_select_random_start_invalid_era(self, db_session):
-        """存在しない時代を指定した場合"""
-        with pytest.raises(ValueError, match="No terms found"):
-            select_random_start(db_session, era='未来')
 
 
 class TestMultipleStarts:
@@ -231,10 +222,27 @@ class TestMultipleStarts:
         route = generate_route(
             start_term_id=start_id,
             target_length=10,
-            db=db_session
+            db=db_session,
+            difficulty='hard'
         )
 
         # 基本的な性質を検証
         assert len(route) > 0
         assert route[0] == start_id
         assert len(route) == len(set(route))  # 重複なし
+
+
+class TestErrorCases:
+    """エラーケースのテスト"""
+
+    def test_select_random_start_no_terms(self, db_session):
+        """該当するtermがない場合はValueError"""
+        from sqlalchemy import text
+
+        # 全termsを削除（トランザクション内なのでロールバックされる）
+        db_session.execute(text("DELETE FROM relations"))
+        db_session.execute(text("DELETE FROM terms"))
+        db_session.commit()
+
+        with pytest.raises(ValueError, match="No terms found"):
+            select_random_start(db_session, difficulty='easy')

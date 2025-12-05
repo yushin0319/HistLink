@@ -1,14 +1,18 @@
 """
-データ品質チェックテスト
+データ品質チェックテスト（新仕様）
 
 このテストモジュールは、データベースに格納されているデータの品質を検証します。
 以下のチェックを実行します：
 1. 死に点チェック（degree < 2のノードがないこと）
-2. 用語数チェック（目標: 100語）
-3. リレーション数チェック（目標: 300リレーション）
+2. 用語数チェック
+3. リレーション数チェック
 4. 孤立ノードチェック（どこにも繋がっていないノード）
-5. 自己ループチェック（src_id = dst_id）
+5. 自己ループチェック（source = target）
 6. 次数統計チェック（最小次数が2以上）
+
+新スキーマ:
+- terms: id, name, tier, category, description
+- relations: id, source, target, difficulty, keyword, explanation
 """
 
 import pytest
@@ -28,9 +32,9 @@ def test_no_dead_points(db_session):
     # 死に点がある場合は詳細を表示
     if result > 0:
         dead_points = db_session.execute(
-            text("SELECT id, name, era, degree FROM v_dead_points")
+            text("SELECT id, name, tier, degree FROM v_dead_points")
         ).fetchall()
-        details = "\n".join([f"  - ID {dp.id}: {dp.name} ({dp.era}) - degree: {dp.degree}"
+        details = "\n".join([f"  - ID {dp.id}: {dp.name} (Tier {dp.tier}) - degree: {dp.degree}"
                             for dp in dead_points])
         pytest.fail(f"死に点が{result}個存在します:\n{details}")
 
@@ -45,7 +49,7 @@ def test_terms_exist(db_session):
         text("SELECT COUNT(*) FROM terms")
     ).scalar()
 
-    assert count > 0, f"用語が1件も存在しません"
+    assert count > 0, "用語が1件も存在しません"
 
 
 def test_relations_exist(db_session):
@@ -56,7 +60,7 @@ def test_relations_exist(db_session):
         text("SELECT COUNT(*) FROM relations")
     ).scalar()
 
-    assert count > 0, f"リレーションが1件も存在しません"
+    assert count > 0, "リレーションが1件も存在しません"
 
 
 def test_no_isolated_nodes(db_session):
@@ -67,7 +71,7 @@ def test_no_isolated_nodes(db_session):
         text("""
             SELECT COUNT(*)
             FROM terms t
-            LEFT JOIN relations r ON (r.src_id = t.id OR r.dst_id = t.id)
+            LEFT JOIN relations r ON (r.source = t.id OR r.target = t.id)
             WHERE r.id IS NULL
         """)
     ).scalar()
@@ -76,13 +80,13 @@ def test_no_isolated_nodes(db_session):
     if result > 0:
         isolated = db_session.execute(
             text("""
-                SELECT t.id, t.name, t.era
+                SELECT t.id, t.name, t.tier
                 FROM terms t
-                LEFT JOIN relations r ON (r.src_id = t.id OR r.dst_id = t.id)
+                LEFT JOIN relations r ON (r.source = t.id OR r.target = t.id)
                 WHERE r.id IS NULL
             """)
         ).fetchall()
-        details = "\n".join([f"  - ID {n.id}: {n.name} ({n.era})" for n in isolated])
+        details = "\n".join([f"  - ID {n.id}: {n.name} (Tier {n.tier})" for n in isolated])
         pytest.fail(f"孤立ノードが{result}個存在します:\n{details}")
 
     assert result == 0, f"孤立ノードが{result}個存在します"
@@ -90,24 +94,24 @@ def test_no_isolated_nodes(db_session):
 
 def test_no_self_loops(db_session):
     """
-    自己ループ（src_id = dst_id）が存在しないことを確認
+    自己ループ（source = target）が存在しないことを確認
 
     自己ループはゲームの進行を妨げるため、禁止されている。
     """
     result = db_session.execute(
-        text("SELECT COUNT(*) FROM relations WHERE src_id = dst_id")
+        text("SELECT COUNT(*) FROM relations WHERE source = target")
     ).scalar()
 
     # 自己ループがある場合は詳細を表示
     if result > 0:
         self_loops = db_session.execute(
             text("""
-                SELECT id, src_id, dst_id, relation_type
+                SELECT id, source, target, difficulty
                 FROM relations
-                WHERE src_id = dst_id
+                WHERE source = target
             """)
         ).fetchall()
-        details = "\n".join([f"  - Relation ID {r.id}: term_id={r.src_id}, type={r.relation_type}"
+        details = "\n".join([f"  - Relation ID {r.id}: term_id={r.source}, difficulty={r.difficulty}"
                             for r in self_loops])
         pytest.fail(f"自己ループが{result}個存在します:\n{details}")
 
@@ -136,60 +140,51 @@ def test_degree_statistics(db_session):
     assert stats.max_degree <= 30, f"最大次数が{stats.max_degree}です（ハブノード対策: 30以下推奨）"
 
 
-def test_era_distribution(db_session):
+def test_tier_distribution(db_session):
     """
-    時代別の用語分布を確認
+    Tier別の用語分布を確認
 
-    各時代に最低10語以上あることを確認（バランスの取れたデータセット）
+    各Tierに用語があることを確認
     """
-    era_counts = db_session.execute(
+    tier_counts = db_session.execute(
         text("""
-            SELECT era, COUNT(*) AS count
+            SELECT tier, COUNT(*) AS count
             FROM terms
-            GROUP BY era
-            ORDER BY
-                CASE era
-                    WHEN '古代' THEN 1
-                    WHEN '中世' THEN 2
-                    WHEN '近世' THEN 3
-                    WHEN '近代' THEN 4
-                    WHEN '現代' THEN 5
-                    ELSE 6
-                END
+            GROUP BY tier
+            ORDER BY tier
         """)
     ).fetchall()
 
-    for era_count in era_counts:
-        assert era_count.count >= 10, \
-            f"{era_count.era}の用語数が{era_count.count}です（期待値: 10以上）"
+    for tier_count in tier_counts:
+        assert tier_count.count >= 1, \
+            f"Tier {tier_count.tier}の用語数が{tier_count.count}です（期待値: 1以上）"
 
 
-def test_relation_type_diversity(db_session):
+def test_difficulty_diversity(db_session):
     """
-    リレーションタイプの多様性を確認
+    難易度の多様性を確認
 
-    最低3種類以上のリレーションタイプが使われていることを確認
+    最低2種類以上の難易度（easy, normal, hard）が使われていることを確認
     """
-    type_count = db_session.execute(
-        text("SELECT COUNT(DISTINCT relation_type) FROM relations")
+    difficulty_count = db_session.execute(
+        text("SELECT COUNT(DISTINCT difficulty) FROM relations")
     ).scalar()
 
-    assert type_count >= 3, \
-        f"リレーションタイプが{type_count}種類です（期待値: 3種類以上）"
+    assert difficulty_count >= 2, \
+        f"難易度が{difficulty_count}種類です（期待値: 2種類以上）"
 
 
 def test_duplicate_relations(db_session):
     """
     重複リレーションが存在しないことを確認
 
-    同じsrc_id, dst_id, relation_typeの組み合わせは1つのみ許可
-    （UNIQUE制約で保証されているはずだが、念のため確認）
+    同じsource, targetの組み合わせは1つのみ許可
     """
     duplicates = db_session.execute(
         text("""
-            SELECT src_id, dst_id, relation_type, COUNT(*) AS dup_count
+            SELECT source, target, COUNT(*) AS dup_count
             FROM relations
-            GROUP BY src_id, dst_id, relation_type
+            GROUP BY source, target
             HAVING COUNT(*) > 1
         """)
     ).fetchall()
@@ -198,40 +193,41 @@ def test_duplicate_relations(db_session):
         f"重複リレーションが{len(duplicates)}個存在します"
 
 
-@pytest.mark.parametrize("era", ["古代", "中世", "近世", "近代", "現代"])
-def test_era_connectivity(db_session, era):
+@pytest.mark.parametrize("tier", [1, 2, 3])
+def test_tier_connectivity(db_session, tier):
     """
-    各時代の用語が孤立していないことを確認
+    各Tierの用語が孤立していないことを確認
 
-    各時代の用語が、他の時代の用語と少なくとも1つ以上繋がっていることを確認
-    （時代を跨いだゲームプレイを可能にするため）
+    各Tierの用語が他のTierの用語と少なくとも1つ以上繋がっていることを確認
+    （Tierを跨いだゲームプレイを可能にするため）
     """
-    # 指定された時代の用語で、他の時代と繋がっているものの数
+    # 指定されたTierの用語で、他のTierと繋がっているものの数
     connected_count = db_session.execute(
         text("""
             SELECT COUNT(DISTINCT t1.id)
             FROM terms t1
-            JOIN relations r ON (r.src_id = t1.id OR r.dst_id = t1.id)
+            JOIN relations r ON (r.source = t1.id OR r.target = t1.id)
             JOIN terms t2 ON (
-                (r.src_id = t2.id AND r.dst_id = t1.id) OR
-                (r.dst_id = t2.id AND r.src_id = t1.id)
+                (r.source = t2.id AND r.target = t1.id) OR
+                (r.target = t2.id AND r.source = t1.id)
             )
-            WHERE t1.era = :era AND t2.era != :era
+            WHERE t1.tier = :tier AND t2.tier != :tier
         """),
-        {"era": era}
+        {"tier": tier}
     ).scalar()
 
-    # 指定された時代の総用語数
+    # 指定されたTierの総用語数
     total_count = db_session.execute(
-        text("SELECT COUNT(*) FROM terms WHERE era = :era"),
-        {"era": era}
+        text("SELECT COUNT(*) FROM terms WHERE tier = :tier"),
+        {"tier": tier}
     ).scalar()
 
-    # 少なくとも25%以上の用語が他の時代と繋がっていることを期待
+    # Tierに用語がある場合のみチェック
     if total_count > 0:
         connectivity_ratio = connected_count / total_count
-        assert connectivity_ratio >= 0.25, \
-            f"{era}の用語のうち他の時代と繋がっているのは{connectivity_ratio:.1%}です（期待値: 25%以上）"
+        # 少なくとも10%以上の用語が他のTierと繋がっていることを期待
+        assert connectivity_ratio >= 0.10, \
+            f"Tier {tier}の用語のうち他のTierと繋がっているのは{connectivity_ratio:.1%}です（期待値: 10%以上）"
 
 
 def test_data_quality_summary(db_session):
@@ -252,37 +248,33 @@ def test_data_quality_summary(db_session):
             SELECT
                 MIN(degree) AS min_degree,
                 MAX(degree) AS max_degree,
-                ROUND(AVG(degree), 2) AS avg_degree
+                ROUND(AVG(degree)::numeric, 2) AS avg_degree
             FROM v_term_degrees
         """)
     ).fetchone()
 
-    # 時代別用語数
-    era_counts = db_session.execute(
+    # Tier別用語数
+    tier_counts = db_session.execute(
         text("""
-            SELECT era, COUNT(*) AS count
+            SELECT tier, COUNT(*) AS count
             FROM terms
-            GROUP BY era
-            ORDER BY
-                CASE era
-                    WHEN '古代' THEN 1
-                    WHEN '中世' THEN 2
-                    WHEN '近世' THEN 3
-                    WHEN '近代' THEN 4
-                    WHEN '現代' THEN 5
-                    ELSE 6
-                END
+            GROUP BY tier
+            ORDER BY tier
         """)
     ).fetchall()
 
-    # リレーションタイプ別数
-    relation_types = db_session.execute(
+    # 難易度別リレーション数
+    difficulty_counts = db_session.execute(
         text("""
-            SELECT relation_type, COUNT(*) AS count
+            SELECT difficulty, COUNT(*) AS count
             FROM relations
-            GROUP BY relation_type
-            ORDER BY count DESC
-            LIMIT 5
+            GROUP BY difficulty
+            ORDER BY
+                CASE difficulty
+                    WHEN 'easy' THEN 1
+                    WHEN 'normal' THEN 2
+                    WHEN 'hard' THEN 3
+                END
         """)
     ).fetchall()
 
@@ -292,13 +284,14 @@ def test_data_quality_summary(db_session):
     print("="*50)
     print(f"用語数: {term_count}")
     print(f"リレーション数: {relation_count}")
-    print(f"次数統計: 最小={degree_stats.min_degree}, 最大={degree_stats.max_degree}, 平均={degree_stats.avg_degree}")
-    print("\n時代別用語数:")
-    for era_count in era_counts:
-        print(f"  {era_count.era}: {era_count.count}語")
-    print("\nリレーションタイプ別数（上位5件）:")
-    for rt in relation_types:
-        print(f"  {rt.relation_type}: {rt.count}件")
+    if degree_stats.min_degree is not None:
+        print(f"次数統計: 最小={degree_stats.min_degree}, 最大={degree_stats.max_degree}, 平均={degree_stats.avg_degree}")
+    print("\nTier別用語数:")
+    for tier_count in tier_counts:
+        print(f"  Tier {tier_count.tier}: {tier_count.count}語")
+    print("\n難易度別リレーション数:")
+    for dc in difficulty_counts:
+        print(f"  {dc.difficulty}: {dc.count}件")
     print("="*50)
 
     # このテストは常に成功

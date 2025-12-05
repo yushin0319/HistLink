@@ -9,8 +9,7 @@ from .term import TermResponse
 
 class GameStartRequest(BaseModel):
     """ゲーム開始リクエスト"""
-    difficulty: Optional[str] = "standard"
-    era: Optional[str] = None
+    difficulty: str = Field(default="normal", pattern="^(easy|normal|hard)$")
     target_length: int = Field(default=20, ge=5, le=50)
 
 
@@ -18,7 +17,7 @@ class ChoiceResponse(BaseModel):
     """選択肢レスポンス"""
     term_id: int
     name: str
-    era: str
+    tier: int
 
     class Config:
         from_attributes = True
@@ -46,7 +45,7 @@ class RouteStepWithChoices(BaseModel):
     term: TermResponse
     correct_next_id: int | None  # 次の正解（最後のステップではNone）
     choices: list[ChoiceResponse]  # 4択（正解1 + ダミー3）
-    relation_type: str  # リレーションの種類（例: "因果"）
+    edge_difficulty: str  # エッジの難易度（easy/normal/hard）
     keyword: str  # リレーションのキーワード（例: "農耕開始"）
     relation_description: str  # リレーションの説明文
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# TSVファイルからデータベースを完全再構築
+# JSONファイルからデータベースを完全再構築
 # UTF-8エンコーディングを保証
 
 set -e
@@ -58,28 +58,27 @@ CREATE SEQUENCE terms_id_seq AS integer;
 -- ========================================
 -- Tables
 -- ========================================
--- terms テーブル
+-- terms テーブル（JSON対応: tier, category）
 CREATE TABLE terms (
     id INTEGER NOT NULL DEFAULT nextval('terms_id_seq'::regclass),
     name VARCHAR(100) NOT NULL,
-    era VARCHAR(50) NOT NULL,
-    year INTEGER,
-    tags JSONB DEFAULT '[]'::jsonb,
+    tier INTEGER NOT NULL CHECK (tier >= 1 AND tier <= 3),
+    category VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     PRIMARY KEY (id)
 );
 
--- relations テーブル（id列あり）
+-- relations テーブル（JSON対応: source, target, difficulty）
 CREATE TABLE relations (
     id INTEGER NOT NULL DEFAULT nextval('relations_id_seq'::regclass),
-    src_id INTEGER NOT NULL,
-    dst_id INTEGER NOT NULL,
-    relation_type VARCHAR(50) NOT NULL,
+    source INTEGER NOT NULL,
+    target INTEGER NOT NULL,
+    difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('easy', 'normal', 'hard')),
     keyword VARCHAR(100),
     explanation TEXT,
     PRIMARY KEY (id),
-    FOREIGN KEY (src_id) REFERENCES terms(id) ON DELETE CASCADE,
-    FOREIGN KEY (dst_id) REFERENCES terms(id) ON DELETE CASCADE
+    FOREIGN KEY (source) REFERENCES terms(id) ON DELETE CASCADE,
+    FOREIGN KEY (target) REFERENCES terms(id) ON DELETE CASCADE
 );
 
 -- routes テーブル
@@ -136,9 +135,11 @@ CREATE TABLE games (
 -- ========================================
 -- Indexes
 -- ========================================
-CREATE INDEX idx_relations_src ON relations(src_id);
-CREATE INDEX idx_relations_dst ON relations(dst_id);
-CREATE INDEX idx_terms_era ON terms(era);
+CREATE INDEX idx_relations_source ON relations(source);
+CREATE INDEX idx_relations_target ON relations(target);
+CREATE INDEX idx_relations_difficulty ON relations(difficulty);
+CREATE INDEX idx_terms_tier ON terms(tier);
+CREATE INDEX idx_terms_category ON terms(category);
 CREATE INDEX idx_games_created_at ON games USING btree (created_at DESC);
 CREATE INDEX idx_games_route_id ON games USING btree (route_id);
 CREATE INDEX idx_games_ranking ON games USING btree (is_finished, score DESC) WHERE is_finished = true;
@@ -151,22 +152,54 @@ CREATE VIEW v_term_degrees AS
 SELECT
     t.id,
     t.name,
-    t.era,
+    t.tier,
+    t.category,
     COALESCE(COUNT(DISTINCT r.id), 0) AS degree
 FROM terms t
-LEFT JOIN relations r ON (r.src_id = t.id OR r.dst_id = t.id)
-GROUP BY t.id, t.name, t.era
+LEFT JOIN relations r ON (r.source = t.id OR r.target = t.id)
+GROUP BY t.id, t.name, t.tier, t.category
 ORDER BY degree DESC, t.id;
 
 COMMENT ON VIEW v_term_degrees IS '用語ごとの次数（リレーション数）';
 
 -- 死に点（degree < 2）を表示するビュー
 CREATE VIEW v_dead_points AS
-SELECT id, name, era, degree
+SELECT id, name, tier, category, degree
 FROM v_term_degrees
 WHERE degree < 2;
 
 COMMENT ON VIEW v_dead_points IS '次数が2未満の用語（死に点）';
+
+-- Tier別統計ビュー
+CREATE VIEW v_tier_stats AS
+SELECT
+    tier,
+    COUNT(*) AS term_count,
+    (SELECT COUNT(*) FROM relations r
+     JOIN terms t1 ON r.source = t1.id
+     JOIN terms t2 ON r.target = t2.id
+     WHERE t1.tier = t.tier OR t2.tier = t.tier) AS relation_count
+FROM terms t
+GROUP BY tier
+ORDER BY tier;
+
+COMMENT ON VIEW v_tier_stats IS 'Tier別の用語数・リレーション数';
+
+-- 難易度別統計ビュー
+CREATE VIEW v_difficulty_stats AS
+SELECT
+    difficulty,
+    COUNT(*) AS relation_count
+FROM relations
+GROUP BY difficulty
+ORDER BY
+    CASE difficulty
+        WHEN 'easy' THEN 1
+        WHEN 'normal' THEN 2
+        WHEN 'hard' THEN 3
+    END;
+
+COMMENT ON VIEW v_difficulty_stats IS '難易度別のリレーション数';
 
 -- ルート品質チェックビュー
 CREATE VIEW v_route_quality AS
@@ -204,44 +237,20 @@ CREATE TRIGGER games_updated_at BEFORE UPDATE ON games
 ALTER SEQUENCE relations_id_seq OWNED BY relations.id;
 ALTER SEQUENCE routes_id_seq OWNED BY routes.id;
 ALTER SEQUENCE terms_id_seq OWNED BY terms.id;
+
 EOF
 
-# 5. ヘッダー行を除いたTSVファイルを準備してコンテナにコピー
-echo "📋 TSVファイルをコピー中..."
-tail -n +2 data/terms.tsv > /tmp/terms_data.tsv
-tail -n +2 data/relations.tsv > /tmp/relations_data.tsv
-docker cp /tmp/terms_data.tsv histlink-postgres:/tmp/terms.tsv
-docker cp /tmp/relations_data.tsv histlink-postgres:/tmp/relations.tsv
-rm /tmp/terms_data.tsv /tmp/relations_data.tsv
+# 5. Node.jsスクリプトでデータをインポート
+echo "📥 JSONデータをインポート中..."
+node scripts/import_json.js
 
-# 6. データインポート
-echo "📥 データインポート中..."
-docker compose exec -T postgres psql -U histlink_user -d histlink << 'EOF'
--- termsテーブルにインポート（IDを含む）
-COPY terms (id, name, era, year, tags, description)
-FROM '/tmp/terms.tsv'
-WITH (FORMAT text, DELIMITER E'\t', ENCODING 'UTF8');
-
--- relationsテーブルにインポート（IDは自動採番）
-COPY relations (src_id, dst_id, relation_type, keyword, explanation)
-FROM '/tmp/relations.tsv'
-WITH (FORMAT text, DELIMITER E'\t', ENCODING 'UTF8');
-
--- シーケンス値を調整
-SELECT pg_catalog.setval('terms_id_seq', (SELECT MAX(id) FROM terms), true);
-SELECT pg_catalog.setval('relations_id_seq', (SELECT MAX(id) FROM relations), true);
-EOF
-
-# 7. 一時ファイル削除
-echo "🧹 一時ファイル削除中..."
-docker compose exec -T postgres rm -f /tmp/terms.tsv /tmp/relations.tsv
-
-echo ""
-echo "✅ 完了！"
 echo ""
 echo "📊 統計:"
 docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT COUNT(*) AS terms FROM terms;"
 docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT COUNT(*) AS relations FROM relations;"
 echo ""
-echo "📈 用語の時代別分布:"
-docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT era, COUNT(*) as count FROM terms GROUP BY era ORDER BY era;"
+echo "📈 Tier別分布:"
+docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT tier, COUNT(*) as count FROM terms GROUP BY tier ORDER BY tier;"
+echo ""
+echo "📈 難易度別分布:"
+docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT difficulty, COUNT(*) as count FROM relations GROUP BY difficulty ORDER BY difficulty;"

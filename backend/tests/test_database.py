@@ -44,12 +44,13 @@ def test_relations_exist(db_session):
 def test_sample_term(db_session):
     """Test reading a sample term"""
     result = db_session.execute(
-        text("SELECT name, era FROM terms WHERE name = '縄文時代'")
+        text("SELECT name, tier, category FROM terms WHERE id = 1")
     )
     row = result.fetchone()
     assert row is not None
-    assert row[0] == "縄文時代"
-    assert row[1] == "古代"
+    assert row[0] is not None  # name
+    assert row[1] in (1, 2, 3)  # tier
+    assert row[2] is not None  # category
 
 
 def test_get_db():

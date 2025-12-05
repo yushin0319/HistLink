@@ -54,9 +54,10 @@ async def start_game(
         raise HTTPException(status_code=400, detail=str(e))
 
     # ルートを生成（難易度に応じたフィルタ付き）
+    # target_length回のゲーム = target_length+1ノード（target_lengthエッジ）が必要
     route = generate_route(
         start_term_id=start_term_id,
-        target_length=request.target_length,
+        target_length=request.target_length + 1,
         db=db,
         difficulty=request.difficulty
     )

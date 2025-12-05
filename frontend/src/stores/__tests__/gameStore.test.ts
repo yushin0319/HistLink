@@ -1,6 +1,27 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useGameStore } from '../gameStore';
 import type { RouteStepWithChoices } from '../../types/api';
+
+// localStorageをモック
+const localStorageMock = (() => {
+  let store: Record<string, string> = {};
+  return {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});
 
 // モックデータ: 3ステップのルート
 const mockSteps: RouteStepWithChoices[] = [
@@ -48,6 +69,9 @@ describe('gameStore', () => {
     // 各テスト前にストアをリセット
     const { resetGame } = useGameStore.getState();
     resetGame();
+    // localStorageをクリア
+    localStorageMock.clear();
+    vi.clearAllMocks();
   });
 
   describe('初期状態', () => {
@@ -448,6 +472,58 @@ describe('gameStore', () => {
       expect(state.isFeedbackPhase).toBe(false);
       expect(state.selectedAnswerId).toBeNull();
       expect(state.isLastAnswerCorrect).toBeNull();
+    });
+  });
+
+  describe('playerName', () => {
+    it('初期値はデフォルト名', () => {
+      const state = useGameStore.getState();
+      // localStorageが空の場合はデフォルト値
+      expect(state.playerName).toBeDefined();
+    });
+
+    it('setPlayerNameで名前を変更できる', () => {
+      const { setPlayerName } = useGameStore.getState();
+
+      setPlayerName('テストユーザー');
+      const state = useGameStore.getState();
+
+      expect(state.playerName).toBe('テストユーザー');
+    });
+
+    it('setPlayerNameでlocalStorageに保存される', () => {
+      const { setPlayerName } = useGameStore.getState();
+
+      setPlayerName('保存テスト');
+
+      expect(localStorageMock.setItem).toHaveBeenCalledWith('histlink_player_name', '保存テスト');
+    });
+
+    it('空文字を設定するとデフォルト名になる', () => {
+      const { setPlayerName } = useGameStore.getState();
+
+      setPlayerName('');
+      const state = useGameStore.getState();
+
+      expect(state.playerName).toBe('あなた');
+    });
+
+    it('空白のみを設定するとデフォルト名になる', () => {
+      const { setPlayerName } = useGameStore.getState();
+
+      setPlayerName('   ');
+      const state = useGameStore.getState();
+
+      expect(state.playerName).toBe('あなた');
+    });
+
+    it('前後の空白はトリムされる', () => {
+      const { setPlayerName } = useGameStore.getState();
+
+      setPlayerName('  名前  ');
+      const state = useGameStore.getState();
+
+      expect(state.playerName).toBe('名前');
     });
   });
 });

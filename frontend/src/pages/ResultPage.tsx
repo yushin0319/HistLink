@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Button, Fade } from '@mui/material';
 import ResultHeader from '../components/ResultHeader';
+import RankingTable from '../components/RankingTable';
+import RouteReviewModal from '../components/RouteReviewModal';
+import { useGameStore } from '../stores/gameStore';
 
 const BONUS_POINTS = {
   easy: 100,
@@ -8,64 +11,89 @@ const BONUS_POINTS = {
   hard: 300,
 } as const;
 
-interface ResultPageProps {
-  initialLives?: number;
-  initialScore?: number;
-  difficulty?: 'easy' | 'normal' | 'hard';
+// モジュールスコープでアニメーション状態を管理（StrictMode対策）
+let animationState: {
+  isRunning: boolean;
+  gameId: string | null;
+  timers: ReturnType<typeof setTimeout>[];
+  intervals: ReturnType<typeof setInterval>[];
+} = {
+  isRunning: false,
+  gameId: null,
+  timers: [],
+  intervals: [],
+};
+
+function clearAnimationTimers() {
+  animationState.timers.forEach(clearTimeout);
+  animationState.intervals.forEach(clearInterval);
+  animationState.timers = [];
+  animationState.intervals = [];
 }
 
-export default function ResultPage({
-  initialLives = 3,
-  initialScore = 2332,
-  difficulty = 'hard'
-}: ResultPageProps = {}) {
+export default function ResultPage() {
+  const {
+    lives: initialLives,
+    score: initialScore,
+    difficulty,
+    currentStage,
+    totalStages,
+    steps,
+    gameId,
+    resetGame,
+  } = useGameStore();
+
   const [lives, setLives] = useState(initialLives);
   const [score, setScore] = useState(initialScore);
-
-  // 初期化フラグ
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
+  const [showContent, setShowContent] = useState(false); // ライフ換金完了後にtrue
 
   useEffect(() => {
+    // ゲームオーバー（ライフ0）の場合はアニメーションなし、即座にコンテンツ表示
     if (initialLives === 0) {
+      setLives(0);
+      setScore(initialScore);
+      setShowContent(true);
       return;
     }
 
-    if (isInitialized) {
+    // 同じゲームIDで既にアニメーション中ならスキップ
+    if (animationState.isRunning && animationState.gameId === gameId) {
       return;
     }
 
-    setIsInitialized(true);
+    // 新しいゲームの場合は前のタイマーをクリア
+    if (animationState.gameId !== gameId) {
+      clearAnimationTimers();
+    }
 
-    // 初期値をリセット
+    animationState.isRunning = true;
+    animationState.gameId = gameId;
+
     setLives(initialLives);
     setScore(initialScore);
 
     const startTime = Date.now();
     console.log('[START] 0ms: アニメーション開始');
 
-    let isComplete = false;
     let currentLifeIndex = 0;
-    const timers: NodeJS.Timeout[] = [];
-    const intervals: NodeJS.Timeout[] = [];
 
-    // 各ライフを順番に処理する関数
     const processNextLife = () => {
-      if (isComplete || currentLifeIndex >= initialLives) {
+      if (!animationState.isRunning || currentLifeIndex >= initialLives) {
         return;
       }
 
       const lifeNumber = currentLifeIndex + 1;
       console.log(`[LIFE] ${Date.now() - startTime}ms: ライフ${lifeNumber}消費開始`);
 
-      // スコアカウントアップ開始（0.5秒で完了）
       const bonusPoints = BONUS_POINTS[difficulty];
-      const countUpSteps = bonusPoints / 10; // 10点刻み
-      const countUpDuration = 500; // 0.5秒
+      const countUpSteps = bonusPoints / 10;
+      const countUpDuration = 500;
       const intervalPerStep = countUpDuration / countUpSteps;
 
       let currentCount = 0;
       const countUpInterval = setInterval(() => {
-        if (isComplete) return;
+        if (!animationState.isRunning) return;
 
         currentCount++;
         setScore((prev) => prev + 10);
@@ -73,41 +101,40 @@ export default function ResultPage({
         if (currentCount >= countUpSteps) {
           clearInterval(countUpInterval);
           console.log(`[COUNT] ${Date.now() - startTime}ms: カウントアップ${lifeNumber}完了`);
-          // カウントアップ完了後にライフを減らす
           setLives((prev) => Math.max(0, prev - 1));
         }
       }, intervalPerStep);
-      intervals.push(countUpInterval);
+      animationState.intervals.push(countUpInterval);
 
       currentLifeIndex++;
 
-      // 次のライフがあれば0.6秒後に処理（0.5秒カウント + 0.1秒待機）、なければ終了
       if (currentLifeIndex < initialLives) {
         const nextLifeTimer = setTimeout(() => {
-          if (!isComplete) processNextLife();
+          if (animationState.isRunning) processNextLife();
         }, 600);
-        timers.push(nextLifeTimer);
+        animationState.timers.push(nextLifeTimer);
       } else {
-        // 最後のライフのカウントアップ完了後に終了
         const finalTimer = setTimeout(() => {
-          if (isComplete) return;
-          isComplete = true;
+          if (!animationState.isRunning) return;
           console.log(`[FINAL] ${Date.now() - startTime}ms: 最終スコア表示`);
+          setShowContent(true);
         }, 500);
-        timers.push(finalTimer);
+        animationState.timers.push(finalTimer);
       }
     };
 
-    // 最初のライフ処理を開始
     processNextLife();
 
-    return () => {
-      console.log('[CLEANUP] タイマー全クリア');
-      isComplete = true;
-      timers.forEach(clearTimeout);
-      intervals.forEach(clearInterval);
-    };
-  }, [initialLives, initialScore, difficulty]);
+    // クリーンアップではタイマーをクリアしない（StrictMode対策）
+    // 実際のクリーンアップは新しいゲーム開始時に行う
+  }, [initialLives, initialScore, difficulty, gameId]);
+
+  const handleRetry = () => {
+    // アニメーション状態をリセット
+    animationState.isRunning = false;
+    clearAnimationTimers();
+    resetGame();
+  };
 
   return (
     <Box
@@ -121,11 +148,55 @@ export default function ResultPage({
     >
       <Container maxWidth="md">
         {/* 結果ヘッダー */}
-        <ResultHeader lives={lives} score={score} currentStage={9} totalStages={10} />
+        <ResultHeader
+          lives={lives}
+          score={score}
+          currentStage={currentStage}
+          totalStages={totalStages}
+        />
 
-        <Typography variant="h3" align="center" gutterBottom sx={{ mt: 2 }}>
-          ゲームクリア！
-        </Typography>
+        {/* ランキング（ライフ換金完了後にフェードイン） */}
+        <Fade in={showContent} timeout={500}>
+          <Box sx={{ mt: 2 }}>
+            <RankingTable
+              totalStages={totalStages}
+              currentUserScore={score}
+              onShowRoute={() => setIsRouteModalOpen(true)}
+            />
+          </Box>
+        </Fade>
+
+        {/* もう一度プレイボタン（ライフ換金完了後にフェードイン） */}
+        <Fade in={showContent} timeout={500}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleRetry}
+              sx={{
+                px: 8,
+                py: 2,
+                fontSize: '1.25rem',
+                fontWeight: 'bold',
+                borderRadius: 3,
+                boxShadow: 4,
+                color: 'white',
+                '&:hover': {
+                  boxShadow: 6,
+                },
+              }}
+            >
+              もう一度プレイ
+            </Button>
+          </Box>
+        </Fade>
+
+        {/* ルートおさらいモーダル */}
+        <RouteReviewModal
+          open={isRouteModalOpen}
+          onClose={() => setIsRouteModalOpen(false)}
+          steps={steps}
+        />
       </Container>
     </Box>
   );

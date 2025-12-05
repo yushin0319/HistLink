@@ -24,16 +24,17 @@ class TestGameStart:
         data = response.json()
 
         # 基本フィールドを確認
+        # target_length=10 → 10回のゲーム → 11ノード（10エッジ）が必要
         assert "game_id" in data
         UUID(data["game_id"])
         assert "route_id" in data
         assert data["difficulty"] == "normal"
-        assert data["total_steps"] == 10
+        assert data["total_steps"] == 11  # 10ゲーム = 11ノード
         assert "created_at" in data
 
         # stepsが存在し、全ステップ分ある
         assert "steps" in data
-        assert len(data["steps"]) == 10
+        assert len(data["steps"]) == 11  # 10ゲーム = 11ノード
 
         # 各ステップの構造を確認
         for i, step in enumerate(data["steps"]):
@@ -46,7 +47,7 @@ class TestGameStart:
             assert "description" in step["term"]
 
             # 最後のステップ以外はchoicesとcorrect_next_idがある
-            if i < 9:
+            if i < 10:  # 10エッジ = 10回のゲーム
                 assert "correct_next_id" in step
                 assert step["correct_next_id"] is not None
                 assert "choices" in step

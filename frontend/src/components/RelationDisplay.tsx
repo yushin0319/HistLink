@@ -35,7 +35,7 @@ export default function RelationDisplay({ keyword, explanation, show }: Relation
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ fontSize: '0.8rem' }}
+            sx={{ fontSize: '0.8rem', width: '70%', mx: 'auto' }}
           >
             {explanation}
           </Typography>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
 import { startGameSession, submitGameResult } from '../services/gameApi';
@@ -24,7 +24,6 @@ export default function GamePage() {
     lastRelationExplanation,
     isFeedbackPhase,
     selectedAnswerId,
-    isLastAnswerCorrect,
     loadGameData,
     startGame,
     answerQuestion,
@@ -35,6 +34,7 @@ export default function GamePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasSubmittedResult, setHasSubmittedResult] = useState(false);
+  const hasInitialized = useRef(false);
 
   // feedbackPhaseが開始されたら0.5秒後にcompleteFeedbackPhaseを呼び出す
   useEffect(() => {
@@ -50,38 +50,42 @@ export default function GamePage() {
   }, [isFeedbackPhase, completeFeedbackPhase]);
 
   // リレーション表示を3.5秒後に非表示にする
-  // 不正解時はfeedbackPhase中（0.5秒）から表示開始されるため、合計4秒
-  // 正解時はfeedbackPhase終了後から表示開始されるため、合計4秒（0.5秒 + 3.5秒）
   useEffect(() => {
-    console.log('[GamePage] showRelation changed:', showRelation, 'keyword:', lastRelationKeyword, 'explanation:', lastRelationExplanation);
     if (showRelation) {
       const timer = setTimeout(() => {
         console.log('[GamePage] Hiding relation after 3.5 seconds');
         useGameStore.setState({ showRelation: false });
       }, 3500);
 
-      return () => {
-        console.log('[GamePage] Clearing timer');
-        clearTimeout(timer);
-      };
+      return () => clearTimeout(timer);
     }
-  }, [showRelation, lastRelationKeyword, lastRelationExplanation]); // 関連する値が変わったら再実行
+  }, [showRelation, lastRelationKeyword, lastRelationExplanation]);
 
-  // ゲームセッション開始（全ルート+選択肢を一括取得）
+  // ゲームセッション開始（全ルート+選択肢を一括取得）- 初回のみ
   useEffect(() => {
+    // 既に初期化済み、またはgameIdがある場合はスキップ
+    if (hasInitialized.current || gameId) {
+      setIsLoading(false);
+      return;
+    }
+
+    hasInitialized.current = true;
+
     const initGame = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
+        console.log('[GamePage] Starting game session...');
         // バックエンドから全ルート+選択肢を取得
         const response = await startGameSession(difficulty, totalStages);
+        console.log('[GamePage] Game session started:', response.game_id);
 
-        // Zustandに読み込む（totalStagesはresponse.steps.lengthで設定される）
+        // Zustandに読み込む
         loadGameData(response.game_id, response.route_id, response.steps);
 
-        // ゲーム開始（totalStagesはloadGameDataで設定済みなので、実際のステップ数を使用）
-        startGame(difficulty, response.steps.length);
+        // ゲーム開始（ステップ数 = ノード数 - 1）
+        startGame(difficulty, response.steps.length - 1);
       } catch (err) {
         setError('エラーが発生しました');
         console.error(err);
@@ -91,7 +95,7 @@ export default function GamePage() {
     };
 
     initGame();
-  }, [difficulty, totalStages, loadGameData, startGame]);
+  }, [difficulty, totalStages, gameId, loadGameData, startGame]);
 
   // タイマー管理（0.1秒ごと）
   useEffect(() => {
@@ -99,7 +103,7 @@ export default function GamePage() {
 
     const intervalId = setInterval(() => {
       decrementTimer();
-    }, 100); // 0.1秒 = 100ms
+    }, 100);
 
     return () => clearInterval(intervalId);
   }, [isPlaying, decrementTimer]);
@@ -124,7 +128,7 @@ export default function GamePage() {
     }
   }, [isPlaying, gameId, score, lives, isCompleted, hasSubmittedResult]);
 
-  // 回答送信（フロントエンドで処理）
+  // 回答送信
   const handleAnswer = (selectedTermId: number) => {
     answerQuestion(selectedTermId);
   };
@@ -163,29 +167,6 @@ export default function GamePage() {
     );
   }
 
-  // ゲームオーバー/クリア画面
-  if (!isPlaying && (isCompleted || lives === 0)) {
-    return (
-      <Box
-        sx={{
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h3" gutterBottom>
-            {isCompleted ? 'ゲームクリア！' : 'ゲームオーバー'}
-          </Typography>
-          <Typography variant="h5">最終スコア: {score}点</Typography>
-          <Typography variant="h6">残りライフ: {lives}</Typography>
-        </Box>
-      </Box>
-    );
-  }
-
   // 現在のステップを取得
   const currentStep = steps[currentStage];
 
@@ -217,7 +198,7 @@ export default function GamePage() {
       }}
     >
       <Container maxWidth="md">
-        {/* ゲーム情報ヘッダー（2×2グリッド） */}
+        {/* ゲーム情報ヘッダー */}
         <GameHeader
           lives={lives}
           score={score}
@@ -227,34 +208,30 @@ export default function GamePage() {
         />
 
         {/* 現在の問題 */}
-        {currentStep && (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              mb: 2,
-            }}
-          >
-            <GameCard
-              term={currentStep.term.name}
-              era={currentStep.term.era}
-              description={currentStep.term.description}
-            />
-          </Box>
-        )}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mb: 2,
+          }}
+        >
+          <GameCard
+            term={currentStep.term.name}
+            era={currentStep.term.era}
+            description={currentStep.term.description}
+          />
+        </Box>
 
         {/* 選択肢（2×2グリッド） */}
-        {currentStep && currentStep.choices.length > 0 && (
+        {currentStep.choices.length > 0 && (
           <Grid container spacing={2}>
             {currentStep.choices.map((choice) => {
               // feedbackState判定
               let feedbackState: 'correct' | 'incorrect' | null = null;
               if (isFeedbackPhase && selectedAnswerId !== null) {
                 if (choice.term_id === currentStep.correct_next_id) {
-                  // 正解カードは常に緑
                   feedbackState = 'correct';
                 } else if (choice.term_id === selectedAnswerId) {
-                  // 選択された不正解カードは赤
                   feedbackState = 'incorrect';
                 }
               }
@@ -272,7 +249,7 @@ export default function GamePage() {
           </Grid>
         )}
 
-        {/* リレーション説明（正解時に表示） */}
+        {/* リレーション説明 */}
         <RelationDisplay
           keyword={lastRelationKeyword}
           explanation={lastRelationExplanation}

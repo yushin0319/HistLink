@@ -134,7 +134,7 @@
       "target": 11,
       "difficulty": "easy",
       "keyword": "古代四大文明",
-      "explanation": "ともに大河流域で栄えた人類最古級の文明"
+      "explanation": "ナイル川とティグリス・ユーフラテス川流域で栄えた古代文明"
     },
     {
       "id": 18,
@@ -294,7 +294,7 @@
       "target": 21,
       "difficulty": "normal",
       "keyword": "壮麗な都の建設",
-      "explanation": "ダレイオス1世が建設した帝国の儀式都"
+      "explanation": "ペルシア帝国の威信を示すため壮大な宮殿都市が建設された"
     },
     {
       "id": 38,
@@ -1566,7 +1566,7 @@
       "target": 109,
       "difficulty": "normal",
       "keyword": "歴史書の著者",
-      "explanation": "前漢の史官が著した中国最初の紀伝体通史"
+      "explanation": "司馬遷が黄帝から武帝までの歴史を紀伝体で編纂した通史"
     },
     {
       "id": 197,
@@ -1894,7 +1894,7 @@
       "target": 137,
       "difficulty": "hard",
       "keyword": "盛唐の双璧",
-      "explanation": "李白と杜甫は唐代を代表する二大詩人"
+      "explanation": "盛唐期に活躍し、後世「詩仙」「詩聖」と称された二大詩人"
     },
     {
       "id": 238,
@@ -1958,7 +1958,7 @@
       "target": 145,
       "difficulty": "easy",
       "keyword": "イスラム暦元年",
-      "explanation": "ムハンマドがメッカからメディナへ聖遷しヒジュラがイスラム暦の起点となった"
+      "explanation": "メッカからメディナへの聖遷がイスラム暦元年の起点となった"
     },
     {
       "id": 246,
@@ -2326,7 +2326,7 @@
       "target": 176,
       "difficulty": "easy",
       "keyword": "荘園の萌芽",
-      "explanation": "古代末期の混乱の中で、農民が保護と引き換えに土地に縛られる制度が形成された"
+      "explanation": "領主の保護と引き換えに農民が土地に縛られる制度が成立した"
     },
     {
       "id": 292,
@@ -2814,7 +2814,7 @@
       "target": 267,
       "difficulty": "normal",
       "keyword": "スペインの海軍力",
-      "explanation": "スペイン王国が誇った当時最強の海軍艦隊"
+      "explanation": "大西洋の制海権を握り新大陸との交易を支えた強大な艦隊"
     },
     {
       "id": 353,
@@ -2886,7 +2886,7 @@
       "target": 207,
       "difficulty": "normal",
       "keyword": "王朝の前期",
-      "explanation": "宋王朝の前半期で、開封を首都とした時代"
+      "explanation": "趙匡胤が建国し開封を都として華北を統治した王朝前半期"
     },
     {
       "id": 362,
@@ -3318,7 +3318,7 @@
       "target": 243,
       "difficulty": "normal",
       "keyword": "東方貿易の競争",
-      "explanation": "アジア貿易で覇権を争った英蘭の特許会社"
+      "explanation": "香辛料貿易の独占をめぐり激しく競争した二大特許会社"
     },
     {
       "id": 416,
@@ -3510,7 +3510,7 @@
       "target": 252,
       "difficulty": "normal",
       "keyword": "ルネサンス巨匠",
-      "explanation": "同時代にイタリアで活躍した二大芸術家"
+      "explanation": "盛期ルネサンスを代表し絵画・彫刻で人類の傑作を残した巨匠"
     },
     {
       "id": 440,
@@ -3518,7 +3518,7 @@
       "target": 588,
       "difficulty": "normal",
       "keyword": "巨匠の系譜",
-      "explanation": "ルネサンスの天才が切り拓いた芸術の道を、20世紀の革新者が継承し変革した"
+      "explanation": "古典的造形美の伝統を20世紀の前衛芸術が解体し再構築した"
     },
     {
       "id": 441,
@@ -3550,7 +3550,7 @@
       "target": 262,
       "difficulty": "normal",
       "keyword": "宗派共存の模索",
-      "explanation": "領邦君主の宗派選択権を認めた原則と、王権による教会統制という並行した動き"
+      "explanation": "領邦君主の宗派選択権を認めた和議が宗教的分裂を固定化した"
     },
     {
       "id": 445,
@@ -3686,7 +3686,7 @@
       "target": 277,
       "difficulty": "normal",
       "keyword": "太陽王の治世",
-      "explanation": "ブルボン朝の最盛期をルイ14世が築いた"
+      "explanation": "太陽王と呼ばれた君主がヴェルサイユ宮殿を建て絶対王政を確立"
     },
     {
       "id": 462,
@@ -4446,7 +4446,7 @@
       "target": 332,
       "difficulty": "normal",
       "keyword": "抑圧と覚醒",
-      "explanation": "保守的な国際秩序への反発として、民族意識と自由主義運動が各地で燃え上がった"
+      "explanation": "復古的な国際秩序への反発から自由主義と民族運動が高揚した"
     },
     {
       "id": 557,
@@ -4854,7 +4854,7 @@
       "target": 536,
       "difficulty": "normal",
       "keyword": "解放から平等へ",
-      "explanation": "奴隷解放後も続いた人種差別への抵抗運動"
+      "explanation": "法的平等を勝ち取った後も残る差別撤廃を求めた社会運動"
     },
     {
       "id": 608,
@@ -4902,7 +4902,7 @@
       "target": 371,
       "difficulty": "normal",
       "keyword": "ロシア文学の巨匠",
-      "explanation": "19世紀ロシアを代表する二大文豪"
+      "explanation": "人間の内面と社会を深く描き世界文学に影響を与えた二大作家"
     },
     {
       "id": 614,
@@ -5230,7 +5230,7 @@
       "target": 399,
       "difficulty": "normal",
       "keyword": "資源争奪戦",
-      "explanation": "重化学工業の発展が資源需要を高め、アフリカの金・ダイヤ産地をめぐる戦争を招いた"
+      "explanation": "南アフリカの金・ダイヤモンド資源をめぐり英国が戦争を起こした"
     },
     {
       "id": 655,
@@ -5798,7 +5798,7 @@
       "target": 494,
       "difficulty": "easy",
       "keyword": "理想の継承",
-      "explanation": "戦間期の平和機構の反省を踏まえ、より強力な安全保障体制として再構築された"
+      "explanation": "連盟の失敗を教訓に安保理と拒否権を備えた新機構が設立された"
     },
     {
       "id": 726,
@@ -6206,7 +6206,7 @@
       "target": 547,
       "difficulty": "normal",
       "keyword": "教訓と協調",
-      "explanation": "大不況の反省から、先進国首脳が経済政策を定期的に協議する枠組みが生まれた"
+      "explanation": "石油危機後に主要先進国首脳が経済政策を協議する場が誕生した"
     },
     {
       "id": 777,
@@ -6222,7 +6222,7 @@
       "target": 470,
       "difficulty": "normal",
       "keyword": "恐慌への対応",
-      "explanation": "世界的な経済危機に対し、保護主義と国家介入という異なるアプローチで対処した"
+      "explanation": "大恐慌に対し保護主義と積極財政という異なる政策で対処した"
     },
     {
       "id": 779,
@@ -6382,7 +6382,7 @@
       "target": 493,
       "difficulty": "easy",
       "keyword": "終戦の閃光",
-      "explanation": "新型兵器の投下が世界大戦を終結に導いた"
+      "explanation": "史上初の核兵器使用が日本の降伏と第二次大戦終結をもたらした"
     },
     {
       "id": 799,
@@ -6726,7 +6726,7 @@
       "target": 547,
       "difficulty": "normal",
       "keyword": "西側の協調",
-      "explanation": "石油危機を契機に西側主要国の首脳が定期的に経済政策を協議するようになった"
+      "explanation": "石油危機への対応として主要国首脳が定期的に会合を持つ慣行が成立"
     },
     {
       "id": 842,
@@ -6942,7 +6942,7 @@
       "target": 566,
       "difficulty": "normal",
       "keyword": "パレスチナ解放機構",
-      "explanation": "パレスチナの解放と国家建設を目指す組織"
+      "explanation": "アラファトが率いパレスチナ人の民族自決を掲げた解放組織"
     },
     {
       "id": 869,
@@ -7182,7 +7182,7 @@
       "target": 539,
       "difficulty": "normal",
       "keyword": "反共の結束",
-      "explanation": "インドシナでの戦争を背景に東南アジアの非共産主義国が地域協力機構を結成した"
+      "explanation": "共産主義拡大への懸念から東南アジア諸国が地域協力機構を結成"
     },
     {
       "id": 899,
@@ -7639,6 +7639,38 @@
       "difficulty": "hard",
       "keyword": "気候外交の進展",
       "explanation": "先進国中心の枠組みから、全ての国が参加する新たな合意へと発展した"
+    },
+    {
+      "id": 956,
+      "source": 7,
+      "target": 10,
+      "difficulty": "easy",
+      "keyword": "粘土板の記録",
+      "explanation": "「目には目を」の原則で知られる古代最古級の成文法典"
+    },
+    {
+      "id": 957,
+      "source": 15,
+      "target": 16,
+      "difficulty": "easy",
+      "keyword": "ユダヤ教の聖典",
+      "explanation": "唯一神ヤハウェへの信仰と選民の歴史を記した聖典"
+    },
+    {
+      "id": 958,
+      "source": 23,
+      "target": 32,
+      "difficulty": "easy",
+      "keyword": "市民の政治参加",
+      "explanation": "市民が民会で直接政治に参加する統治形態の原型が生まれた"
+    },
+    {
+      "id": 959,
+      "source": 46,
+      "target": 54,
+      "difficulty": "easy",
+      "keyword": "共和政の成文法",
+      "explanation": "平民と貴族の法的平等を定めたローマ最古の成文法"
     }
   ]
 }

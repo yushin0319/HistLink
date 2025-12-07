@@ -10,8 +10,12 @@ interface RouteReviewModalProps {
 }
 
 export default function RouteReviewModal({ open, onClose, steps, falseSteps }: RouteReviewModalProps) {
-  // 最初に間違えたステージ以降をグレー表示するための判定
-  const firstFalseStep = falseSteps.length > 0 ? Math.min(...falseSteps) : -1;
+  // falseSteps[i]は「ステージi→i+1のエッジでミス」を意味する
+  // エッジ: 3回目のミス+1以降をグレー表示（3回目のエッジ自体は赤で見せる）
+  const thirdFalseStep = falseSteps.length >= 3 ? falseSteps[2] : -1;
+  const edgeGrayStart = thirdFalseStep >= 0 ? thirdFalseStep + 1 : -1;
+  // term: 3回目のミス+2以降をグレー表示（3回目のミス先のtermは赤枠で見せる）
+  const termGrayStart = thirdFalseStep >= 0 ? thirdFalseStep + 2 : -1;
   return (
     <Modal
       open={open}
@@ -55,10 +59,14 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
         {/* ルート表示 */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, mt: 3 }}>
           {steps.map((step, index) => {
-            // このステージで間違えたか
-            const isFalseStep = falseSteps.includes(index);
-            // 最初のミス以降か（グレー表示対象）
-            const isAfterFirstFalse = firstFalseStep >= 0 && index > firstFalseStep;
+            // エッジ: edgeGrayStart以降はグレー表示
+            const isEdgeGray = edgeGrayStart >= 0 && index >= edgeGrayStart;
+            // term: termGrayStart以降はグレー表示
+            const isTermGray = termGrayStart >= 0 && index >= termGrayStart;
+            // このステージのエッジでミスしたか（index→index+1の遷移でミス）
+            const isEdgeFalse = falseSteps.includes(index);
+            // このtermがミスの結果か（前のエッジでミス → このtermに赤枠）
+            const isTermFalse = falseSteps.includes(index - 1);
 
             return (
               <Box key={step.term.id} sx={{ width: '100%' }}>
@@ -67,26 +75,19 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
                   sx={{
                     py: 0.5,
                     px: 1.5,
-                    border: isFalseStep ? '2px solid' : '1px solid',
-                    borderColor: isFalseStep ? 'error.main' : 'grey.300',
+                    border: isTermFalse ? '2px solid' : '1px solid',
+                    borderColor: isTermFalse ? 'error.main' : 'grey.300',
                     borderRadius: 1,
                     textAlign: 'center',
-                    opacity: isAfterFirstFalse ? 0.4 : 1,
+                    opacity: isTermGray ? 0.4 : 1,
                   }}
                 >
                   <Typography
                     variant="body2"
                     fontWeight="medium"
-                    sx={{ color: isAfterFirstFalse ? 'text.disabled' : 'text.primary' }}
+                    sx={{ color: isTermGray ? 'text.disabled' : 'text.primary' }}
                   >
                     {step.term.name}
-                    <Typography
-                      component="span"
-                      variant="caption"
-                      sx={{ ml: 0.5, color: isAfterFirstFalse ? 'text.disabled' : 'text.secondary' }}
-                    >
-                      {step.term.category}
-                    </Typography>
                   </Typography>
                 </Box>
 
@@ -98,30 +99,30 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
                       flexDirection: 'column',
                       alignItems: 'center',
                       py: 0.5,
-                      opacity: isAfterFirstFalse ? 0.4 : 1,
+                      opacity: isEdgeGray ? 0.4 : 1,
                     }}
                   >
                     <Typography
                       variant="caption"
                       sx={{
-                        color: isFalseStep ? 'error.main' : isAfterFirstFalse ? 'text.disabled' : 'primary.main',
+                        color: isEdgeGray ? 'text.disabled' : isEdgeFalse ? 'error.main' : 'primary.main',
                         fontWeight: 'medium',
                         fontSize: '0.75rem',
                       }}
                     >
                       {step.keyword}
                     </Typography>
-                    {step.relation_description && (
+                    {step.edge_description && (
                       <Typography
                         variant="caption"
                         sx={{
                           width: '70%',
                           textAlign: 'center',
                           fontSize: '0.65rem',
-                          color: isAfterFirstFalse ? 'text.disabled' : 'text.secondary',
+                          color: isEdgeGray ? 'text.disabled' : 'text.secondary',
                         }}
                       >
-                        {step.relation_description}
+                        {step.edge_description}
                       </Typography>
                     )}
                   </Box>

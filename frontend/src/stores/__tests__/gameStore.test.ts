@@ -23,44 +23,58 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 });
 
-// モックデータ: 3ステップのルート
+// モックデータ: 4ステップのルート（3回の回答が必要）
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: '邪馬台国', era: '弥生時代', tags: [], description: '' },
+    term: { id: 1, name: '邪馬台国', tier: 1, category: '弥生時代', description: '' },
     correct_next_id: 2,
     choices: [
-      { term_id: 2, name: '卑弥呼', era: '弥生時代' },
-      { term_id: 3, name: '聖徳太子', era: '飛鳥時代' },
-      { term_id: 4, name: '中大兄皇子', era: '飛鳥時代' },
-      { term_id: 5, name: '藤原道長', era: '平安時代' },
+      { term_id: 2, name: '卑弥呼', tier: 1 },
+      { term_id: 3, name: '聖徳太子', tier: 1 },
+      { term_id: 4, name: '中大兄皇子', tier: 1 },
+      { term_id: 5, name: '藤原道長', tier: 1 },
     ],
-    relation_type: '統治者',
+    difficulty: 'easy',
     keyword: '女王卑弥呼',
-    relation_description: '邪馬台国を統治した女王',
+    edge_description: '邪馬台国を統治した女王',
   },
   {
     step_no: 1,
-    term: { id: 2, name: '卑弥呼', era: '弥生時代', tags: [], description: '' },
+    term: { id: 2, name: '卑弥呼', tier: 1, category: '弥生時代', description: '' },
     correct_next_id: 6,
     choices: [
-      { term_id: 6, name: '大化の改新', era: '飛鳥時代' },
-      { term_id: 7, name: '壬申の乱', era: '飛鳥時代' },
-      { term_id: 8, name: '平城京', era: '奈良時代' },
-      { term_id: 9, name: '平安京', era: '平安時代' },
+      { term_id: 6, name: '大化の改新', tier: 1 },
+      { term_id: 7, name: '壬申の乱', tier: 1 },
+      { term_id: 8, name: '平城京', tier: 1 },
+      { term_id: 9, name: '平安京', tier: 1 },
     ],
-    relation_type: '時代変化',
+    difficulty: 'normal',
     keyword: '律令制度',
-    relation_description: '大化の改新により律令制度が導入された',
+    edge_description: '大化の改新により律令制度が導入された',
   },
   {
     step_no: 2,
-    term: { id: 6, name: '大化の改新', era: '飛鳥時代', tags: [], description: '' },
+    term: { id: 6, name: '大化の改新', tier: 1, category: '飛鳥時代', description: '' },
+    correct_next_id: 10,
+    choices: [
+      { term_id: 10, name: '壬申の乱', tier: 1 },
+      { term_id: 11, name: '白村江の戦い', tier: 2 },
+      { term_id: 12, name: '遣唐使', tier: 1 },
+      { term_id: 13, name: '奈良時代', tier: 1 },
+    ],
+    difficulty: 'normal',
+    keyword: '天智天皇',
+    edge_description: '大化の改新後の政治変動',
+  },
+  {
+    step_no: 3,
+    term: { id: 10, name: '壬申の乱', tier: 1, category: '飛鳥時代', description: '' },
     correct_next_id: null, // 最後のステップ
     choices: [],
-    relation_type: '',
+    difficulty: '',
     keyword: '',
-    relation_description: '',
+    edge_description: '',
   },
 ];
 
@@ -105,17 +119,19 @@ describe('gameStore', () => {
       expect(state.gameId).toBe('test-game-id');
       expect(state.routeId).toBe(123);
       expect(state.steps).toEqual(mockSteps);
-      expect(state.totalStages).toBe(3); // steps.lengthから自動設定
+      // totalStagesはstartGameで設定される（loadGameDataでは変更しない）
+      expect(state.totalStages).toBe(10); // 初期値のまま
     });
 
-    it('stepsがundefinedの場合、totalStagesはデフォルト値10になる', () => {
-      const { loadGameData } = useGameStore.getState();
+    it('loadGameData + startGameでtotalStagesが正しく設定される', () => {
+      const { loadGameData, startGame } = useGameStore.getState();
 
-      // @ts-expect-error: テスト用にundefinedを渡す
-      loadGameData('test-game-id', 123, undefined);
+      loadGameData('test-game-id', 123, mockSteps);
+      // GamePageと同様に steps.length - 1 でstartGame
+      startGame('normal', mockSteps.length - 1);
       const state = useGameStore.getState();
 
-      expect(state.totalStages).toBe(10); // デフォルト値
+      expect(state.totalStages).toBe(3); // 4ステップ - 1 = 3問
     });
   });
 
@@ -141,7 +157,8 @@ describe('gameStore', () => {
     beforeEach(() => {
       const { loadGameData, startGame } = useGameStore.getState();
       loadGameData('test-game-id', 123, mockSteps);
-      startGame('normal', 3);
+      // mockStepsは4ステップなので、totalStagesは3（最後のステップは回答不要）
+      startGame('normal', mockSteps.length - 1); // 3
     });
 
     it('正解したらfeedbackPhaseに入る', () => {
@@ -154,12 +171,12 @@ describe('gameStore', () => {
       expect(state.isFeedbackPhase).toBe(true);
       expect(state.selectedAnswerId).toBe(2);
       expect(state.isLastAnswerCorrect).toBe(true);
-      expect(state.showRelation).toBe(true); // 正解・不正解どちらも即座に表示
-      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+      expect(state.showEdge).toBe(true); // 正解・不正解どちらも即座に表示
+      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
       expect(state.currentStage).toBe(0); // まだ遷移していない
     });
 
-    it('不正解したらfeedbackPhaseに入り、relation表示が開始される', () => {
+    it('不正解したらfeedbackPhaseに入り、edge表示が開始される', () => {
       const { answerQuestion } = useGameStore.getState();
 
       // ステップ0: 正解は2だが、3を選択
@@ -169,8 +186,8 @@ describe('gameStore', () => {
       expect(state.isFeedbackPhase).toBe(true);
       expect(state.selectedAnswerId).toBe(3);
       expect(state.isLastAnswerCorrect).toBe(false);
-      expect(state.showRelation).toBe(true); // 不正解時は即座に表示
-      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+      expect(state.showEdge).toBe(true); // 不正解時は即座に表示
+      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
       expect(state.currentStage).toBe(0); // まだ遷移していない
     });
 
@@ -217,7 +234,7 @@ describe('gameStore', () => {
     it('currentStageが範囲外の時は何も起きない', () => {
       const { loadGameData, startGame, answerQuestion } = useGameStore.getState();
       loadGameData('test-game-id', 123, mockSteps);
-      startGame('normal', 3);
+      startGame('normal', 10);
 
       // currentStageを強制的に範囲外に設定
       useGameStore.setState({ currentStage: 999 });
@@ -234,6 +251,7 @@ describe('gameStore', () => {
     beforeEach(() => {
       const { loadGameData, startGame } = useGameStore.getState();
       loadGameData('test-game-id', 123, mockSteps);
+      // mockStepsは4ステップ（3回の回答が必要）なので、totalStagesは3
       startGame('normal', 3);
     });
 
@@ -253,8 +271,8 @@ describe('gameStore', () => {
       expect(state.lives).toBe(3);
       expect(state.score).toBe(200);
       expect(state.remainingTime).toBe(200); // リセット
-      expect(state.showRelation).toBe(true); // 正解時はfeedbackPhase後に表示
-      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+      expect(state.showEdge).toBe(true); // 正解時はfeedbackPhase後に表示
+      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
     });
 
     it('不正解後feedbackPhaseを完了するとライフが減る', () => {
@@ -272,8 +290,8 @@ describe('gameStore', () => {
       expect(state.currentStage).toBe(1);
       expect(state.lives).toBe(2);
       expect(state.score).toBe(0); // スコア加算なし
-      expect(state.showRelation).toBe(true); // 不正解時もrelation継続表示
-      expect(state.lastRelationKeyword).toBe('女王卑弥呼');
+      expect(state.showEdge).toBe(true); // 不正解時もedge継続表示
+      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
     });
 
     it('残り時間に応じてスコアが変動する', () => {
@@ -314,19 +332,22 @@ describe('gameStore', () => {
     it('最終ステージをクリアしたらゲーム完了', () => {
       const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
 
-      // ステップ0, 1を正解で進む
-      answerQuestion(2);
+      // ステップ0, 1, 2を正解で進む（3回回答でゲーム完了）
+      answerQuestion(2);  // step0: 邪馬台国→卑弥呼
       completeFeedbackPhase();
-      answerQuestion(6);
+      answerQuestion(6);  // step1: 卑弥呼→大化の改新
+      completeFeedbackPhase();
+      answerQuestion(10); // step2: 大化の改新→壬申の乱
       completeFeedbackPhase();
 
       const state = useGameStore.getState();
 
-      expect(state.currentStage).toBe(2);
+      // totalStages=3なので、currentStage + 1 === totalStages → "COMPLETE"表示
+      expect(state.currentStage).toBe(2); // totalStages - 1 = 2（COMPLETE表示用）
       expect(state.isPlaying).toBe(false);
       expect(state.isCompleted).toBe(true);
       expect(state.isFeedbackPhase).toBe(false);
-      expect(state.score).toBe(400); // 200 + 200
+      expect(state.score).toBe(600); // 200 + 200 + 200
     });
 
     it('feedbackPhase中でない時は何も起きない', () => {
@@ -387,7 +408,7 @@ describe('gameStore', () => {
       expect(state.isFeedbackPhase).toBe(true);
       expect(state.selectedAnswerId).toBe(2); // 正解カード
       expect(state.isLastAnswerCorrect).toBe(false); // タイムアウトは不正解扱い
-      expect(state.showRelation).toBe(false); // タイムアウト時はrelation表示なし
+      expect(state.showEdge).toBe(false); // タイムアウト時はedge表示なし
     });
 
     it('タイムアウト後feedbackPhaseを完了するとライフが減る', () => {

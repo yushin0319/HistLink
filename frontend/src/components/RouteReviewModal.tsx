@@ -67,7 +67,7 @@ export default function RouteReviewModal({ open, onClose, steps }: RouteReviewMo
                 <Typography variant="body2" fontWeight="medium">
                   {step.term.name}
                   <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 0.5 }}>
-                    {step.term.era}
+                    {step.term.category}
                   </Typography>
                 </Typography>
               </Box>

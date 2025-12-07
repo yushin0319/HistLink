@@ -5,14 +5,14 @@
 以下のチェックを実行します：
 1. 死に点チェック（degree < 2のノードがないこと）
 2. 用語数チェック
-3. リレーション数チェック
+3. エッジ数チェック
 4. 孤立ノードチェック（どこにも繋がっていないノード）
-5. 自己ループチェック（source = target）
+5. 自己ループチェック（term_a = term_b）
 6. 次数統計チェック（最小次数が2以上）
 
 新スキーマ:
 - terms: id, name, tier, category, description
-- relations: id, source, target, difficulty, keyword, explanation
+- edges: id, term_a, term_b, difficulty, keyword, description
 """
 
 import pytest
@@ -52,15 +52,15 @@ def test_terms_exist(db_session):
     assert count > 0, "用語が1件も存在しません"
 
 
-def test_relations_exist(db_session):
+def test_edges_exist(db_session):
     """
-    リレーションが存在することを確認
+    エッジが存在することを確認
     """
     count = db_session.execute(
-        text("SELECT COUNT(*) FROM relations")
+        text("SELECT COUNT(*) FROM edges")
     ).scalar()
 
-    assert count > 0, "リレーションが1件も存在しません"
+    assert count > 0, "エッジが1件も存在しません"
 
 
 def test_no_isolated_nodes(db_session):
@@ -71,8 +71,8 @@ def test_no_isolated_nodes(db_session):
         text("""
             SELECT COUNT(*)
             FROM terms t
-            LEFT JOIN relations r ON (r.source = t.id OR r.target = t.id)
-            WHERE r.id IS NULL
+            LEFT JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
+            WHERE e.id IS NULL
         """)
     ).scalar()
 
@@ -82,8 +82,8 @@ def test_no_isolated_nodes(db_session):
             text("""
                 SELECT t.id, t.name, t.tier
                 FROM terms t
-                LEFT JOIN relations r ON (r.source = t.id OR r.target = t.id)
-                WHERE r.id IS NULL
+                LEFT JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
+                WHERE e.id IS NULL
             """)
         ).fetchall()
         details = "\n".join([f"  - ID {n.id}: {n.name} (Tier {n.tier})" for n in isolated])
@@ -94,24 +94,24 @@ def test_no_isolated_nodes(db_session):
 
 def test_no_self_loops(db_session):
     """
-    自己ループ（source = target）が存在しないことを確認
+    自己ループ（term_a = term_b）が存在しないことを確認
 
     自己ループはゲームの進行を妨げるため、禁止されている。
     """
     result = db_session.execute(
-        text("SELECT COUNT(*) FROM relations WHERE source = target")
+        text("SELECT COUNT(*) FROM edges WHERE term_a = term_b")
     ).scalar()
 
     # 自己ループがある場合は詳細を表示
     if result > 0:
         self_loops = db_session.execute(
             text("""
-                SELECT id, source, target, difficulty
-                FROM relations
-                WHERE source = target
+                SELECT id, term_a, term_b, difficulty
+                FROM edges
+                WHERE term_a = term_b
             """)
         ).fetchall()
-        details = "\n".join([f"  - Relation ID {r.id}: term_id={r.source}, difficulty={r.difficulty}"
+        details = "\n".join([f"  - Edge ID {r.id}: term_id={r.term_a}, difficulty={r.difficulty}"
                             for r in self_loops])
         pytest.fail(f"自己ループが{result}個存在します:\n{details}")
 
@@ -167,30 +167,30 @@ def test_difficulty_diversity(db_session):
     最低2種類以上の難易度（easy, normal, hard）が使われていることを確認
     """
     difficulty_count = db_session.execute(
-        text("SELECT COUNT(DISTINCT difficulty) FROM relations")
+        text("SELECT COUNT(DISTINCT difficulty) FROM edges")
     ).scalar()
 
     assert difficulty_count >= 2, \
         f"難易度が{difficulty_count}種類です（期待値: 2種類以上）"
 
 
-def test_duplicate_relations(db_session):
+def test_duplicate_edges(db_session):
     """
-    重複リレーションが存在しないことを確認
+    重複エッジが存在しないことを確認
 
-    同じsource, targetの組み合わせは1つのみ許可
+    同じterm_a, term_bの組み合わせは1つのみ許可
     """
     duplicates = db_session.execute(
         text("""
-            SELECT source, target, COUNT(*) AS dup_count
-            FROM relations
-            GROUP BY source, target
+            SELECT term_a, term_b, COUNT(*) AS dup_count
+            FROM edges
+            GROUP BY term_a, term_b
             HAVING COUNT(*) > 1
         """)
     ).fetchall()
 
     assert len(duplicates) == 0, \
-        f"重複リレーションが{len(duplicates)}個存在します"
+        f"重複エッジが{len(duplicates)}個存在します"
 
 
 @pytest.mark.parametrize("tier", [1, 2, 3])
@@ -206,10 +206,10 @@ def test_tier_connectivity(db_session, tier):
         text("""
             SELECT COUNT(DISTINCT t1.id)
             FROM terms t1
-            JOIN relations r ON (r.source = t1.id OR r.target = t1.id)
+            JOIN edges e ON (e.term_a = t1.id OR e.term_b = t1.id)
             JOIN terms t2 ON (
-                (r.source = t2.id AND r.target = t1.id) OR
-                (r.target = t2.id AND r.source = t1.id)
+                (e.term_a = t2.id AND e.term_b = t1.id) OR
+                (e.term_b = t2.id AND e.term_a = t1.id)
             )
             WHERE t1.tier = :tier AND t2.tier != :tier
         """),
@@ -239,8 +239,8 @@ def test_data_quality_summary(db_session):
     # 用語数
     term_count = db_session.execute(text("SELECT COUNT(*) FROM terms")).scalar()
 
-    # リレーション数
-    relation_count = db_session.execute(text("SELECT COUNT(*) FROM relations")).scalar()
+    # エッジ数
+    edge_count = db_session.execute(text("SELECT COUNT(*) FROM edges")).scalar()
 
     # 次数統計
     degree_stats = db_session.execute(
@@ -263,11 +263,11 @@ def test_data_quality_summary(db_session):
         """)
     ).fetchall()
 
-    # 難易度別リレーション数
+    # 難易度別エッジ数
     difficulty_counts = db_session.execute(
         text("""
             SELECT difficulty, COUNT(*) AS count
-            FROM relations
+            FROM edges
             GROUP BY difficulty
             ORDER BY
                 CASE difficulty
@@ -283,13 +283,13 @@ def test_data_quality_summary(db_session):
     print("データ品質サマリー")
     print("="*50)
     print(f"用語数: {term_count}")
-    print(f"リレーション数: {relation_count}")
+    print(f"エッジ数: {edge_count}")
     if degree_stats.min_degree is not None:
         print(f"次数統計: 最小={degree_stats.min_degree}, 最大={degree_stats.max_degree}, 平均={degree_stats.avg_degree}")
     print("\nTier別用語数:")
     for tier_count in tier_counts:
         print(f"  Tier {tier_count.tier}: {tier_count.count}語")
-    print("\n難易度別リレーション数:")
+    print("\n難易度別エッジ数:")
     for dc in difficulty_counts:
         print(f"  {dc.difficulty}: {dc.count}件")
     print("="*50)

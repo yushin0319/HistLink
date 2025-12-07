@@ -33,9 +33,9 @@ interface GameState {
   isLastAnswerCorrect: boolean | null; // 最後の回答が正解だったか
 
   // フィードバック表示
-  showRelation: boolean; // リレーション説明を表示するか
-  lastRelationKeyword: string; // 最後に表示したリレーションのキーワード
-  lastRelationExplanation: string; // 最後に表示したリレーションの説明
+  showEdge: boolean; // エッジ説明を表示するか
+  lastEdgeKeyword: string; // 最後に表示したエッジのキーワード
+  lastEdgeExplanation: string; // 最後に表示したエッジの説明
 
   // アクション
   setPlayerName: (name: string) => void;
@@ -83,9 +83,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   isFeedbackPhase: false,
   selectedAnswerId: null,
   isLastAnswerCorrect: null,
-  showRelation: false,
-  lastRelationKeyword: '',
-  lastRelationExplanation: '',
+  showEdge: false,
+  lastEdgeKeyword: '',
+  lastEdgeExplanation: '',
 
   // プレイヤー名を設定（localStorageにも保存）
   setPlayerName: (name) => {
@@ -104,7 +104,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       gameId,
       routeId,
       steps,
-      totalStages: steps?.length ?? 10,
+      // totalStagesはstartGameで設定される（steps.length - 1）
     });
   },
 
@@ -135,10 +135,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     // 正解判定：選択された用語IDが正解の次の用語IDと一致するか
     const isCorrect = selectedTermId === currentStep.correct_next_id;
 
-    // 正解・不正解どちらもリレーション情報を即座に表示開始
-    const showRelation = true;
-    const lastRelationKeyword = currentStep.keyword;
-    const lastRelationExplanation = currentStep.relation_description;
+    // 正解・不正解どちらもエッジ情報を即座に表示開始
+    const showEdge = true;
+    const lastEdgeKeyword = currentStep.keyword;
+    const lastEdgeExplanation = currentStep.edge_description;
 
     console.log('[gameStore] answerQuestion - isCorrect:', isCorrect, 'entering feedbackPhase');
 
@@ -147,9 +147,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       isFeedbackPhase: true,
       selectedAnswerId: selectedTermId,
       isLastAnswerCorrect: isCorrect,
-      showRelation,
-      lastRelationKeyword,
-      lastRelationExplanation,
+      showEdge,
+      lastEdgeKeyword,
+      lastEdgeExplanation,
     });
   },
 
@@ -170,12 +170,12 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newLives = isCorrect ? state.lives : state.lives - 1;
     const newStage = state.currentStage + 1;
 
-    // リレーション情報を継続表示（answerQuestionで設定済み）
-    const showRelation = state.showRelation; // answerQuestionで設定した値をそのまま維持
-    const lastRelationKeyword = state.lastRelationKeyword;
-    const lastRelationExplanation = state.lastRelationExplanation;
+    // エッジ情報を継続表示（answerQuestionで設定済み）
+    const showEdge = state.showEdge; // answerQuestionで設定した値をそのまま維持
+    const lastEdgeKeyword = state.lastEdgeKeyword;
+    const lastEdgeExplanation = state.lastEdgeExplanation;
 
-    console.log('[gameStore] completeFeedbackPhase - isCorrect:', isCorrect, 'showRelation:', showRelation);
+    console.log('[gameStore] completeFeedbackPhase - isCorrect:', isCorrect, 'showEdge:', showEdge);
 
     // ライフが0になったらゲームオーバー
     if (newLives <= 0) {
@@ -186,25 +186,27 @@ export const useGameStore = create<GameState>((set, get) => ({
         isFeedbackPhase: false,
         selectedAnswerId: null,
         isLastAnswerCorrect: null,
-        showRelation: false,
+        showEdge: false,
       });
       return;
     }
 
     // 最終ステージをクリアしたらゲーム完了
+    // totalStagesはstartGameで設定された値を使用（steps.length - 1）
+    // 最後のステップは回答不要（correct_next_id: null）なので、newStage >= totalStages でゲーム完了
     if (isCorrect && newStage >= state.totalStages) {
       set({
         score: newScore,
         lives: newLives,
-        currentStage: state.totalStages - 1, // 最終ステージのまま（COMPLETE表示用）
+        currentStage: state.totalStages - 1, // 最終ステージ（COMPLETE表示用: currentStage + 1 === totalStages）
         isPlaying: false,
         isCompleted: true,
         isFeedbackPhase: false,
         selectedAnswerId: null,
         isLastAnswerCorrect: null,
-        showRelation,
-        lastRelationKeyword,
-        lastRelationExplanation,
+        showEdge,
+        lastEdgeKeyword,
+        lastEdgeExplanation,
       });
       return;
     }
@@ -218,9 +220,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       isFeedbackPhase: false,
       selectedAnswerId: null,
       isLastAnswerCorrect: null,
-      showRelation,
-      lastRelationKeyword,
-      lastRelationExplanation,
+      showEdge,
+      lastEdgeKeyword,
+      lastEdgeExplanation,
     });
   },
 
@@ -243,7 +245,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         isFeedbackPhase: true,
         selectedAnswerId: correctNextId, // 正解を緑背景で表示
         isLastAnswerCorrect: false, // タイムアウトは不正解扱い
-        showRelation: false, // タイムアウト時はrelation表示なし
+        showEdge: false, // タイムアウト時はedge表示なし
       });
       return;
     }
@@ -268,9 +270,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       isFeedbackPhase: false,
       selectedAnswerId: null,
       isLastAnswerCorrect: null,
-      showRelation: false,
-      lastRelationKeyword: '',
-      lastRelationExplanation: '',
+      showEdge: false,
+      lastEdgeKeyword: '',
+      lastEdgeExplanation: '',
     });
   },
 }));

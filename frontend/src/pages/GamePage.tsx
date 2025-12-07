@@ -5,7 +5,7 @@ import { startGameSession, submitGameResult } from '../services/gameApi';
 import GameCard from '../components/GameCard';
 import ChoiceCard from '../components/ChoiceCard';
 import GameHeader from '../components/GameHeader';
-import RelationDisplay from '../components/RelationDisplay';
+import EdgeDisplay from '../components/EdgeDisplay';
 import BackgroundImage from '../components/BackgroundImage';
 
 export default function GamePage() {
@@ -20,9 +20,9 @@ export default function GamePage() {
     isCompleted,
     steps,
     gameId,
-    showRelation,
-    lastRelationKeyword,
-    lastRelationExplanation,
+    showEdge,
+    lastEdgeKeyword,
+    lastEdgeExplanation,
     isFeedbackPhase,
     selectedAnswerId,
     loadGameData,
@@ -50,17 +50,17 @@ export default function GamePage() {
     }
   }, [isFeedbackPhase, completeFeedbackPhase]);
 
-  // リレーション表示を3.5秒後に非表示にする
+  // エッジ表示を3.5秒後に非表示にする
   useEffect(() => {
-    if (showRelation) {
+    if (showEdge) {
       const timer = setTimeout(() => {
-        console.log('[GamePage] Hiding relation after 3.5 seconds');
-        useGameStore.setState({ showRelation: false });
+        console.log('[GamePage] Hiding edge after 3.5 seconds');
+        useGameStore.setState({ showEdge: false });
       }, 3500);
 
       return () => clearTimeout(timer);
     }
-  }, [showRelation, lastRelationKeyword, lastRelationExplanation]);
+  }, [showEdge, lastEdgeKeyword, lastEdgeExplanation]);
 
   // ゲームセッション開始（全ルート+選択肢を一括取得）- 初回のみ
   useEffect(() => {
@@ -222,7 +222,7 @@ export default function GamePage() {
         >
           <GameCard
             term={currentStep.term.name}
-            era={currentStep.term.era}
+            category={currentStep.term.category}
             description={currentStep.term.description}
           />
         </Box>
@@ -254,11 +254,11 @@ export default function GamePage() {
           </Grid>
         )}
 
-        {/* リレーション説明 */}
-        <RelationDisplay
-          keyword={lastRelationKeyword}
-          explanation={lastRelationExplanation}
-          show={showRelation}
+        {/* エッジ説明 */}
+        <EdgeDisplay
+          keyword={lastEdgeKeyword}
+          explanation={lastEdgeExplanation}
+          show={showEdge}
         />
       </Container>
     </Box>

@@ -2,11 +2,11 @@ import { Paper, Typography, Box } from '@mui/material';
 
 interface GameCardProps {
   term: string;
-  era: string;
+  category: string;
   description?: string;
 }
 
-export default function GameCard({ term, era, description }: GameCardProps) {
+export default function GameCard({ term, category, description }: GameCardProps) {
   return (
     <Paper
       elevation={2}
@@ -27,7 +27,7 @@ export default function GameCard({ term, era, description }: GameCardProps) {
         }
       }}
     >
-      {/* Top: Name & Era */}
+      {/* Top: Name & Category */}
       <Box sx={{ textAlign: 'center', width: '100%' }}>
         <Typography
           variant="h3"
@@ -49,7 +49,7 @@ export default function GameCard({ term, era, description }: GameCardProps) {
             mb: description ? 0.5 : 0
           }}
         >
-          {era}
+          {category}
         </Typography>
       </Box>
 

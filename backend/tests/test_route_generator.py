@@ -84,8 +84,8 @@ class TestRouteGeneration:
             assert len(route) > 0
             assert route[0] == tier1_id[0]
 
-    def test_route_follows_relations(self, db_session):
-        """生成されたルートは実際のリレーションに従っている"""
+    def test_route_follows_edges(self, db_session):
+        """生成されたルートは実際のエッジに従っている"""
         from sqlalchemy import text
         route = generate_route(
             start_term_id=1,
@@ -96,18 +96,17 @@ class TestRouteGeneration:
 
         # 各ステップが実際に繋がっているか確認
         for i in range(len(route) - 1):
-            src, dst = route[i], route[i + 1]
+            term_a, term_b = min(route[i], route[i + 1]), max(route[i], route[i + 1])
 
             result = db_session.execute(
                 text("""
-                SELECT COUNT(*) FROM relations
-                WHERE (source = :src AND target = :dst)
-                   OR (source = :dst AND target = :src)
+                SELECT COUNT(*) FROM edges
+                WHERE term_a = :term_a AND term_b = :term_b
                 """),
-                {"src": src, "dst": dst}
+                {"term_a": term_a, "term_b": term_b}
             ).fetchone()
 
-            assert result[0] > 0, f"No relation between {src} and {dst}"
+            assert result[0] > 0, f"No edge between {term_a} and {term_b}"
 
 
 class TestScoringFunction:
@@ -240,7 +239,7 @@ class TestErrorCases:
         from sqlalchemy import text
 
         # 全termsを削除（トランザクション内なのでロールバックされる）
-        db_session.execute(text("DELETE FROM relations"))
+        db_session.execute(text("DELETE FROM edges"))
         db_session.execute(text("DELETE FROM terms"))
         db_session.commit()
 

@@ -27,9 +27,9 @@ def get_neighbors_for_term(term_id: int, db) -> Set[int]:
     """
     result = db.execute(
         text("""
-        SELECT target FROM relations WHERE source = :term_id
+        SELECT term_b FROM edges WHERE term_a = :term_id
         UNION
-        SELECT source FROM relations WHERE target = :term_id
+        SELECT term_a FROM edges WHERE term_b = :term_id
         """),
         {"term_id": term_id}
     )

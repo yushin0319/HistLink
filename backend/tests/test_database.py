@@ -17,11 +17,11 @@ def test_terms_table_exists(db_session):
     assert result.scalar() is True
 
 
-def test_relations_table_exists(db_session):
-    """Test that relations table exists"""
+def test_edges_table_exists(db_session):
+    """Test that edges table exists"""
     result = db_session.execute(
         text(
-            "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'relations')"
+            "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'edges')"
         )
     )
     assert result.scalar() is True
@@ -34,9 +34,9 @@ def test_terms_exist(db_session):
     assert count > 0
 
 
-def test_relations_exist(db_session):
-    """Test that relations exist"""
-    result = db_session.execute(text("SELECT COUNT(*) FROM relations"))
+def test_edges_exist(db_session):
+    """Test that edges exist"""
+    result = db_session.execute(text("SELECT COUNT(*) FROM edges"))
     count = result.scalar()
     assert count > 0
 

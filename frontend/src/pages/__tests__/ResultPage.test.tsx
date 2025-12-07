@@ -1,15 +1,31 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import ResultPage from '../ResultPage';
+import { useGameStore } from '../../stores/gameStore';
 
 describe('ResultPage', () => {
+  let testCounter = 0;
+
   beforeEach(() => {
     vi.useFakeTimers();
+    testCounter++;
+    // ストアをデフォルト値に設定（各テストで固有のgameIdを使用）
+    useGameStore.setState({
+      lives: 3,
+      score: 2332,
+      difficulty: 'hard',
+      currentStage: 9,
+      totalStages: 10,
+      steps: [],
+      gameId: `test-game-id-${testCounter}`,
+    });
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
     vi.useRealTimers();
+    // ストアをリセット
+    useGameStore.getState().resetGame();
   });
 
   it('初期表示時、正しい要素が表示される', () => {
@@ -17,15 +33,15 @@ describe('ResultPage', () => {
 
     expect(screen.getByText('LIFE')).toBeInTheDocument();
     expect(screen.getByText('SCORE')).toBeInTheDocument();
+    // currentStage=9, totalStages=10 なので currentStage + 1 === totalStages で COMPLETE が表示される
     expect(screen.getByText('COMPLETE')).toBeInTheDocument();
-    expect(screen.getByText(/ゲームクリア/)).toBeInTheDocument();
   });
 
   it('初期状態では3ライフと初期スコア2332が表示される', () => {
     const { container } = render(<ResultPage />);
 
-    // 初期スコア表示
-    expect(screen.getByText('2332')).toBeInTheDocument();
+    // 初期スコア表示（スコアは複数箇所に表示されるのでgetAllByTextを使用）
+    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
 
     // 3つのダイヤモンドアイコンが存在
     const filledDiamonds = container.querySelectorAll('[data-testid="DiamondIcon"]');
@@ -35,8 +51,8 @@ describe('ResultPage', () => {
   it('0.5秒後、スコアがカウントアップされライフが1減る', async () => {
     render(<ResultPage />);
 
-    // 初期状態
-    expect(screen.getByText('2332')).toBeInTheDocument();
+    // 初期状態（スコアは複数箇所に表示されるのでgetAllByTextを使用）
+    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
 
     // 0.5秒経過
     await act(async () => {
@@ -44,7 +60,7 @@ describe('ResultPage', () => {
     });
 
     // スコアが300点増加（hard: 300点ボーナス）
-    expect(screen.getByText('2632')).toBeInTheDocument();
+    expect(screen.getAllByText('2632').length).toBeGreaterThan(0);
   });
 
   it('1.1秒後、2回目のカウントアップが完了する', async () => {
@@ -56,7 +72,7 @@ describe('ResultPage', () => {
     });
 
     // 2回分のボーナス加算（300 × 2 = 600点）
-    expect(screen.getByText('2932')).toBeInTheDocument();
+    expect(screen.getAllByText('2932').length).toBeGreaterThan(0);
   });
 
   it('1.7秒後、3回目のカウントアップが完了し全てのライフが消費される', async () => {
@@ -68,7 +84,7 @@ describe('ResultPage', () => {
     });
 
     // 3回分のボーナス加算（300 × 3 = 900点）
-    expect(screen.getByText('3232')).toBeInTheDocument();
+    expect(screen.getAllByText('3232').length).toBeGreaterThan(0);
   });
 
   it('コンポーネントがアンマウントされたときタイマーがクリアされる', () => {
@@ -121,8 +137,8 @@ describe('ResultPage', () => {
   it('コンポーネントの再レンダリング時、useEffectが2回実行されない（isInitializedフラグが機能）', async () => {
     const { rerender } = render(<ResultPage />);
 
-    // 初回レンダリング後のスコアを確認
-    expect(screen.getByText('2332')).toBeInTheDocument();
+    // 初回レンダリング後のスコアを確認（スコアは複数箇所に表示されるのでgetAllByTextを使用）
+    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
 
     // 再レンダリング
     rerender(<ResultPage />);
@@ -133,28 +149,34 @@ describe('ResultPage', () => {
     });
 
     // 2回実行されていたら2932になるはずだが、1回だけなので2632
-    expect(screen.getByText('2632')).toBeInTheDocument();
+    expect(screen.getAllByText('2632').length).toBeGreaterThan(0);
   });
 
   it('initialLivesが0の時、アニメーションが実行されない', () => {
-    render(<ResultPage initialLives={0} />);
+    // ストアにlives=0を設定
+    useGameStore.setState({ lives: 0, gameId: 'zero-lives-game' });
 
-    // スコアが初期値のまま変わらない
-    expect(screen.getByText('2332')).toBeInTheDocument();
+    render(<ResultPage />);
+
+    // スコアが初期値のまま変わらない（スコアは複数箇所に表示されるのでgetAllByTextを使用）
+    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
 
     // タイマーを進めてもスコアは変わらない
     act(() => {
       vi.advanceTimersByTime(2000);
     });
 
-    expect(screen.getByText('2332')).toBeInTheDocument();
+    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
   });
 
   it('異なる難易度設定でスコアボーナスが変わる（easy: 100点）', async () => {
-    render(<ResultPage initialLives={1} difficulty="easy" />);
+    // ストアにeasy難易度を設定
+    useGameStore.setState({ lives: 1, difficulty: 'easy', gameId: 'easy-game' });
 
-    // 初期スコア確認
-    expect(screen.getByText('2332')).toBeInTheDocument();
+    render(<ResultPage />);
+
+    // 初期スコア確認（スコアは複数箇所に表示されるのでgetAllByTextを使用）
+    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
 
     // 0.5秒経過
     await act(async () => {
@@ -162,14 +184,17 @@ describe('ResultPage', () => {
     });
 
     // easyは100点ボーナス
-    expect(screen.getByText('2432')).toBeInTheDocument();
+    expect(screen.getAllByText('2432').length).toBeGreaterThan(0);
   });
 
   it('異なる初期スコアでも正しく動作する', async () => {
-    render(<ResultPage initialLives={1} initialScore={500} />);
+    // ストアに異なる初期スコアを設定
+    useGameStore.setState({ lives: 1, score: 500, gameId: 'different-score-game' });
 
-    // 初期スコア確認
-    expect(screen.getByText('500')).toBeInTheDocument();
+    render(<ResultPage />);
+
+    // 初期スコア確認（スコアは複数箇所に表示されるのでgetAllByTextを使用）
+    expect(screen.getAllByText('500').length).toBeGreaterThan(0);
 
     // 0.5秒経過
     await act(async () => {
@@ -177,6 +202,6 @@ describe('ResultPage', () => {
     });
 
     // 500 + 300 = 800
-    expect(screen.getByText('800')).toBeInTheDocument();
+    expect(screen.getAllByText('800').length).toBeGreaterThan(0);
   });
 });

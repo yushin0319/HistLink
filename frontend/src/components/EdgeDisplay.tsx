@@ -1,12 +1,12 @@
 import { Box, Typography, Fade } from '@mui/material';
 
-interface RelationDisplayProps {
+interface EdgeDisplayProps {
   keyword: string;
   explanation: string;
   show: boolean;
 }
 
-export default function RelationDisplay({ keyword, explanation, show }: RelationDisplayProps) {
+export default function EdgeDisplay({ keyword, explanation, show }: EdgeDisplayProps) {
   return (
     <Box
       sx={{

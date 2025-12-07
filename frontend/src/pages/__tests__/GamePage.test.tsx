@@ -12,40 +12,40 @@ vi.mock('../../services/gameApi');
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: '邪馬台国', era: '弥生時代', tags: [], description: '卑弥呼が治めた国' },
+    term: { id: 1, name: '邪馬台国', tier: 1, category: '弥生時代', description: '卑弥呼が治めた国' },
     correct_next_id: 2,
     choices: [
-      { term_id: 2, name: '卑弥呼', era: '弥生時代' },
-      { term_id: 3, name: '聖徳太子', era: '飛鳥時代' },
-      { term_id: 4, name: '中大兄皇子', era: '飛鳥時代' },
-      { term_id: 5, name: '藤原道長', era: '平安時代' },
+      { term_id: 2, name: '卑弥呼', tier: 1 },
+      { term_id: 3, name: '聖徳太子', tier: 1 },
+      { term_id: 4, name: '中大兄皇子', tier: 1 },
+      { term_id: 5, name: '藤原道長', tier: 1 },
     ],
-    relation_type: '統治者',
+    difficulty: 'easy',
     keyword: '女王卑弥呼',
-    relation_description: '邪馬台国を統治した女王',
+    edge_description: '邪馬台国を統治した女王',
   },
   {
     step_no: 1,
-    term: { id: 2, name: '卑弥呼', era: '弥生時代', tags: [], description: '邪馬台国の女王' },
+    term: { id: 2, name: '卑弥呼', tier: 1, category: '弥生時代', description: '邪馬台国の女王' },
     correct_next_id: 6,
     choices: [
-      { term_id: 6, name: '大化の改新', era: '飛鳥時代' },
-      { term_id: 7, name: '壬申の乱', era: '飛鳥時代' },
-      { term_id: 8, name: '平城京', era: '奈良時代' },
-      { term_id: 9, name: '平安京', era: '平安時代' },
+      { term_id: 6, name: '大化の改新', tier: 1 },
+      { term_id: 7, name: '壬申の乱', tier: 1 },
+      { term_id: 8, name: '平城京', tier: 1 },
+      { term_id: 9, name: '平安京', tier: 1 },
     ],
-    relation_type: '時代変化',
+    difficulty: 'normal',
     keyword: '律令制度',
-    relation_description: '大化の改新により律令制度が導入された',
+    edge_description: '大化の改新により律令制度が導入された',
   },
   {
     step_no: 2,
-    term: { id: 6, name: '大化の改新', era: '飛鳥時代', tags: [], description: '645年の政治改革' },
+    term: { id: 6, name: '大化の改新', tier: 1, category: '飛鳥時代', description: '645年の政治改革' },
     correct_next_id: null,
     choices: [],
-    relation_type: '',
+    difficulty: '',
     keyword: '',
-    relation_description: '',
+    edge_description: '',
   },
 ];
 
@@ -112,7 +112,7 @@ describe('GamePage', () => {
 
       // 値を確認
       expect(screen.getAllByText('0').length).toBeGreaterThan(0); // スコアとタイマーに0が表示される
-      expect(screen.getByText('1 / 3')).toBeInTheDocument(); // ステージ（totalStagesはsteps.lengthの3）
+      expect(screen.getByText('1 / 2')).toBeInTheDocument(); // ステージ（totalStagesはsteps.length - 1 = 2、最後のステップは回答不要）
     });
 
     it('最初のステップが表示される', async () => {
@@ -191,7 +191,7 @@ describe('GamePage', () => {
       expect(screen.getByText('読み込み中...')).toBeInTheDocument();
     });
 
-    it('リレーション表示が4秒後に自動的に非表示になる', async () => {
+    it('エッジ表示が4秒後に自動的に非表示になる', async () => {
       mockStartGameSession.mockResolvedValue(mockGameStartResponse);
 
       render(<GamePage />);
@@ -209,16 +209,16 @@ describe('GamePage', () => {
         await new Promise((resolve) => setTimeout(resolve, 600));
       });
 
-      // リレーションが表示される（feedbackPhase後に表示開始）
-      expect(useGameStore.getState().showRelation).toBe(true);
+      // エッジが表示される（feedbackPhase後に表示開始）
+      expect(useGameStore.getState().showEdge).toBe(true);
 
       // 3.5秒待つ（合計4秒）
       await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 3600));
       });
 
-      // リレーションが自動的に非表示になる
-      expect(useGameStore.getState().showRelation).toBe(false);
+      // エッジが自動的に非表示になる
+      expect(useGameStore.getState().showEdge).toBe(false);
     }, 10000); // タイムアウトを10秒に設定
   });
 
@@ -243,22 +243,25 @@ describe('GamePage', () => {
       await screen.findByText('邪馬台国');
 
       // totalStagesが正しく設定されていることを確認
+      // steps.length - 1 = 2 (最後のステップは回答不要)
       const beforeState = useGameStore.getState();
-      expect(beforeState.totalStages).toBe(3); // steps.lengthから設定される
+      expect(beforeState.totalStages).toBe(2);
       expect(beforeState.currentStage).toBe(0);
 
-      // 全問正解でクリア
+      // 全問正解でクリア（2回の回答が必要）
       await act(async () => {
-        const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+        const { answerQuestion } = useGameStore.getState();
         answerQuestion(2); // ステップ0 → feedbackPhase
         await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
-        answerQuestion(6); // ステップ1 → feedbackPhase
+        answerQuestion(6); // ステップ1 → feedbackPhase → ゲーム完了
         await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
       });
 
       // クリア画面の表示を確認
       const state = useGameStore.getState();
-      expect(state.currentStage).toBe(2);
+      // totalStages=2、2回正解で newStage(2) >= totalStages(2) でゲーム完了
+      // COMPLETE表示用: currentStage + 1 === totalStages → 1 + 1 === 2 → "COMPLETE"
+      expect(state.currentStage).toBe(1); // totalStages - 1 = 1
       expect(state.isCompleted).toBe(true);
       expect(state.isPlaying).toBe(false);
     });

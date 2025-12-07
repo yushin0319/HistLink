@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import RelationDisplay from '../RelationDisplay';
+import EdgeDisplay from '../EdgeDisplay';
 
-describe('RelationDisplay', () => {
+describe('EdgeDisplay', () => {
   it('show=trueの時、keywordとexplanationが表示される', () => {
     render(
-      <RelationDisplay
+      <EdgeDisplay
         keyword="女王卑弥呼"
         explanation="邪馬台国を統治した女王"
         show={true}
@@ -18,7 +18,7 @@ describe('RelationDisplay', () => {
 
   it('show=falseの時も要素は存在するが、Fadeで非表示になる', () => {
     render(
-      <RelationDisplay
+      <EdgeDisplay
         keyword="女王卑弥呼"
         explanation="邪馬台国を統治した女王"
         show={false}
@@ -32,7 +32,7 @@ describe('RelationDisplay', () => {
 
   it('keywordが空文字でも正常に表示される', () => {
     render(
-      <RelationDisplay
+      <EdgeDisplay
         keyword=""
         explanation="説明文"
         show={true}
@@ -44,7 +44,7 @@ describe('RelationDisplay', () => {
 
   it('explanationが空文字でも正常に表示される', () => {
     render(
-      <RelationDisplay
+      <EdgeDisplay
         keyword="キーワード"
         explanation=""
         show={true}
@@ -56,7 +56,7 @@ describe('RelationDisplay', () => {
 
   it('両方空文字でも正常にレンダリングされる', () => {
     const { container } = render(
-      <RelationDisplay
+      <EdgeDisplay
         keyword=""
         explanation=""
         show={true}

@@ -119,42 +119,42 @@ class TestGameStart:
         assert response.status_code == 200
         data = response.json()
 
-        # 最後のステップ以外はリレーション情報がある
-        missing_relations = []
+        # 最後のステップ以外はエッジ情報がある
+        missing_edges = []
         for i, step in enumerate(data["steps"][:-1]):
-            # edge_difficulty、keyword、relation_descriptionフィールドが存在
-            assert "edge_difficulty" in step
+            # difficulty、keyword、edge_descriptionフィールドが存在
+            assert "difficulty" in step
             assert "keyword" in step
-            assert "relation_description" in step
+            assert "edge_description" in step
 
             # 型の確認
-            assert isinstance(step["edge_difficulty"], str)
+            assert isinstance(step["difficulty"], str)
             assert isinstance(step["keyword"], str)
-            assert isinstance(step["relation_description"], str)
+            assert isinstance(step["edge_description"], str)
 
             # データが空の場合、どのステップかを記録
-            if not step["edge_difficulty"] and not step["keyword"] and not step["relation_description"]:
-                src_id = step["term"]["id"]
-                dst_id = step["correct_next_id"]
-                missing_relations.append({
+            if not step["difficulty"] and not step["keyword"] and not step["edge_description"]:
+                term_id = step["term"]["id"]
+                next_id = step["correct_next_id"]
+                missing_edges.append({
                     "step_no": i,
-                    "src_id": src_id,
-                    "dst_id": dst_id,
-                    "src_name": step["term"]["name"]
+                    "term_id": term_id,
+                    "next_id": next_id,
+                    "term_name": step["term"]["name"]
                 })
 
-        # リレーションが欠けている場合、詳細情報を表示してテスト失敗
-        if missing_relations:
-            error_msg = "Missing relations found:\n"
-            for rel in missing_relations:
-                error_msg += f"  Step {rel['step_no']}: {rel['src_name']} (id={rel['src_id']}) -> term_id={rel['dst_id']}\n"
+        # エッジが欠けている場合、詳細情報を表示してテスト失敗
+        if missing_edges:
+            error_msg = "Missing edges found:\n"
+            for edge in missing_edges:
+                error_msg += f"  Step {edge['step_no']}: {edge['term_name']} (id={edge['term_id']}) -> term_id={edge['next_id']}\n"
             pytest.fail(error_msg)
 
-        # 最後のステップはリレーション情報が空
+        # 最後のステップはエッジ情報が空
         last_step = data["steps"][-1]
-        assert last_step["edge_difficulty"] == ""
+        assert last_step["difficulty"] == ""
         assert last_step["keyword"] == ""
-        assert last_step["relation_description"] == ""
+        assert last_step["edge_description"] == ""
 
     def test_game_start_invalid_difficulty(self, client, db_session):
         """不正な難易度でエラー"""
@@ -247,11 +247,11 @@ class TestGameResult:
 
     def test_game_start_no_terms_error(self, client, db_session, monkeypatch):
         """termがない場合は400エラー"""
-        def mock_select_random_start(db, difficulty='hard'):
+        def mock_generate_route_with_fallback(target_length, db, difficulty='hard', seed=None, max_start_retries=10, max_same_start_retries=10):
             raise ValueError("No terms found with tier <= 1")
 
         import app.routes.games
-        monkeypatch.setattr(app.routes.games, "select_random_start", mock_select_random_start)
+        monkeypatch.setattr(app.routes.games, "generate_route_with_fallback", mock_generate_route_with_fallback)
 
         response = client.post(
             "/api/v1/games/start",
@@ -278,16 +278,18 @@ class TestGameResult:
             )
             term_ids.append(term_result.fetchone()[0])
 
-        # term1 → term2 のリレーションを作成しない（意図的に欠落）
+        # term1 → term2 のエッジを作成しない（意図的に欠落）
 
-        # 残りのステップ用にリレーションを作成（新スキーマ: source, target, difficulty）
+        # 残りのステップ用にエッジを作成（新スキーマ: term_a, term_b, difficulty）
         for i in range(1, 4):
+            term_a = min(term_ids[i], term_ids[i+1])
+            term_b = max(term_ids[i], term_ids[i+1])
             db_session.execute(
                 text("""
-                    INSERT INTO relations (source, target, difficulty, keyword, explanation)
-                    VALUES (:source, :target, 'normal', 'テストキーワード', 'テスト説明')
+                    INSERT INTO edges (term_a, term_b, difficulty, keyword, description)
+                    VALUES (:term_a, :term_b, 'normal', 'テストキーワード', 'テスト説明')
                 """),
-                {"source": term_ids[i], "target": term_ids[i+1]}
+                {"term_a": term_a, "term_b": term_b}
             )
 
         # ダミー選択肢用の用語を追加
@@ -305,24 +307,20 @@ class TestGameResult:
 
         db_session.commit()
 
-        # ルート生成をモック
-        def mock_select_random_start(db, difficulty='hard'):
-            return term_ids[0]
-
-        def mock_generate_route(start_term_id, target_length, db, difficulty='hard'):
+        # generate_route_with_fallbackをモック（ルートを直接返す）
+        def mock_generate_route_with_fallback(target_length, db, difficulty='hard', seed=None, max_start_retries=10, max_same_start_retries=10):
             return term_ids[:5]  # 5ステップのルート
 
         # ダミー選択肢生成をモック（3個ずつ返す）
         distractor_counter = [0]
-        def mock_generate_distractors(correct_id, current_id, visited, difficulty, count, db):
+        def mock_generate_distractors(correct_id, current_id, visited, difficulty, count, db, seed=None):
             start_idx = distractor_counter[0] * count
             distractor_counter[0] += 1
             return distractor_ids[start_idx:start_idx + count]
 
         # モックを適用
         import app.routes.games
-        monkeypatch.setattr(app.routes.games, "select_random_start", mock_select_random_start)
-        monkeypatch.setattr(app.routes.games, "generate_route", mock_generate_route)
+        monkeypatch.setattr(app.routes.games, "generate_route_with_fallback", mock_generate_route_with_fallback)
         monkeypatch.setattr(app.routes.games, "generate_distractors", mock_generate_distractors)
 
         # ゲーム開始（モックにより term1 → term2 → ... のルートが使われる）
@@ -338,16 +336,16 @@ class TestGameResult:
         assert "steps" in data
         assert len(data["steps"]) == 5
 
-        # 防御的コードにより、最初のステップのedge_difficulty, keyword, relation_descriptionがデフォルト値になる
+        # 防御的コードにより、最初のステップのdifficultyがデフォルト値、keyword/edge_descriptionが空になる
         first_step = data["steps"][0]
         assert first_step["term"]["id"] == term_ids[0]
         assert first_step["correct_next_id"] == term_ids[1]
-        assert first_step["edge_difficulty"] == "normal"  # デフォルト値
+        assert first_step["difficulty"] == "normal"  # デフォルト値
         assert first_step["keyword"] == ""
-        assert first_step["relation_description"] == ""
+        assert first_step["edge_description"] == ""
 
-        # 2番目以降のステップはリレーションが存在する
+        # 2番目以降のステップはエッジが存在する
         second_step = data["steps"][1]
-        assert second_step["edge_difficulty"] == "normal"
+        assert second_step["difficulty"] == "normal"
         assert second_step["keyword"] == "テストキーワード"
-        assert second_step["relation_description"] == "テスト説明"
+        assert second_step["edge_description"] == "テスト説明"

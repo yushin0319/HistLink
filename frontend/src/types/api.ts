@@ -1,8 +1,8 @@
 export interface Term {
   id: number;
   name: string;
-  era: string;
-  tags: string[];
+  tier: number;
+  category: string;
   description: string;
 }
 
@@ -22,7 +22,6 @@ export interface RoutesResponse {
 export interface RouteStep {
   step_no: number;
   term: Term;
-  relation_type?: string;
 }
 
 export interface RouteStepsResponse {
@@ -34,7 +33,7 @@ export interface RouteStepsResponse {
 export interface Choice {
   term_id: number;
   name: string;
-  era: string;
+  tier: number;
 }
 
 export interface RouteStepWithChoices {
@@ -42,9 +41,9 @@ export interface RouteStepWithChoices {
   term: Term;
   correct_next_id: number | null;
   choices: Choice[];
-  relation_type: string;
+  difficulty: string;  // エッジの難易度（easy/normal/hard）
   keyword: string;
-  relation_description: string;
+  edge_description: string;
 }
 
 export interface GameStartResponse {

@@ -51,7 +51,7 @@ $$;
 -- ========================================
 -- Sequences
 -- ========================================
-CREATE SEQUENCE relations_id_seq AS integer;
+CREATE SEQUENCE edges_id_seq AS integer;
 CREATE SEQUENCE routes_id_seq;
 CREATE SEQUENCE terms_id_seq AS integer;
 
@@ -68,17 +68,18 @@ CREATE TABLE terms (
     PRIMARY KEY (id)
 );
 
--- relations テーブル（JSON対応: source, target, difficulty）
-CREATE TABLE relations (
-    id INTEGER NOT NULL DEFAULT nextval('relations_id_seq'::regclass),
-    source INTEGER NOT NULL,
-    target INTEGER NOT NULL,
+-- edges テーブル（双方向エッジ: term_a < term_b で重複防止）
+CREATE TABLE edges (
+    id INTEGER NOT NULL DEFAULT nextval('edges_id_seq'::regclass),
+    term_a INTEGER NOT NULL,
+    term_b INTEGER NOT NULL,
     difficulty VARCHAR(20) NOT NULL CHECK (difficulty IN ('easy', 'normal', 'hard')),
     keyword VARCHAR(100),
-    explanation TEXT,
+    description TEXT,
     PRIMARY KEY (id),
-    FOREIGN KEY (source) REFERENCES terms(id) ON DELETE CASCADE,
-    FOREIGN KEY (target) REFERENCES terms(id) ON DELETE CASCADE
+    FOREIGN KEY (term_a) REFERENCES terms(id) ON DELETE CASCADE,
+    FOREIGN KEY (term_b) REFERENCES terms(id) ON DELETE CASCADE,
+    CHECK (term_a < term_b)
 );
 
 -- routes テーブル
@@ -135,9 +136,9 @@ CREATE TABLE games (
 -- ========================================
 -- Indexes
 -- ========================================
-CREATE INDEX idx_relations_source ON relations(source);
-CREATE INDEX idx_relations_target ON relations(target);
-CREATE INDEX idx_relations_difficulty ON relations(difficulty);
+CREATE INDEX idx_edges_term_a ON edges(term_a);
+CREATE INDEX idx_edges_term_b ON edges(term_b);
+CREATE INDEX idx_edges_difficulty ON edges(difficulty);
 CREATE INDEX idx_terms_tier ON terms(tier);
 CREATE INDEX idx_terms_category ON terms(category);
 CREATE INDEX idx_games_created_at ON games USING btree (created_at DESC);
@@ -154,13 +155,13 @@ SELECT
     t.name,
     t.tier,
     t.category,
-    COALESCE(COUNT(DISTINCT r.id), 0) AS degree
+    COALESCE(COUNT(DISTINCT e.id), 0) AS degree
 FROM terms t
-LEFT JOIN relations r ON (r.source = t.id OR r.target = t.id)
+LEFT JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
 GROUP BY t.id, t.name, t.tier, t.category
 ORDER BY degree DESC, t.id;
 
-COMMENT ON VIEW v_term_degrees IS '用語ごとの次数（リレーション数）';
+COMMENT ON VIEW v_term_degrees IS '用語ごとの次数（エッジ数）';
 
 -- 死に点（degree < 2）を表示するビュー
 CREATE VIEW v_dead_points AS
@@ -175,22 +176,22 @@ CREATE VIEW v_tier_stats AS
 SELECT
     tier,
     COUNT(*) AS term_count,
-    (SELECT COUNT(*) FROM relations r
-     JOIN terms t1 ON r.source = t1.id
-     JOIN terms t2 ON r.target = t2.id
-     WHERE t1.tier = t.tier OR t2.tier = t.tier) AS relation_count
+    (SELECT COUNT(*) FROM edges e
+     JOIN terms t1 ON e.term_a = t1.id
+     JOIN terms t2 ON e.term_b = t2.id
+     WHERE t1.tier = t.tier OR t2.tier = t.tier) AS edge_count
 FROM terms t
 GROUP BY tier
 ORDER BY tier;
 
-COMMENT ON VIEW v_tier_stats IS 'Tier別の用語数・リレーション数';
+COMMENT ON VIEW v_tier_stats IS 'Tier別の用語数・エッジ数';
 
 -- 難易度別統計ビュー
 CREATE VIEW v_difficulty_stats AS
 SELECT
     difficulty,
-    COUNT(*) AS relation_count
-FROM relations
+    COUNT(*) AS edge_count
+FROM edges
 GROUP BY difficulty
 ORDER BY
     CASE difficulty
@@ -199,7 +200,7 @@ ORDER BY
         WHEN 'hard' THEN 3
     END;
 
-COMMENT ON VIEW v_difficulty_stats IS '難易度別のリレーション数';
+COMMENT ON VIEW v_difficulty_stats IS '難易度別のエッジ数';
 
 -- ルート品質チェックビュー
 CREATE VIEW v_route_quality AS
@@ -234,7 +235,7 @@ CREATE TRIGGER games_updated_at BEFORE UPDATE ON games
 -- ========================================
 -- Sequence Ownership
 -- ========================================
-ALTER SEQUENCE relations_id_seq OWNED BY relations.id;
+ALTER SEQUENCE edges_id_seq OWNED BY edges.id;
 ALTER SEQUENCE routes_id_seq OWNED BY routes.id;
 ALTER SEQUENCE terms_id_seq OWNED BY terms.id;
 
@@ -247,10 +248,10 @@ node scripts/import_json.js
 echo ""
 echo "📊 統計:"
 docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT COUNT(*) AS terms FROM terms;"
-docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT COUNT(*) AS relations FROM relations;"
+docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT COUNT(*) AS edges FROM edges;"
 echo ""
 echo "📈 Tier別分布:"
 docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT tier, COUNT(*) as count FROM terms GROUP BY tier ORDER BY tier;"
 echo ""
 echo "📈 難易度別分布:"
-docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT difficulty, COUNT(*) as count FROM relations GROUP BY difficulty ORDER BY difficulty;"
+docker compose exec -T postgres psql -U histlink_user -d histlink -c "SELECT difficulty, COUNT(*) as count FROM edges GROUP BY difficulty ORDER BY difficulty;"

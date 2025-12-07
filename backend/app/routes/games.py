@@ -14,7 +14,7 @@ from app.schemas import (
     RouteStepWithChoices,
     FullRouteStartResponse,
 )
-from app.services.route_generator import select_random_start, generate_route
+from app.services.route_generator import generate_route_with_fallback
 from app.services.distractor_generator import generate_distractors
 import random
 
@@ -47,20 +47,24 @@ async def start_game(
     Raises:
         HTTPException: スタート地点が見つからない場合（400）
     """
-    # ランダムスタート地点を選択（難易度に応じたTierでフィルタ）
+    # ルートを生成（難易度に応じたフィルタ付き、スタート地点変更付きフォールバック）
+    # target_length回のゲーム = target_length+1ノード（target_lengthエッジ）が必要
+    # max_start_retries=10, max_same_start_retries=20 で最大200回試行
     try:
-        start_term_id = select_random_start(db, difficulty=request.difficulty)
+        route = generate_route_with_fallback(
+            target_length=request.target_length + 1,
+            db=db,
+            difficulty=request.difficulty,
+            max_start_retries=10,
+            max_same_start_retries=20
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    # ルートを生成（難易度に応じたフィルタ付き）
-    # target_length回のゲーム = target_length+1ノード（target_lengthエッジ）が必要
-    route = generate_route(
-        start_term_id=start_term_id,
-        target_length=request.target_length + 1,
-        db=db,
-        difficulty=request.difficulty
-    )
+    start_term_id = route[0] if route else None
+
+    if not route:
+        raise HTTPException(status_code=400, detail="Failed to generate route")
 
     # routesテーブルに保存
     route_result = db.execute(
@@ -132,32 +136,31 @@ async def start_game(
             correct_next_id = route[step_no + 1]
             visited.add(term_id)
 
-            # リレーション情報を取得（双方向で検索）
-            relation_result = db.execute(
+            # エッジ情報を取得（双方向で検索、term_a < term_bの制約があるのでmin/maxで検索）
+            edge_result = db.execute(
                 text("""
-                    SELECT difficulty, keyword, explanation
-                    FROM relations
-                    WHERE (source = :source AND target = :target)
-                       OR (source = :target AND target = :source)
+                    SELECT difficulty, keyword, description
+                    FROM edges
+                    WHERE term_a = :term_a AND term_b = :term_b
                     LIMIT 1
                 """),
-                {"source": term_id, "target": correct_next_id}
+                {"term_a": min(term_id, correct_next_id), "term_b": max(term_id, correct_next_id)}
             )
-            relation_row = relation_result.fetchone()
+            edge_row = edge_result.fetchone()
 
-            if not relation_row:
-                print(f"[WARNING] No relation found for source={term_id}, target={correct_next_id}")
-                edge_difficulty = "normal"
+            if not edge_row:
+                print(f"[WARNING] No edge found for term_a={min(term_id, correct_next_id)}, term_b={max(term_id, correct_next_id)}")
+                difficulty_value = "normal"
                 keyword = ""
-                explanation = ""
+                description = ""
             else:
-                edge_difficulty = relation_row[0] or "normal"
-                keyword = relation_row[1] or ""
-                explanation = relation_row[2] or ""
-                print(f"[DEBUG] Relation found: source={term_id}, target={correct_next_id}, difficulty={edge_difficulty}, keyword={keyword}")
+                difficulty_value = edge_row[0] or "normal"
+                keyword = edge_row[1] or ""
+                description = edge_row[2] or ""
+                print(f"[DEBUG] Edge found: term_a={min(term_id, correct_next_id)}, term_b={max(term_id, correct_next_id)}, difficulty={difficulty_value}, keyword={keyword}")
 
-            # explanationのみを説明文として使用（keywordは別フィールドで返す）
-            relation_description = explanation
+            # descriptionのみを説明文として使用（keywordは別フィールドで返す）
+            edge_description = description
 
             # ダミーを3つ生成（難易度に応じたTierフィルタ）
             distractors = generate_distractors(
@@ -200,9 +203,9 @@ async def start_game(
                 term=term,
                 correct_next_id=correct_next_id,
                 choices=choices,
-                edge_difficulty=edge_difficulty,
+                difficulty=difficulty_value,
                 keyword=keyword,
-                relation_description=relation_description
+                edge_description=edge_description
             ))
         else:
             # 最後のステップは選択肢なし
@@ -211,9 +214,9 @@ async def start_game(
                 term=term,
                 correct_next_id=None,
                 choices=[],
-                edge_difficulty="",
+                difficulty="",
                 keyword="",
-                relation_description=""
+                edge_description=""
             ))
 
     return FullRouteStartResponse(

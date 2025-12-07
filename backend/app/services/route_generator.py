@@ -62,12 +62,12 @@ def get_unvisited_neighbors(
         text("""
         SELECT DISTINCT t.id
         FROM terms t
-        JOIN relations r ON (r.target = t.id OR r.source = t.id)
+        JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
         WHERE t.tier <= :max_tier
-          AND r.difficulty = ANY(:difficulties)
+          AND e.difficulty = ANY(:difficulties)
           AND (
-              (r.source = :term_id AND r.target = t.id)
-              OR (r.target = :term_id AND r.source = t.id)
+              (e.term_a = :term_id AND e.term_b = t.id)
+              OR (e.term_b = :term_id AND e.term_a = t.id)
           )
         """),
         {

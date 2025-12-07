@@ -60,8 +60,8 @@ describe('routesApi', () => {
             term: {
               id: 1,
               name: 'ペリー来航',
-              era: '近代',
-              tags: ['外交', '開国'],
+              tier: 1,
+              category: '近代',
               description: '1853年、アメリカのペリー提督が浦賀に来航',
             },
           },

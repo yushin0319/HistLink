@@ -45,9 +45,9 @@ class RouteStepWithChoices(BaseModel):
     term: TermResponse
     correct_next_id: int | None  # 次の正解（最後のステップではNone）
     choices: list[ChoiceResponse]  # 4択（正解1 + ダミー3）
-    edge_difficulty: str  # エッジの難易度（easy/normal/hard）
-    keyword: str  # リレーションのキーワード（例: "農耕開始"）
-    relation_description: str  # リレーションの説明文
+    difficulty: str  # エッジの難易度（easy/normal/hard）
+    keyword: str  # エッジのキーワード（例: "農耕開始"）
+    edge_description: str  # エッジの説明文
 
 
 class FullRouteStartResponse(BaseModel):

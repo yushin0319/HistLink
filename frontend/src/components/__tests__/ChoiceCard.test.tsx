@@ -10,12 +10,6 @@ describe('ChoiceCard', () => {
     expect(screen.getByText('井伊直弼')).toBeInTheDocument();
   });
 
-  it('時代は表示されない', () => {
-    const mockOnClick = vi.fn();
-    render(<ChoiceCard term="井伊直弼" era="近代" onClick={mockOnClick} />);
-    expect(screen.queryByText('近代')).not.toBeInTheDocument();
-  });
-
   it('クリックイベントが正しく発火する', async () => {
     const user = userEvent.setup();
     const mockOnClick = vi.fn();

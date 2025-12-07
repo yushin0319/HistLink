@@ -421,12 +421,14 @@ frontend/ (React)
 
 **ストア構造:**
 - `stores/gameStore.ts`: ゲーム状態の一元管理
-  - lives, score, chain, stage, timer, difficulty
-  - startGame, answerQuestion, resetGame アクション
+  - **状態**: playerName, difficulty, totalStages, gameId, steps, myRank, rankings
+  - **ゲーム進行**: lives, score, currentStage, remainingTime, falseSteps
+  - **フェーズ管理**: isPlaying, isCompleted, isFeedbackPhase
+  - **アクション**: setPlayerName, loadGameData, startGame, answerQuestion, completeFeedbackPhase, decrementTimer, resetGame
 
 **テスト戦略:**
 - 各ストアに対応する `__tests__/` ファイル
-- カバレッジ100%を目標
+- カバレッジ98%達成（185テスト全パス）
 
 ### API層の設計
 
@@ -461,19 +463,22 @@ frontend/src/
 ```
 frontend/src/
 ├── components/         # 再利用可能なコンポーネント
-│   ├── GameHeader.tsx
-│   ├── ResultHeader.tsx  # GameHeaderの亜種
-│   ├── ChoiceCard.tsx
-│   ├── RankingTable.tsx
-│   ├── NameInputModal.tsx
+│   ├── GameHeader.tsx     # ゲーム中のヘッダー（ライフ/ステージ/スコア/タイマー）
+│   ├── ResultHeader.tsx   # リザルト画面のヘッダー
+│   ├── GameCard.tsx       # 現在の用語カード
+│   ├── ChoiceCard.tsx     # 4択の選択肢カード
+│   ├── EdgeDisplay.tsx    # エッジ説明表示
+│   ├── RankingTable.tsx   # ランキング表示（X問/全体タブ）
+│   ├── RouteReviewModal.tsx  # ルートおさらいモーダル
+│   ├── BackgroundImage.tsx   # 背景画像
 │   └── __tests__/
 ├── pages/             # ページコンポーネント
-│   ├── SelectPage.tsx
-│   ├── GamePage.tsx
-│   ├── ResultPage.tsx
+│   ├── SelectPage.tsx     # 難易度・ステージ数選択
+│   ├── GamePage.tsx       # ゲームプレイ画面
+│   ├── ResultPage.tsx     # リザルト画面
 │   └── __tests__/
 └── stores/            # Zustandストア
-    ├── gameStore.ts
+    ├── gameStore.ts       # ゲーム状態の一元管理
     └── __tests__/
 ```
 
@@ -505,3 +510,26 @@ frontend/src/
 
 - **Notion連携**: `use-notion` スキル経由でタスク管理
 - **Todo管理**: Claude Code の TodoWrite ツール使用
+
+---
+
+## 開発状況（2024年12月時点）
+
+### 完成した機能
+
+**フロントエンド (98% カバレッジ):**
+- SelectPage: 難易度・ステージ数選択
+- GamePage: ゲームプレイ（タイマー、ライフ、スコア、フィードバック）
+- ResultPage: ライフ→スコア換金アニメーション、ランキング、名前編集
+
+**バックエンド (93% カバレッジ):**
+- ゲーム開始API（全ルート+選択肢一括返却）
+- ゲーム結果送信API
+- ランキングAPI（X問別/全体）
+- 名前更新API
+
+### 次のステップ
+
+1. **Supabase移行**: 本番環境のDB移行
+2. **管理画面開発**: histlink-admin（データ編集用）
+3. **デプロイ**: Render.comへのデプロイ

@@ -2,43 +2,75 @@
 
 歴史用語をつなげるクイズゲーム
 
+## 概要
+
+日本史・西洋史の用語を連鎖的につなぐ歴史学習ゲーム。
+関連する出来事を選んでハイスコアを目指そう！
+
+### 主な機能
+
+- 3段階の難易度（かんたん/ふつう/難しい）
+- 3つのステージ数（10/30/50問）
+- ライフシステム（3ライフ）
+- タイマー制（20秒）
+- ランキング機能（X問ランキング/全体ランキング）
+- ルートおさらい機能
+
+## 技術スタック
+
+| レイヤー | 技術 |
+|---------|------|
+| Frontend | React 19 + TypeScript + Vite + MUI |
+| Backend | Python (FastAPI) + SQLAlchemy |
+| Database | PostgreSQL 16 (Docker) |
+| Testing | Vitest (frontend), pytest (backend) |
+
 ## セットアップ
 
 ```bash
+# Docker起動（DB + Backend）
 docker compose up -d
+
+# フロントエンド開発サーバー
+cd frontend && npm install && npm run dev
 ```
 
-## データベース
-
-### 初期化（クリーンスタート）
-```bash
-# ボリューム削除して再作成
-docker compose down -v
-docker compose up -d
-```
-
-### スキーマ変更時
-1. `database/schema.sql` を編集
-2. 上記の初期化を実行
-
-### データ追加・変更時
-1. `data/terms.json` または `data/edges.json` を編集
-2. seed.sql を再生成:
-   ```bash
-   node database/scripts/generate_seed.js
-   ```
-3. 上記の初期化を実行
-
-## テスト
-
-### バックエンド
-```bash
-docker compose exec backend python -m pytest
-```
+## 開発コマンド
 
 ### フロントエンド
+
 ```bash
-docker compose exec frontend npm test
+cd frontend
+
+npm run dev           # 開発サーバー起動
+npm test              # テスト（watch mode）
+npm run test:run      # テスト（1回実行）
+npm run test:coverage # カバレッジ付き
+npm run build         # 本番ビルド
+```
+
+### バックエンド
+
+```bash
+cd backend
+
+pytest                          # 全テスト
+pytest --cov=app               # カバレッジ付き
+uvicorn app.main:app --reload  # 開発サーバー
+```
+
+### データベース
+
+```bash
+# 初期化（クリーンスタート）
+docker compose down -v
+docker compose up -d
+
+# DB接続
+docker compose exec postgres psql -U histlink_user -d histlink
+
+# TSV更新後の再構築
+./scripts/update_migration.sh
 ```
 
 ## 難易度システム
@@ -48,3 +80,38 @@ docker compose exec frontend npm test
 | easy   | Tier1のみ | easyのみ |
 | normal | Tier1-2  | easy, normal |
 | hard   | 全Tier   | 全エッジ |
+
+## ディレクトリ構成
+
+```
+HistLink/
+├── frontend/          # React フロントエンド
+│   ├── src/
+│   │   ├── components/   # 再利用可能なコンポーネント
+│   │   ├── pages/        # ページコンポーネント
+│   │   ├── stores/       # Zustand ストア
+│   │   ├── services/     # API通信層
+│   │   └── types/        # 型定義
+│   └── package.json
+├── backend/           # FastAPI バックエンド
+│   ├── app/
+│   │   ├── routes/       # APIエンドポイント
+│   │   ├── services/     # ビジネスロジック
+│   │   ├── models/       # SQLAlchemyモデル
+│   │   └── schemas/      # Pydanticスキーマ
+│   └── tests/
+├── database/          # DBマイグレーション
+├── data/              # TSVデータファイル
+└── docker-compose.yml
+```
+
+## 開発状況
+
+- フロントエンド: 完成（テストカバレッジ 98%）
+- バックエンド: 完成（テストカバレッジ 93%）
+- 次のステップ: Supabase移行、管理画面開発
+
+## ドキュメント
+
+- [CLAUDE.md](./CLAUDE.md) - 開発ガイドライン
+- [PLAN.md](./PLAN.md) - 開発計画

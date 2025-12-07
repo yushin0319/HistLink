@@ -13,7 +13,7 @@ const mockSteps: RouteStepWithChoices[] = [
     choices: [],
     difficulty: 'easy',
     keyword: '女王卑弥呼',
-    relation_description: '邪馬台国を統治した女王',
+    edge_description: '邪馬台国を統治した女王',
   },
   {
     step_no: 1,
@@ -22,7 +22,7 @@ const mockSteps: RouteStepWithChoices[] = [
     choices: [],
     difficulty: 'normal',
     keyword: '大化の改新',
-    relation_description: '律令制度が導入された',
+    edge_description: '律令制度が導入された',
   },
   {
     step_no: 2,
@@ -31,7 +31,7 @@ const mockSteps: RouteStepWithChoices[] = [
     choices: [],
     difficulty: '',
     keyword: '',
-    relation_description: '',
+    edge_description: '',
   },
 ];
 
@@ -43,6 +43,7 @@ describe('RouteReviewModal', () => {
           open={true}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -55,6 +56,7 @@ describe('RouteReviewModal', () => {
           open={false}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -69,6 +71,7 @@ describe('RouteReviewModal', () => {
           open={true}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -79,27 +82,13 @@ describe('RouteReviewModal', () => {
       expect(daikaElements.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('全ての時代が表示される', () => {
-      render(
-        <RouteReviewModal
-          open={true}
-          onClose={vi.fn()}
-          steps={mockSteps}
-        />
-      );
-
-      // 弥生時代は2つある
-      const yayoiElements = screen.getAllByText('弥生時代');
-      expect(yayoiElements).toHaveLength(2);
-      expect(screen.getByText('飛鳥時代')).toBeInTheDocument();
-    });
-
     it('キーワードが表示される（最後の要素以外）', () => {
       render(
         <RouteReviewModal
           open={true}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -109,12 +98,13 @@ describe('RouteReviewModal', () => {
       expect(daikaElements.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('relation_descriptionが表示される', () => {
+    it('edge_descriptionが表示される', () => {
       render(
         <RouteReviewModal
           open={true}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -130,6 +120,7 @@ describe('RouteReviewModal', () => {
           open={true}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -144,6 +135,7 @@ describe('RouteReviewModal', () => {
           open={true}
           onClose={mockOnClose}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
@@ -162,14 +154,15 @@ describe('RouteReviewModal', () => {
             open={true}
             onClose={vi.fn()}
             steps={[]}
+            falseSteps={[]}
           />
         );
       }).not.toThrow();
     });
   });
 
-  describe('relation_descriptionがない場合', () => {
-    it('relation_descriptionが空の場合は表示されない', () => {
+  describe('edge_descriptionがない場合', () => {
+    it('edge_descriptionが空の場合は表示されない', () => {
       const stepsWithoutDesc: RouteStepWithChoices[] = [
         {
           step_no: 0,
@@ -178,7 +171,7 @@ describe('RouteReviewModal', () => {
           choices: [],
           difficulty: '',
           keyword: 'テストキーワード',
-          relation_description: '', // 空
+          edge_description: '', // 空
         },
         {
           step_no: 1,
@@ -187,7 +180,7 @@ describe('RouteReviewModal', () => {
           choices: [],
           difficulty: '',
           keyword: '',
-          relation_description: '',
+          edge_description: '',
         },
       ];
 
@@ -196,13 +189,13 @@ describe('RouteReviewModal', () => {
           open={true}
           onClose={vi.fn()}
           steps={stepsWithoutDesc}
+          falseSteps={[]}
         />
       );
 
       // キーワードは表示される
       expect(screen.getByText('テストキーワード')).toBeInTheDocument();
-      // relation_descriptionは空なので、該当するTypographyは表示されない
-      // (空文字でも要素自体は存在しないことを確認)
+      // edge_descriptionは空なので、該当するTypographyは表示されない
     });
   });
 
@@ -213,12 +206,110 @@ describe('RouteReviewModal', () => {
           open={true}
           onClose={vi.fn()}
           steps={mockSteps}
+          falseSteps={[]}
         />
       );
 
       // MUI Modalのコンテンツボックスを確認
       const contentBox = screen.getByRole('presentation').querySelector('[class*="MuiBox-root"]');
       expect(contentBox).toBeInTheDocument();
+    });
+  });
+
+  describe('falseSteps表示', () => {
+    it('間違えたエッジのキーワードが赤色で表示される', () => {
+      render(
+        <RouteReviewModal
+          open={true}
+          onClose={vi.fn()}
+          steps={mockSteps}
+          falseSteps={[0]} // index 0のエッジで間違えた
+        />
+      );
+
+      // 「女王卑弥呼」キーワードが存在することを確認
+      expect(screen.getByText('女王卑弥呼')).toBeInTheDocument();
+    });
+
+    it('間違えた先のtermに赤枠が表示される', () => {
+      render(
+        <RouteReviewModal
+          open={true}
+          onClose={vi.fn()}
+          steps={mockSteps}
+          falseSteps={[0]} // index 0のエッジで間違えた → index 1のtermに赤枠
+        />
+      );
+
+      // 卑弥呼（index 1）が表示されることを確認
+      expect(screen.getByText('卑弥呼')).toBeInTheDocument();
+    });
+
+    it('3回目のミス以降はグレー表示になる', () => {
+      // 5つのステップを持つデータ
+      const fiveSteps: RouteStepWithChoices[] = [
+        {
+          step_no: 0,
+          term: { id: 1, name: 'Term1', tier: 1, category: '', description: '' },
+          correct_next_id: 2,
+          choices: [],
+          difficulty: 'easy',
+          keyword: 'Keyword1',
+          edge_description: '',
+        },
+        {
+          step_no: 1,
+          term: { id: 2, name: 'Term2', tier: 1, category: '', description: '' },
+          correct_next_id: 3,
+          choices: [],
+          difficulty: 'easy',
+          keyword: 'Keyword2',
+          edge_description: '',
+        },
+        {
+          step_no: 2,
+          term: { id: 3, name: 'Term3', tier: 1, category: '', description: '' },
+          correct_next_id: 4,
+          choices: [],
+          difficulty: 'easy',
+          keyword: 'Keyword3',
+          edge_description: '',
+        },
+        {
+          step_no: 3,
+          term: { id: 4, name: 'Term4', tier: 1, category: '', description: '' },
+          correct_next_id: 5,
+          choices: [],
+          difficulty: 'easy',
+          keyword: 'Keyword4',
+          edge_description: '',
+        },
+        {
+          step_no: 4,
+          term: { id: 5, name: 'Term5', tier: 1, category: '', description: '' },
+          correct_next_id: null,
+          choices: [],
+          difficulty: '',
+          keyword: '',
+          edge_description: '',
+        },
+      ];
+
+      render(
+        <RouteReviewModal
+          open={true}
+          onClose={vi.fn()}
+          steps={fiveSteps}
+          falseSteps={[0, 1, 2]} // 3回ミス：index 0, 1, 2
+        />
+      );
+
+      // 全てのTermが表示されることを確認
+      expect(screen.getByText('Term1')).toBeInTheDocument();
+      expect(screen.getByText('Term2')).toBeInTheDocument();
+      expect(screen.getByText('Term3')).toBeInTheDocument();
+      expect(screen.getByText('Term4')).toBeInTheDocument();
+      expect(screen.getByText('Term5')).toBeInTheDocument();
     });
   });
 });

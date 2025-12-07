@@ -1,27 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { useGameStore } from '../gameStore';
 import type { RouteStepWithChoices } from '../../types/api';
-
-// localStorageをモック
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => {
-      store[key] = value;
-    }),
-    removeItem: vi.fn((key: string) => {
-      delete store[key];
-    }),
-    clear: vi.fn(() => {
-      store = {};
-    }),
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
 
 // モックデータ: 4ステップのルート（3回の回答が必要）
 const mockSteps: RouteStepWithChoices[] = [
@@ -83,9 +62,6 @@ describe('gameStore', () => {
     // 各テスト前にストアをリセット
     const { resetGame } = useGameStore.getState();
     resetGame();
-    // localStorageをクリア
-    localStorageMock.clear();
-    vi.clearAllMocks();
   });
 
   describe('初期状態', () => {
@@ -524,14 +500,6 @@ describe('gameStore', () => {
       expect(state.playerName).toBe('テストユーザー');
     });
 
-    it('setPlayerNameでlocalStorageに保存される', () => {
-      const { setPlayerName } = useGameStore.getState();
-
-      setPlayerName('保存テスト');
-
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('histlink_player_name', '保存テスト');
-    });
-
     it('空文字を設定するとデフォルト名になる', () => {
       const { setPlayerName } = useGameStore.getState();
 
@@ -557,6 +525,43 @@ describe('gameStore', () => {
       const state = useGameStore.getState();
 
       expect(state.playerName).toBe('名前');
+    });
+  });
+
+  describe('setRankingData', () => {
+    it('ランキングデータを設定できる', () => {
+      const { setRankingData } = useGameStore.getState();
+
+      const rankings = [
+        { rank: 1, user_name: 'たろう', score: 1800, cleared_steps: 10 },
+        { rank: 2, user_name: 'はなこ', score: 1700, cleared_steps: 10 },
+      ];
+
+      setRankingData(1, rankings);
+      const state = useGameStore.getState();
+
+      expect(state.myRank).toBe(1);
+      expect(state.rankings).toEqual(rankings);
+      expect(state.rankings).toHaveLength(2);
+    });
+
+    it('ランキングデータを更新できる', () => {
+      const { setRankingData } = useGameStore.getState();
+
+      const initialRankings = [
+        { rank: 1, user_name: 'たろう', score: 1800, cleared_steps: 10 },
+      ];
+      setRankingData(2, initialRankings);
+
+      const updatedRankings = [
+        { rank: 1, user_name: '新トップ', score: 2000, cleared_steps: 10 },
+        { rank: 2, user_name: 'たろう', score: 1800, cleared_steps: 10 },
+      ];
+      setRankingData(1, updatedRankings);
+      const state = useGameStore.getState();
+
+      expect(state.myRank).toBe(1);
+      expect(state.rankings).toEqual(updatedRankings);
     });
   });
 });

@@ -54,17 +54,7 @@ interface GameState {
 
 const INITIAL_LIVES = 3;
 const MAX_TIME = 200; // 20.0秒 = 200 × 0.1秒
-const PLAYER_NAME_KEY = 'histlink_player_name';
 const DEFAULT_PLAYER_NAME = 'GUEST';
-
-// localStorageから名前を読み込む
-const getStoredPlayerName = (): string => {
-  try {
-    return localStorage.getItem(PLAYER_NAME_KEY) || DEFAULT_PLAYER_NAME;
-  } catch {
-    return DEFAULT_PLAYER_NAME;
-  }
-};
 
 // スコア計算：残り時間のみ（0-100点）
 const calculateScore = (remainingTime: number): number => {
@@ -73,7 +63,7 @@ const calculateScore = (remainingTime: number): number => {
 
 export const useGameStore = create<GameState>((set, get) => ({
   // 初期状態
-  playerName: getStoredPlayerName(),
+  playerName: DEFAULT_PLAYER_NAME,
   difficulty: 'normal',
   totalStages: 10,
   gameId: null,
@@ -94,14 +84,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   lastEdgeKeyword: '',
   lastEdgeExplanation: '',
 
-  // プレイヤー名を設定（localStorageにも保存）
+  // プレイヤー名を設定
   setPlayerName: (name) => {
     const trimmedName = name.trim() || DEFAULT_PLAYER_NAME;
-    try {
-      localStorage.setItem(PLAYER_NAME_KEY, trimmedName);
-    } catch {
-      // localStorage書き込み失敗は無視
-    }
     set({ playerName: trimmedName });
   },
 
@@ -274,12 +259,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   // ゲームリセット
   resetGame: () => {
-    // playerNameを初期値に戻す（localStorageもクリア）
-    try {
-      localStorage.removeItem(PLAYER_NAME_KEY);
-    } catch {
-      // localStorage書き込み失敗は無視
-    }
     set({
       playerName: DEFAULT_PLAYER_NAME,
       difficulty: 'normal',

@@ -12,6 +12,9 @@ from app.schemas import (
     ChoiceResponse,
     GameResultRequest,
     GameResultResponse,
+    GameUpdateRequest,
+    OverallRankingResponse,
+    RankingEntry,
     RouteStepWithChoices,
     FullRouteStartResponse,
 )
@@ -21,6 +24,116 @@ from app.services.cache import get_cache
 import random
 
 router = APIRouter(prefix="/games", tags=["games"])
+
+RANKING_LIMIT = 10  # 上位何件を返すか
+
+
+def get_rankings_and_my_rank(
+    db: Session,
+    total_steps: int,
+    my_score: int,
+    limit: int = RANKING_LIMIT
+) -> tuple[list[RankingEntry], int]:
+    """
+    指定問題数のランキングと自分の順位を取得
+
+    Args:
+        db: DBセッション
+        total_steps: 問題数（10, 30, 50など）
+        my_score: 自分のスコア
+        limit: 取得する上位件数
+
+    Returns:
+        (ランキングリスト, 自分の順位)
+    """
+    # 上位ランキングを取得（問題数でフィルタリング）
+    # total_steps = array_length(terms, 1) - 1
+    ranking_result = db.execute(
+        text("""
+            SELECT user_name, score, cleared_steps
+            FROM games
+            WHERE array_length(terms, 1) - 1 = :total_steps
+            ORDER BY score DESC, cleared_steps DESC, created_at ASC
+            LIMIT :limit
+        """),
+        {"total_steps": total_steps, "limit": limit}
+    )
+    ranking_rows = ranking_result.fetchall()
+
+    rankings = [
+        RankingEntry(
+            rank=i + 1,
+            user_name=row.user_name,
+            score=row.score,
+            cleared_steps=row.cleared_steps
+        )
+        for i, row in enumerate(ranking_rows)
+    ]
+
+    # 自分の順位を取得（自分より高いスコアの数 + 1）
+    rank_result = db.execute(
+        text("""
+            SELECT COUNT(*) + 1 as rank
+            FROM games
+            WHERE array_length(terms, 1) - 1 = :total_steps AND score > :my_score
+        """),
+        {"total_steps": total_steps, "my_score": my_score}
+    )
+    my_rank = rank_result.fetchone().rank
+
+    return rankings, my_rank
+
+
+def get_overall_rankings_and_my_rank(
+    db: Session,
+    my_score: int,
+    limit: int = RANKING_LIMIT
+) -> tuple[list[RankingEntry], int]:
+    """
+    全体ランキングと自分の順位を取得（難易度関係なし）
+
+    Args:
+        db: DBセッション
+        my_score: 自分のスコア
+        limit: 取得する上位件数
+
+    Returns:
+        (ランキングリスト, 自分の順位)
+    """
+    # 上位ランキングを取得（全難易度）
+    ranking_result = db.execute(
+        text("""
+            SELECT user_name, score, cleared_steps
+            FROM games
+            ORDER BY score DESC, cleared_steps DESC, created_at ASC
+            LIMIT :limit
+        """),
+        {"limit": limit}
+    )
+    ranking_rows = ranking_result.fetchall()
+
+    rankings = [
+        RankingEntry(
+            rank=i + 1,
+            user_name=row.user_name,
+            score=row.score,
+            cleared_steps=row.cleared_steps
+        )
+        for i, row in enumerate(ranking_rows)
+    ]
+
+    # 自分の順位を取得（自分より高いスコアの数 + 1）
+    rank_result = db.execute(
+        text("""
+            SELECT COUNT(*) + 1 as rank
+            FROM games
+            WHERE score > :my_score
+        """),
+        {"my_score": my_score}
+    )
+    my_rank = rank_result.fetchone().rank
+
+    return rankings, my_rank
 
 
 @router.post("/start", response_model=FullRouteStartResponse)
@@ -172,7 +285,6 @@ async def start_game(
 
     return FullRouteStartResponse(
         game_id=game_id,
-        route_id=0,  # route_idは廃止予定、互換性のため0を返す
         difficulty=request.difficulty,
         total_steps=len(route),
         steps=steps,
@@ -192,9 +304,9 @@ async def submit_game_result(
     フロントエンドで全てのゲームロジックを実行した後、
     最終スコア・残りライフ・クリア状況をバックエンドに送信してDBを更新する。
     """
-    # ゲームが存在するか確認
+    # ゲームが存在するか確認し、難易度とルート情報を取得
     game_result = db.execute(
-        text("SELECT id FROM games WHERE id = :game_id"),
+        text("SELECT id, difficulty, terms FROM games WHERE id = :game_id"),
         {"game_id": str(game_id)}
     )
     game_row = game_result.fetchone()
@@ -209,6 +321,8 @@ async def submit_game_result(
             SET score = :score,
                 lives = :lives,
                 cleared_steps = :cleared_steps,
+                user_name = :user_name,
+                false_steps = :false_steps,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = :game_id
         """),
@@ -216,21 +330,112 @@ async def submit_game_result(
             "game_id": str(game_id),
             "score": request.final_score,
             "lives": request.final_lives,
-            "cleared_steps": request.cleared_steps
+            "cleared_steps": request.cleared_steps,
+            "user_name": request.user_name,
+            "false_steps": request.false_steps
         }
     )
     db.commit()
 
-    # 成功メッセージを生成
-    if request.final_lives > 0:
-        message = f"ゲームクリア！最終スコア: {request.final_score}点"
-    else:
-        message = f"ゲームオーバー。最終スコア: {request.final_score}点"
+    # total_steps = エッジ数 = termsの長さ - 1
+    total_steps = len(game_row.terms) - 1 if game_row.terms else 0
+
+    # ランキング情報を取得（問題数でフィルタリング）
+    rankings, my_rank = get_rankings_and_my_rank(
+        db, total_steps, request.final_score
+    )
 
     return GameResultResponse(
         game_id=game_id,
+        difficulty=game_row.difficulty,
+        total_steps=total_steps,
         final_score=request.final_score,
         final_lives=request.final_lives,
         cleared_steps=request.cleared_steps,
-        message=message
+        user_name=request.user_name,
+        my_rank=my_rank,
+        rankings=rankings
+    )
+
+
+@router.patch("/{game_id}", response_model=GameResultResponse)
+async def update_game(
+    game_id: UUID,
+    request: GameUpdateRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    ゲーム情報を更新（主にユーザー名変更用）
+
+    リザルト画面で名前を変更した場合などに使用。
+    """
+    # ゲームが存在するか確認し、現在の状態を取得
+    game_result = db.execute(
+        text("""
+            SELECT id, difficulty, terms, score, lives, cleared_steps, user_name
+            FROM games WHERE id = :game_id
+        """),
+        {"game_id": str(game_id)}
+    )
+    game_row = game_result.fetchone()
+
+    if not game_row:
+        raise HTTPException(status_code=404, detail="Game not found")
+
+    # ユーザー名を更新
+    db.execute(
+        text("""
+            UPDATE games
+            SET user_name = :user_name,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = :game_id
+        """),
+        {
+            "game_id": str(game_id),
+            "user_name": request.user_name
+        }
+    )
+    db.commit()
+
+    # total_steps = エッジ数 = termsの長さ - 1
+    total_steps = len(game_row.terms) - 1 if game_row.terms else 0
+
+    # ランキング情報を取得（問題数でフィルタリング）
+    rankings, my_rank = get_rankings_and_my_rank(
+        db, total_steps, game_row.score
+    )
+
+    return GameResultResponse(
+        game_id=game_id,
+        difficulty=game_row.difficulty,
+        total_steps=total_steps,
+        final_score=game_row.score,
+        final_lives=game_row.lives,
+        cleared_steps=game_row.cleared_steps,
+        user_name=request.user_name,
+        my_rank=my_rank,
+        rankings=rankings
+    )
+
+
+@router.get("/rankings/overall", response_model=OverallRankingResponse)
+async def get_overall_ranking(
+    my_score: int = 0,
+    db: Session = Depends(get_db)
+):
+    """
+    全体ランキングを取得（難易度問わず）
+
+    Args:
+        my_score: 自分のスコア（順位計算用）
+        db: データベースセッション
+
+    Returns:
+        OverallRankingResponse: 全体ランキングと自分の順位
+    """
+    rankings, my_rank = get_overall_rankings_and_my_rank(db, my_score)
+
+    return OverallRankingResponse(
+        my_rank=my_rank,
+        rankings=rankings
     )

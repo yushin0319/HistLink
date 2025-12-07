@@ -95,8 +95,9 @@ describe('gameStore', () => {
       expect(state.difficulty).toBe('normal');
       expect(state.totalStages).toBe(10);
       expect(state.gameId).toBeNull();
-      expect(state.routeId).toBeNull();
       expect(state.steps).toEqual([]);
+      expect(state.myRank).toBeNull();
+      expect(state.rankings).toEqual([]);
       expect(state.lives).toBe(3);
       expect(state.score).toBe(0);
       expect(state.currentStage).toBe(0);
@@ -113,11 +114,10 @@ describe('gameStore', () => {
     it('バックエンドから取得したゲームデータを読み込める', () => {
       const { loadGameData } = useGameStore.getState();
 
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       const state = useGameStore.getState();
 
       expect(state.gameId).toBe('test-game-id');
-      expect(state.routeId).toBe(123);
       expect(state.steps).toEqual(mockSteps);
       // totalStagesはstartGameで設定される（loadGameDataでは変更しない）
       expect(state.totalStages).toBe(10); // 初期値のまま
@@ -126,7 +126,7 @@ describe('gameStore', () => {
     it('loadGameData + startGameでtotalStagesが正しく設定される', () => {
       const { loadGameData, startGame } = useGameStore.getState();
 
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       // GamePageと同様に steps.length - 1 でstartGame
       startGame('normal', mockSteps.length - 1);
       const state = useGameStore.getState();
@@ -156,7 +156,7 @@ describe('gameStore', () => {
   describe('answerQuestion', () => {
     beforeEach(() => {
       const { loadGameData, startGame } = useGameStore.getState();
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       // mockStepsは4ステップなので、totalStagesは3（最後のステップは回答不要）
       startGame('normal', mockSteps.length - 1); // 3
     });
@@ -233,7 +233,7 @@ describe('gameStore', () => {
 
     it('currentStageが範囲外の時は何も起きない', () => {
       const { loadGameData, startGame, answerQuestion } = useGameStore.getState();
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       startGame('normal', 10);
 
       // currentStageを強制的に範囲外に設定
@@ -250,7 +250,7 @@ describe('gameStore', () => {
   describe('completeFeedbackPhase', () => {
     beforeEach(() => {
       const { loadGameData, startGame } = useGameStore.getState();
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       // mockStepsは4ステップ（3回の回答が必要）なので、totalStagesは3
       startGame('normal', 3);
     });
@@ -364,7 +364,7 @@ describe('gameStore', () => {
   describe('decrementTimer', () => {
     beforeEach(() => {
       const { loadGameData, startGame } = useGameStore.getState();
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       startGame('normal', 3);
     });
 
@@ -469,7 +469,7 @@ describe('gameStore', () => {
       const { loadGameData, startGame, answerQuestion, completeFeedbackPhase, resetGame } =
         useGameStore.getState();
 
-      loadGameData('test-game-id', 123, mockSteps);
+      loadGameData('test-game-id', mockSteps);
       startGame('hard', 3);
       answerQuestion(2);
       completeFeedbackPhase();
@@ -479,11 +479,13 @@ describe('gameStore', () => {
       resetGame();
       const state = useGameStore.getState();
 
+      expect(state.playerName).toBe('GUEST');
       expect(state.difficulty).toBe('normal');
       expect(state.totalStages).toBe(10);
       expect(state.gameId).toBeNull();
-      expect(state.routeId).toBeNull();
       expect(state.steps).toEqual([]);
+      expect(state.myRank).toBeNull();
+      expect(state.rankings).toEqual([]);
       expect(state.lives).toBe(3);
       expect(state.score).toBe(0);
       expect(state.currentStage).toBe(0);
@@ -493,6 +495,16 @@ describe('gameStore', () => {
       expect(state.isFeedbackPhase).toBe(false);
       expect(state.selectedAnswerId).toBeNull();
       expect(state.isLastAnswerCorrect).toBeNull();
+    });
+
+    it('名前を変更後リセットすると初期値に戻る', () => {
+      const { setPlayerName, resetGame } = useGameStore.getState();
+
+      setPlayerName('カスタム名前');
+      expect(useGameStore.getState().playerName).toBe('カスタム名前');
+
+      resetGame();
+      expect(useGameStore.getState().playerName).toBe('GUEST');
     });
   });
 
@@ -526,7 +538,7 @@ describe('gameStore', () => {
       setPlayerName('');
       const state = useGameStore.getState();
 
-      expect(state.playerName).toBe('あなた');
+      expect(state.playerName).toBe('GUEST');
     });
 
     it('空白のみを設定するとデフォルト名になる', () => {
@@ -535,7 +547,7 @@ describe('gameStore', () => {
       setPlayerName('   ');
       const state = useGameStore.getState();
 
-      expect(state.playerName).toBe('あなた');
+      expect(state.playerName).toBe('GUEST');
     });
 
     it('前後の空白はトリムされる', () => {

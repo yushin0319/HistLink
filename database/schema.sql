@@ -50,6 +50,7 @@ CREATE TABLE games (
     cleared_steps integer DEFAULT 0 NOT NULL,
     score integer DEFAULT 0 NOT NULL,
     lives integer DEFAULT 3 NOT NULL,
+    user_name varchar(20) DEFAULT 'GUEST' NOT NULL,
     false_steps integer[] DEFAULT '{}',
     created_at timestamptz DEFAULT now() NOT NULL,
     updated_at timestamptz DEFAULT now() NOT NULL,
@@ -78,4 +79,5 @@ CREATE TRIGGER games_updated_at
 COMMENT ON TABLE games IS 'ゲームプレイ履歴（リザルト）';
 COMMENT ON COLUMN games.terms IS 'ルートの用語ID配列';
 COMMENT ON COLUMN games.cleared_steps IS 'クリアしたステップ数';
+COMMENT ON COLUMN games.user_name IS 'プレイヤー名';
 COMMENT ON COLUMN games.false_steps IS '間違えたステップ番号の配列';

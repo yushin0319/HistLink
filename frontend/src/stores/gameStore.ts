@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { RouteStepWithChoices } from '../types/api';
+import type { RouteStepWithChoices, RankingEntry } from '../types/api';
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 type TotalStages = 10 | 30 | 50;
@@ -14,14 +14,18 @@ interface GameState {
 
   // ゲームデータ（バックエンドから取得）
   gameId: string | null;
-  routeId: number | null;
   steps: RouteStepWithChoices[]; // 全ルート+選択肢
+
+  // 結果送信後のランキングデータ
+  myRank: number | null;
+  rankings: RankingEntry[];
 
   // ゲーム進行状態
   lives: number;
   score: number;
   currentStage: number; // 0-indexed (steps配列のインデックスと対応)
   remainingTime: number; // 残り時間（0.1秒単位、100 = 10.0秒）
+  falseSteps: number[]; // 間違えたステージのインデックス配列
 
   // ゲーム状態
   isPlaying: boolean;
@@ -39,7 +43,8 @@ interface GameState {
 
   // アクション
   setPlayerName: (name: string) => void;
-  loadGameData: (gameId: string, routeId: number, steps: RouteStepWithChoices[]) => void;
+  loadGameData: (gameId: string, steps: RouteStepWithChoices[]) => void;
+  setRankingData: (myRank: number, rankings: RankingEntry[]) => void;
   startGame: (difficulty: Difficulty, totalStages: TotalStages) => void;
   answerQuestion: (selectedTermId: number) => void;
   completeFeedbackPhase: () => void; // feedbackPhase終了後のステージ遷移
@@ -50,7 +55,7 @@ interface GameState {
 const INITIAL_LIVES = 3;
 const MAX_TIME = 200; // 20.0秒 = 200 × 0.1秒
 const PLAYER_NAME_KEY = 'histlink_player_name';
-const DEFAULT_PLAYER_NAME = 'あなた';
+const DEFAULT_PLAYER_NAME = 'GUEST';
 
 // localStorageから名前を読み込む
 const getStoredPlayerName = (): string => {
@@ -72,12 +77,14 @@ export const useGameStore = create<GameState>((set, get) => ({
   difficulty: 'normal',
   totalStages: 10,
   gameId: null,
-  routeId: null,
   steps: [],
+  myRank: null,
+  rankings: [],
   lives: INITIAL_LIVES,
   score: 0,
   currentStage: 0,
   remainingTime: 0,
+  falseSteps: [],
   isPlaying: false,
   isCompleted: false,
   isFeedbackPhase: false,
@@ -99,13 +106,17 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   // バックエンドから取得したゲームデータを読み込む
-  loadGameData: (gameId, routeId, steps) => {
+  loadGameData: (gameId, steps) => {
     set({
       gameId,
-      routeId,
       steps,
       // totalStagesはstartGameで設定される（steps.length - 1）
     });
+  },
+
+  // ランキングデータを設定（結果送信後）
+  setRankingData: (myRank, rankings) => {
+    set({ myRank, rankings });
   },
 
   // ゲーム開始
@@ -117,6 +128,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       score: 0,
       currentStage: 0, // 0-indexed
       remainingTime: MAX_TIME,
+      falseSteps: [],
       isPlaying: true,
       isCompleted: false,
     });
@@ -170,6 +182,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newLives = isCorrect ? state.lives : state.lives - 1;
     const newStage = state.currentStage + 1;
 
+    // 間違えた場合はfalseStepsに記録
+    const newFalseSteps = isCorrect
+      ? state.falseSteps
+      : [...state.falseSteps, state.currentStage];
+
     // エッジ情報を継続表示（answerQuestionで設定済み）
     const showEdge = state.showEdge; // answerQuestionで設定した値をそのまま維持
     const lastEdgeKeyword = state.lastEdgeKeyword;
@@ -181,6 +198,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (newLives <= 0) {
       set({
         lives: 0,
+        falseSteps: newFalseSteps,
         isPlaying: false,
         isCompleted: false,
         isFeedbackPhase: false,
@@ -217,6 +235,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       lives: newLives,
       currentStage: newStage,
       remainingTime: MAX_TIME,
+      falseSteps: newFalseSteps,
       isFeedbackPhase: false,
       selectedAnswerId: null,
       isLastAnswerCorrect: null,
@@ -255,16 +274,25 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   // ゲームリセット
   resetGame: () => {
+    // playerNameを初期値に戻す（localStorageもクリア）
+    try {
+      localStorage.removeItem(PLAYER_NAME_KEY);
+    } catch {
+      // localStorage書き込み失敗は無視
+    }
     set({
+      playerName: DEFAULT_PLAYER_NAME,
       difficulty: 'normal',
       totalStages: 10,
       gameId: null,
-      routeId: null,
       steps: [],
+      myRank: null,
+      rankings: [],
       lives: INITIAL_LIVES,
       score: 0,
       currentStage: 0,
       remainingTime: 0,
+      falseSteps: [],
       isPlaying: false,
       isCompleted: false,
       isFeedbackPhase: false,

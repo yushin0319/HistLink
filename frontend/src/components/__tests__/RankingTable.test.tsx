@@ -1,11 +1,35 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import RankingTable from '../RankingTable';
 import { useGameStore } from '../../stores/gameStore';
+import type { RankingEntry } from '../../types/api';
 
 // モック化
 vi.mock('../../stores/gameStore');
+
+// gameApi のモック
+vi.mock('../../services/gameApi', () => ({
+  getOverallRanking: vi.fn().mockResolvedValue({
+    my_rank: 5,
+    rankings: [
+      { rank: 1, user_name: '全体1位', score: 5000, cleared_steps: 50 },
+      { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
+      { rank: 3, user_name: '全体3位', score: 4000, cleared_steps: 50 },
+      { rank: 4, user_name: '全体4位', score: 3500, cleared_steps: 30 },
+      { rank: 5, user_name: '全体5位', score: 3000, cleared_steps: 30 },
+    ],
+  }),
+}));
+
+// テスト用のランキングデータ
+const mockRankings: RankingEntry[] = [
+  { rank: 1, user_name: 'たろう', score: 1800, cleared_steps: 10 },
+  { rank: 2, user_name: 'はなこ', score: 1700, cleared_steps: 10 },
+  { rank: 3, user_name: 'じろう', score: 1600, cleared_steps: 10 },
+  { rank: 4, user_name: 'さぶろう', score: 1500, cleared_steps: 10 },
+  { rank: 5, user_name: 'しろう', score: 1400, cleared_steps: 10 },
+];
 
 describe('RankingTable', () => {
   const mockSetPlayerName = vi.fn();
@@ -19,28 +43,19 @@ describe('RankingTable', () => {
   });
 
   describe('初期表示', () => {
-    it('タブボタンが2つ表示される', () => {
+    it('タブが表示される（X問/全体）', () => {
       render(
         <RankingTable
           totalStages={10}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
-      expect(screen.getByRole('button', { name: /10問/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /全体/i })).toBeInTheDocument();
-    });
-
-    it('初期状態ではステージタブが選択されている', () => {
-      render(
-        <RankingTable
-          totalStages={10}
-          currentUserScore={1500}
-        />
-      );
-
-      const stagesTab = screen.getByRole('button', { name: /10問/i });
-      expect(stagesTab).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByRole('tab', { name: '10問' })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: '全体' })).toBeInTheDocument();
     });
 
     it('ランキングリストが表示される', () => {
@@ -48,10 +63,13 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
-      // モックランキングのユーザー名が表示される
+      // ランキングのユーザー名が表示される
       expect(screen.getByText('たろう')).toBeInTheDocument();
       expect(screen.getByText('はなこ')).toBeInTheDocument();
     });
@@ -62,6 +80,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
           onShowRoute={mockOnShowRoute}
         />
       );
@@ -74,6 +95,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -88,15 +112,56 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
-      const allTab = screen.getByRole('button', { name: /全体/i });
-      await user.click(allTab);
+      // 全体タブをクリック
+      const overallTab = screen.getByRole('tab', { name: '全体' });
+      await user.click(overallTab);
 
-      // 全体ランキングのユーザー名が表示される
-      expect(screen.getByText('マスター')).toBeInTheDocument();
-      expect(screen.getByText('チャンプ')).toBeInTheDocument();
+      // 全体ランキングのデータが表示される
+      await waitFor(() => {
+        expect(screen.getByText('全体1位')).toBeInTheDocument();
+      });
+    });
+
+    it('X問タブをクリックすると難易度別ランキングが表示される', async () => {
+      const user = userEvent.setup();
+      render(
+        <RankingTable
+          totalStages={10}
+          currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
+        />
+      );
+
+      // 一度全体タブへ
+      await user.click(screen.getByRole('tab', { name: '全体' }));
+
+      // 10問タブをクリック
+      await user.click(screen.getByRole('tab', { name: '10問' }));
+
+      // 難易度別ランキングに戻る
+      expect(screen.getByText('たろう')).toBeInTheDocument();
+    });
+
+    it('タブのステージ数がtotalStagesに応じて変わる', () => {
+      render(
+        <RankingTable
+          totalStages={30}
+          currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
+        />
+      );
+
+      expect(screen.getByRole('tab', { name: '30問' })).toBeInTheDocument();
     });
   });
 
@@ -108,6 +173,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
           onShowRoute={mockOnShowRoute}
         />
       );
@@ -127,6 +195,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1900}
+          currentUserRank={1}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -144,6 +215,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1900}
+          currentUserRank={1}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -166,6 +240,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1900}
+          currentUserRank={1}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -188,6 +265,9 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={10}
           currentUserScore={1900}
+          currentUserRank={1}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -202,17 +282,22 @@ describe('RankingTable', () => {
       await user.tab();
 
       // setPlayerNameが呼ばれる
-      expect(mockSetPlayerName).toHaveBeenCalledWith('blur確認');
+      await waitFor(() => {
+        expect(mockSetPlayerName).toHaveBeenCalledWith('blur確認');
+      });
     });
   });
 
   describe('ランキング順位計算', () => {
-    it('スコアが高いとランキング上位に入る', () => {
-      // 最高スコア（1位になるスコア）
+    it('スコアが高いとランキング上位に入る（5位以内）', () => {
+      // 1位になるスコア
       render(
         <RankingTable
           totalStages={10}
           currentUserScore={2000}
+          currentUserRank={1}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -221,12 +306,15 @@ describe('RankingTable', () => {
       expect(screen.getByText('2000')).toBeInTheDocument();
     });
 
-    it('スコアが低いと省略表示になる', () => {
+    it('スコアが低いと省略表示になる（6位以下）', () => {
       // 低いスコア（6位以下）
       render(
         <RankingTable
           totalStages={10}
           currentUserScore={100}
+          currentUserRank={10}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
@@ -236,15 +324,18 @@ describe('RankingTable', () => {
   });
 
   describe('ステージ数の表示', () => {
-    it('totalStagesに応じてタブラベルが変わる', () => {
+    it('totalStagesに応じてタブが変わる', () => {
       render(
         <RankingTable
           totalStages={30}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
-      expect(screen.getByRole('button', { name: /30問/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: '30問' })).toBeInTheDocument();
     });
 
     it('50問の場合も正しく表示される', () => {
@@ -252,10 +343,45 @@ describe('RankingTable', () => {
         <RankingTable
           totalStages={50}
           currentUserScore={1500}
+          currentUserRank={4}
+          rankings={mockRankings}
+          gameId="test-game-id"
         />
       );
 
-      expect(screen.getByRole('button', { name: /50問/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: '50問' })).toBeInTheDocument();
+    });
+  });
+
+  describe('名前変更APIコールバック', () => {
+    it('onNameChangeが渡された場合、名前変更時にコールバックが呼ばれる', async () => {
+      const user = userEvent.setup();
+      const mockOnNameChange = vi.fn().mockResolvedValue(undefined);
+
+      render(
+        <RankingTable
+          totalStages={10}
+          currentUserScore={1900}
+          currentUserRank={1}
+          rankings={mockRankings}
+          gameId="test-game-id"
+          onNameChange={mockOnNameChange}
+        />
+      );
+
+      // 自分の名前をクリック
+      const playerName = screen.getByText('テストユーザー');
+      await user.click(playerName);
+
+      // 名前を変更
+      const textField = screen.getByRole('textbox');
+      await user.clear(textField);
+      await user.type(textField, 'API経由名前{Enter}');
+
+      // onNameChangeが呼ばれる
+      await waitFor(() => {
+        expect(mockOnNameChange).toHaveBeenCalledWith('API経由名前');
+      });
     });
   });
 });

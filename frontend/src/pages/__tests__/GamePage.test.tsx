@@ -294,37 +294,5 @@ describe('GamePage', () => {
     });
   });
 
-  describe('結果送信', () => {
-    it('結果送信が失敗してもエラーハンドリングされる', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
-      mockSubmitGameResult.mockRejectedValue(new Error('Network Error'));
-
-      // console.errorをモック
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-      render(<GamePage />);
-      await screen.findByText('邪馬台国');
-
-      // 全問正解でクリア（結果送信が自動で行われる）
-      await act(async () => {
-        const { answerQuestion } = useGameStore.getState();
-        answerQuestion(2); // ステップ0 → feedbackPhase
-        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
-        answerQuestion(6); // ステップ1 → feedbackPhase
-        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
-      });
-
-      // 結果送信が試行されることを確認
-      await vi.waitFor(() => {
-        expect(mockSubmitGameResult).toHaveBeenCalled();
-      });
-
-      // エラーログが出力されることを確認
-      await vi.waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith('結果送信エラー:', expect.any(Error));
-      });
-
-      consoleErrorSpy.mockRestore();
-    });
-  });
+  // 結果送信はResultPageに移動したため、GamePageからは削除
 });

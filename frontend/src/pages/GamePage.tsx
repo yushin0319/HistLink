@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Box, Container, Typography, Grid } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
-import { startGameSession, submitGameResult } from '../services/gameApi';
+import { startGameSession } from '../services/gameApi';
 import GameCard from '../components/GameCard';
 import ChoiceCard from '../components/ChoiceCard';
 import GameHeader from '../components/GameHeader';
@@ -17,7 +17,6 @@ export default function GamePage() {
     currentStage,
     remainingTime,
     isPlaying,
-    isCompleted,
     steps,
     gameId,
     showEdge,
@@ -34,7 +33,6 @@ export default function GamePage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hasSubmittedResult, setHasSubmittedResult] = useState(false);
   const hasInitialized = useRef(false);
 
   // feedbackPhaseが開始されたら0.5秒後にcompleteFeedbackPhaseを呼び出す
@@ -83,7 +81,7 @@ export default function GamePage() {
         console.log('[GamePage] Game session started:', response.game_id);
 
         // Zustandに読み込む
-        loadGameData(response.game_id, response.route_id, response.steps);
+        loadGameData(response.game_id, response.steps);
 
         // ゲーム開始（ステップ数 = ノード数 - 1）
         startGame(difficulty, response.steps.length - 1);
@@ -108,26 +106,6 @@ export default function GamePage() {
 
     return () => clearInterval(intervalId);
   }, [isPlaying, decrementTimer]);
-
-  // ゲーム終了時に結果を送信
-  useEffect(() => {
-    if (!isPlaying && gameId && !hasSubmittedResult && (isCompleted || lives === 0)) {
-      const submitResult = async () => {
-        try {
-          await submitGameResult(gameId, {
-            final_score: score,
-            final_lives: lives,
-            is_completed: isCompleted,
-          });
-          setHasSubmittedResult(true);
-        } catch (err) {
-          console.error('結果送信エラー:', err);
-        }
-      };
-
-      submitResult();
-    }
-  }, [isPlaying, gameId, score, lives, isCompleted, hasSubmittedResult]);
 
   // 回答送信
   const handleAnswer = (selectedTermId: number) => {

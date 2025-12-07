@@ -5,6 +5,9 @@ from .game import (
     ChoiceResponse,
     GameResultRequest,
     GameResultResponse,
+    GameUpdateRequest,
+    OverallRankingResponse,
+    RankingEntry,
     RouteStepWithChoices,
     FullRouteStartResponse,
 )
@@ -15,6 +18,9 @@ __all__ = [
     "ChoiceResponse",
     "GameResultRequest",
     "GameResultResponse",
+    "GameUpdateRequest",
+    "OverallRankingResponse",
+    "RankingEntry",
     "RouteStepWithChoices",
     "FullRouteStartResponse",
 ]

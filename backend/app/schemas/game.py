@@ -28,15 +28,41 @@ class GameResultRequest(BaseModel):
     final_score: int = Field(ge=0)
     final_lives: int = Field(ge=0)
     cleared_steps: int = Field(ge=0)
+    user_name: str = Field(default="GUEST", max_length=20)
+    false_steps: list[int] = Field(default_factory=list)  # 間違えたステージのインデックス配列
+
+
+class RankingEntry(BaseModel):
+    """ランキングエントリ"""
+    rank: int
+    user_name: str
+    score: int
+    cleared_steps: int
 
 
 class GameResultResponse(BaseModel):
-    """ゲーム結果送信レスポンス"""
+    """ゲーム結果送信レスポンス（リザルト画面表示用）"""
     game_id: UUID
+    difficulty: str
+    total_steps: int  # ルートの総ステップ数（termsの長さ - 1）
     final_score: int
     final_lives: int
     cleared_steps: int
-    message: str
+    user_name: str
+    # ランキング情報
+    my_rank: int  # 自分の順位
+    rankings: list[RankingEntry]  # 上位ランキング
+
+
+class GameUpdateRequest(BaseModel):
+    """ゲーム更新リクエスト（名前変更用）"""
+    user_name: str = Field(max_length=20)
+
+
+class OverallRankingResponse(BaseModel):
+    """全体ランキングレスポンス"""
+    my_rank: int
+    rankings: list[RankingEntry]
 
 
 class RouteStepWithChoices(BaseModel):
@@ -53,7 +79,6 @@ class RouteStepWithChoices(BaseModel):
 class FullRouteStartResponse(BaseModel):
     """全ルート+全選択肢を含むゲーム開始レスポンス"""
     game_id: UUID
-    route_id: int
     difficulty: str
     total_steps: int
     steps: list[RouteStepWithChoices]

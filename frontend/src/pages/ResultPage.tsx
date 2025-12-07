@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Box, Container, Button, Fade } from '@mui/material';
 import ResultHeader from '../components/ResultHeader';
 import RankingTable from '../components/RankingTable';
 import RouteReviewModal from '../components/RouteReviewModal';
 import BackgroundImage from '../components/BackgroundImage';
 import { useGameStore } from '../stores/gameStore';
+import { updateGame, submitGameResult } from '../services/gameApi';
 
 const BONUS_POINTS = {
   easy: 100,
@@ -41,6 +42,12 @@ export default function ResultPage() {
     totalStages,
     steps,
     gameId,
+    playerName,
+    isCompleted,
+    myRank,
+    rankings,
+    falseSteps,
+    setRankingData,
     resetGame,
   } = useGameStore();
 
@@ -48,6 +55,44 @@ export default function ResultPage() {
   const [score, setScore] = useState(initialScore);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const [showContent, setShowContent] = useState(false); // ライフ換金完了後にtrue
+  const hasSubmittedResult = useRef(false);
+
+  // ゲーム結果送信（マウント時に1回だけ）
+  useEffect(() => {
+    if (!gameId || hasSubmittedResult.current) return;
+
+    const submitResult = async () => {
+      try {
+        hasSubmittedResult.current = true;
+        // cleared_steps: ゲームオーバーの場合はcurrentStage、クリアの場合はtotalStages
+        const clearedSteps = isCompleted ? totalStages : currentStage;
+
+        console.log('[ResultPage] Submitting game result:', {
+          gameId,
+          final_score: initialScore,
+          final_lives: initialLives,
+          cleared_steps: clearedSteps,
+          user_name: playerName,
+          false_steps: falseSteps,
+        });
+
+        const response = await submitGameResult(gameId, {
+          final_score: initialScore,
+          final_lives: initialLives,
+          cleared_steps: clearedSteps,
+          user_name: playerName,
+          false_steps: falseSteps,
+        });
+        // ランキングデータをstoreに保存
+        setRankingData(response.my_rank, response.rankings);
+      } catch (err) {
+        console.error('結果送信エラー:', err);
+        hasSubmittedResult.current = false; // リトライ可能にする
+      }
+    };
+
+    submitResult();
+  }, [gameId, initialScore, initialLives, currentStage, totalStages, isCompleted, playerName, falseSteps, setRankingData]);
 
   useEffect(() => {
     // ゲームオーバー（ライフ0）の場合はアニメーションなし、即座にコンテンツ表示
@@ -134,7 +179,17 @@ export default function ResultPage() {
     // アニメーション状態をリセット
     animationState.isRunning = false;
     clearAnimationTimers();
+    // 結果送信フラグをリセット
+    hasSubmittedResult.current = false;
     resetGame();
+  };
+
+  // 名前変更時のAPI呼び出し
+  const handleNameChange = async (newName: string) => {
+    if (!gameId) return;
+    const response = await updateGame(gameId, { user_name: newName });
+    // ランキングデータを更新
+    setRankingData(response.my_rank, response.rankings);
   };
 
   return (
@@ -166,6 +221,10 @@ export default function ResultPage() {
             <RankingTable
               totalStages={totalStages}
               currentUserScore={score}
+              currentUserRank={myRank ?? 1}
+              rankings={rankings}
+              gameId={gameId ?? ''}
+              onNameChange={handleNameChange}
               onShowRoute={() => setIsRouteModalOpen(true)}
             />
           </Box>
@@ -201,6 +260,7 @@ export default function ResultPage() {
           open={isRouteModalOpen}
           onClose={() => setIsRouteModalOpen(false)}
           steps={steps}
+          falseSteps={falseSteps}
         />
       </Container>
     </Box>

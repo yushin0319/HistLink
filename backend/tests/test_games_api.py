@@ -27,7 +27,6 @@ class TestGameStart:
         # target_length=10 → 10回のゲーム → 11ノード（10エッジ）が必要
         assert "game_id" in data
         UUID(data["game_id"])
-        assert "route_id" in data
         assert data["difficulty"] == "normal"
         assert data["total_steps"] == 11  # 10ゲーム = 11ノード
         assert "created_at" in data
@@ -191,20 +190,29 @@ class TestGameResult:
         assert response.status_code == 200
         data = response.json()
         assert data["game_id"] == game_id
+        assert data["difficulty"] == "hard"
+        assert data["total_steps"] == 10  # target_length=10 → 11ノード → 10エッジ
         assert data["final_score"] == 1500
         assert data["final_lives"] == 2
         assert data["cleared_steps"] == 8
-        assert "message" in data
+        assert data["user_name"] == "GUEST"  # デフォルト値
+
+        # ランキング情報が含まれている
+        assert "my_rank" in data
+        assert data["my_rank"] >= 1
+        assert "rankings" in data
+        assert isinstance(data["rankings"], list)
 
         # DBが更新されていることを確認
         from sqlalchemy import text
         game_result = db_session.execute(
-            text("SELECT score, lives, cleared_steps FROM games WHERE id = :game_id"),
+            text("SELECT score, lives, cleared_steps, user_name FROM games WHERE id = :game_id"),
             {"game_id": game_id}
         ).fetchone()
-        assert game_result[0] == 1500  # score
-        assert game_result[1] == 2     # lives
-        assert game_result[2] == 8     # cleared_steps
+        assert game_result[0] == 1500    # score
+        assert game_result[1] == 2       # lives
+        assert game_result[2] == 8       # cleared_steps
+        assert game_result[3] == "GUEST" # user_name
 
     def test_submit_result_game_not_found(self, client, db_session):
         """存在しないゲームIDで404エラー"""
@@ -220,8 +228,8 @@ class TestGameResult:
 
         assert response.status_code == 404
 
-    def test_submit_result_game_over(self, client, db_session):
-        """ゲームオーバー時のメッセージ確認"""
+    def test_submit_result_with_custom_name(self, client, db_session):
+        """カスタムユーザー名でゲーム結果を送信"""
         # ゲーム開始
         start_response = client.post(
             "/api/v1/games/start",
@@ -229,21 +237,29 @@ class TestGameResult:
         )
         game_id = start_response.json()["game_id"]
 
-        # ゲームオーバーで結果送信
+        # カスタム名で結果送信
         response = client.post(
             f"/api/v1/games/{game_id}/result",
             json={
                 "final_score": 500,
                 "final_lives": 0,
-                "cleared_steps": 3
+                "cleared_steps": 3,
+                "user_name": "TestPlayer"
             }
         )
 
         assert response.status_code == 200
         data = response.json()
         assert data["cleared_steps"] == 3
-        assert "ゲームオーバー" in data["message"]
-        assert "500" in data["message"]
+        assert data["user_name"] == "TestPlayer"
+
+        # DBが更新されていることを確認
+        from sqlalchemy import text
+        game_result = db_session.execute(
+            text("SELECT user_name FROM games WHERE id = :game_id"),
+            {"game_id": game_id}
+        ).fetchone()
+        assert game_result[0] == "TestPlayer"
 
     def test_game_start_no_terms_error(self, client, db_session, monkeypatch):
         """termがない場合は400エラー"""
@@ -260,6 +276,63 @@ class TestGameResult:
 
         assert response.status_code == 400
         assert "No terms found" in response.json()["detail"]
+
+
+class TestGameUpdate:
+    """PATCH /games/{game_id} エンドポイントのテスト"""
+
+    def test_update_user_name(self, client, db_session):
+        """ユーザー名を変更"""
+        # ゲーム開始
+        start_response = client.post(
+            "/api/v1/games/start",
+            json={"difficulty": "hard", "target_length": 5}
+        )
+        game_id = start_response.json()["game_id"]
+
+        # 結果送信（GUESTで）
+        client.post(
+            f"/api/v1/games/{game_id}/result",
+            json={
+                "final_score": 1000,
+                "final_lives": 3,
+                "cleared_steps": 5
+            }
+        )
+
+        # 名前を変更
+        response = client.patch(
+            f"/api/v1/games/{game_id}",
+            json={"user_name": "NewName"}
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["user_name"] == "NewName"
+        assert data["final_score"] == 1000
+        assert data["final_lives"] == 3
+
+        # ランキング情報が含まれている
+        assert "my_rank" in data
+        assert "rankings" in data
+
+        # DBが更新されていることを確認
+        from sqlalchemy import text
+        game_result = db_session.execute(
+            text("SELECT user_name FROM games WHERE id = :game_id"),
+            {"game_id": game_id}
+        ).fetchone()
+        assert game_result[0] == "NewName"
+
+    def test_update_game_not_found(self, client, db_session):
+        """存在しないゲームIDで404エラー"""
+        fake_uuid = "12345678-1234-1234-1234-123456789012"
+        response = client.patch(
+            f"/api/v1/games/{fake_uuid}",
+            json={"user_name": "NewName"}
+        )
+
+        assert response.status_code == 404
 
     # 注：test_start_game_with_missing_relationは削除
     # キャッシュベースの設計では、起動時に全データがキャッシュされるため、

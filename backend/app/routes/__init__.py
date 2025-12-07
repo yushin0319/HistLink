@@ -1,4 +1,4 @@
 """API routers"""
-from . import routes, games
+from . import games
 
-__all__ = ["routes", "games"]
+__all__ = ["games"]

@@ -1,8 +1,9 @@
-"""ゲーム関連のAPIエンドポイント"""
+"""ゲーム関連のAPIエンドポイント（キャッシュ版）"""
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from uuid import UUID
+from uuid import UUID, uuid4
+from datetime import datetime
 
 from app.database import get_db
 from app.schemas import (
@@ -14,8 +15,9 @@ from app.schemas import (
     RouteStepWithChoices,
     FullRouteStartResponse,
 )
-from app.services.route_generator import generate_route_with_fallback
+from app.services.route_generator import generate_route
 from app.services.distractor_generator import generate_distractors
+from app.services.cache import get_cache
 import random
 
 router = APIRouter(prefix="/games", tags=["games"])
@@ -27,7 +29,7 @@ async def start_game(
     db: Session = Depends(get_db)
 ):
     """
-    新しいゲームを開始（フロントエンド主体設計）
+    新しいゲームを開始（キャッシュ版）
 
     全ルート+全選択肢を一括返却し、ゲームロジックはフロントエンドで実行。
     ゲーム終了後に /games/{game_id}/result で結果を送信する。
@@ -39,7 +41,7 @@ async def start_game(
 
     Args:
         request: ゲーム開始リクエスト（difficulty, target_length）
-        db: データベースセッション
+        db: データベースセッション（結果保存用）
 
     Returns:
         FullRouteStartResponse: 全ステップ+選択肢を含むゲーム開始レスポンス
@@ -47,88 +49,58 @@ async def start_game(
     Raises:
         HTTPException: スタート地点が見つからない場合（400）
     """
-    # ルートを生成（難易度に応じたフィルタ付き、スタート地点変更付きフォールバック）
+    cache = get_cache()
+
+    # ルートを生成（キャッシュから、DBアクセスなし）
     # target_length回のゲーム = target_length+1ノード（target_lengthエッジ）が必要
-    # max_start_retries=10, max_same_start_retries=20 で最大200回試行
     try:
-        route = generate_route_with_fallback(
+        route = generate_route(
             target_length=request.target_length + 1,
-            db=db,
             difficulty=request.difficulty,
-            max_start_retries=10,
-            max_same_start_retries=20
+            max_start_retries=20,
+            max_same_start_retries=50
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    start_term_id = route[0] if route else None
-
     if not route:
         raise HTTPException(status_code=400, detail="Failed to generate route")
 
-    # routesテーブルに保存
-    route_result = db.execute(
+    # ゲームIDを生成
+    game_id = uuid4()
+    created_at = datetime.utcnow()
+
+    # gamesテーブルに保存（新設計: route_id不要、terms配列を保存）
+    db.execute(
         text("""
-            INSERT INTO routes (start_term_id, length, difficulty)
-            VALUES (:start_term_id, :length, :difficulty)
-            RETURNING id
+            INSERT INTO games (id, difficulty, terms, cleared_steps, score, lives, created_at, updated_at)
+            VALUES (:id, :difficulty, :terms, 0, 0, 3, :created_at, :created_at)
         """),
         {
-            "start_term_id": start_term_id,
-            "length": len(route),
-            "difficulty": request.difficulty
+            "id": str(game_id),
+            "difficulty": request.difficulty,
+            "terms": route,
+            "created_at": created_at
         }
     )
-    route_id = route_result.fetchone()[0]
-
-    # route_stepsテーブルに保存
-    for step_no, term_id in enumerate(route):
-        db.execute(
-            text("""
-                INSERT INTO route_steps (route_id, step_no, term_id)
-                VALUES (:route_id, :step_no, :term_id)
-            """),
-            {
-                "route_id": route_id,
-                "step_no": step_no,
-                "term_id": term_id
-            }
-        )
-
-    # gamesテーブルに保存
-    game_result = db.execute(
-        text("""
-            INSERT INTO games (route_id, current_step, lives, score, chain_count, is_finished)
-            VALUES (:route_id, 0, 3, 0, 0, false)
-            RETURNING id, created_at
-        """),
-        {"route_id": route_id}
-    )
-    game_row = game_result.fetchone()
     db.commit()
 
-    # 全ステップ+選択肢を作成
+    # 全ステップ+選択肢を作成（キャッシュから）
     steps: list[RouteStepWithChoices] = []
     visited = set()
 
     for step_no, term_id in enumerate(route):
-        # 現在のステップの用語情報を取得
-        term_result = db.execute(
-            text("""
-                SELECT id, name, tier, category, description
-                FROM terms
-                WHERE id = :term_id
-            """),
-            {"term_id": term_id}
-        )
-        term_row = term_result.fetchone()
+        # 用語情報をキャッシュから取得
+        term_data = cache.get_term(term_id)
+        if not term_data:
+            raise HTTPException(status_code=500, detail=f"Term {term_id} not found in cache")
 
         term = TermResponse(
-            id=term_row[0],
-            name=term_row[1],
-            tier=term_row[2],
-            category=term_row[3],
-            description=term_row[4]
+            id=term_data.id,
+            name=term_data.name,
+            tier=term_data.tier,
+            category=term_data.category,
+            description=term_data.description
         )
 
         # 最後のステップ以外は選択肢を生成
@@ -136,64 +108,43 @@ async def start_game(
             correct_next_id = route[step_no + 1]
             visited.add(term_id)
 
-            # エッジ情報を取得（双方向で検索、term_a < term_bの制約があるのでmin/maxで検索）
-            edge_result = db.execute(
-                text("""
-                    SELECT difficulty, keyword, description
-                    FROM edges
-                    WHERE term_a = :term_a AND term_b = :term_b
-                    LIMIT 1
-                """),
-                {"term_a": min(term_id, correct_next_id), "term_b": max(term_id, correct_next_id)}
-            )
-            edge_row = edge_result.fetchone()
+            # エッジ情報をキャッシュから取得
+            edge = cache.get_edge(term_id, correct_next_id)
 
-            if not edge_row:
+            if not edge:
                 print(f"[WARNING] No edge found for term_a={min(term_id, correct_next_id)}, term_b={max(term_id, correct_next_id)}")
                 difficulty_value = "normal"
                 keyword = ""
-                description = ""
+                edge_description = ""
             else:
-                difficulty_value = edge_row[0] or "normal"
-                keyword = edge_row[1] or ""
-                description = edge_row[2] or ""
-                print(f"[DEBUG] Edge found: term_a={min(term_id, correct_next_id)}, term_b={max(term_id, correct_next_id)}, difficulty={difficulty_value}, keyword={keyword}")
+                difficulty_value = edge.difficulty or "normal"
+                keyword = edge.keyword or ""
+                edge_description = edge.description or ""
 
-            # descriptionのみを説明文として使用（keywordは別フィールドで返す）
-            edge_description = description
-
-            # ダミーを3つ生成（難易度に応じたTierフィルタ）
+            # ダミーを3つ生成（キャッシュから）
             distractors = generate_distractors(
                 correct_id=correct_next_id,
                 current_id=term_id,
                 visited=visited,
                 difficulty=request.difficulty,
-                count=3,
-                db=db
+                count=3
             )
 
             # 4択を作成
             all_choice_ids = [correct_next_id] + distractors
 
-            # 選択肢の詳細を取得
+            # 選択肢の詳細をキャッシュから取得
             choices = []
             for choice_id in all_choice_ids:
-                choice_result = db.execute(
-                    text("""
-                        SELECT id, name, tier
-                        FROM terms
-                        WHERE id = :term_id
-                    """),
-                    {"term_id": choice_id}
-                )
-                choice_row = choice_result.fetchone()
-                choices.append(
-                    ChoiceResponse(
-                        term_id=choice_row[0],
-                        name=choice_row[1],
-                        tier=choice_row[2]
+                choice_term = cache.get_term(choice_id)
+                if choice_term:
+                    choices.append(
+                        ChoiceResponse(
+                            term_id=choice_term.id,
+                            name=choice_term.name,
+                            tier=choice_term.tier
+                        )
                     )
-                )
 
             # シャッフル
             random.shuffle(choices)
@@ -220,12 +171,12 @@ async def start_game(
             ))
 
     return FullRouteStartResponse(
-        game_id=game_row[0],
-        route_id=route_id,
+        game_id=game_id,
+        route_id=0,  # route_idは廃止予定、互換性のため0を返す
         difficulty=request.difficulty,
         total_steps=len(route),
         steps=steps,
-        created_at=game_row[1]
+        created_at=created_at
     )
 
 
@@ -257,7 +208,7 @@ async def submit_game_result(
             UPDATE games
             SET score = :score,
                 lives = :lives,
-                is_finished = :is_finished,
+                cleared_steps = :cleared_steps,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = :game_id
         """),
@@ -265,13 +216,13 @@ async def submit_game_result(
             "game_id": str(game_id),
             "score": request.final_score,
             "lives": request.final_lives,
-            "is_finished": request.is_completed
+            "cleared_steps": request.cleared_steps
         }
     )
     db.commit()
 
     # 成功メッセージを生成
-    if request.is_completed:
+    if request.final_lives > 0:
         message = f"ゲームクリア！最終スコア: {request.final_score}点"
     else:
         message = f"ゲームオーバー。最終スコア: {request.final_score}点"
@@ -280,6 +231,6 @@ async def submit_game_result(
         game_id=game_id,
         final_score=request.final_score,
         final_lives=request.final_lives,
-        is_completed=request.is_completed,
+        cleared_steps=request.cleared_steps,
         message=message
     )

@@ -27,7 +27,7 @@ class GameResultRequest(BaseModel):
     """ゲーム結果送信リクエスト"""
     final_score: int = Field(ge=0)
     final_lives: int = Field(ge=0)
-    is_completed: bool
+    cleared_steps: int = Field(ge=0)
 
 
 class GameResultResponse(BaseModel):
@@ -35,7 +35,7 @@ class GameResultResponse(BaseModel):
     game_id: UUID
     final_score: int
     final_lives: int
-    is_completed: bool
+    cleared_steps: int
     message: str
 
 

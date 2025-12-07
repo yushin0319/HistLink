@@ -1,6 +1,5 @@
 """Pydantic schemas for API requests and responses"""
 from .term import TermResponse
-from .route import RouteResponse, RouteListResponse
 from .game import (
     GameStartRequest,
     ChoiceResponse,
@@ -12,8 +11,6 @@ from .game import (
 
 __all__ = [
     "TermResponse",
-    "RouteResponse",
-    "RouteListResponse",
     "GameStartRequest",
     "ChoiceResponse",
     "GameResultRequest",

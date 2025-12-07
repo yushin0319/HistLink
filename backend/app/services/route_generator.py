@@ -1,10 +1,9 @@
 """
-ルート生成アルゴリズム（ランダムウォーク版）
+ルート生成アルゴリズム（キャッシュ版）
 
 ランダムウォーク方式：
 - 行き止まり回避付きランダムウォーク
-- BFSより2-9倍高速
-- 同等の品質（ループなし、ユニークノード）
+- キャッシュからデータ取得（DBアクセスなし）
 
 難易度別のデータ範囲:
 - Easy: Tier1のみ + easyエッジのみ
@@ -13,8 +12,9 @@
 """
 
 from typing import List, Optional, Set
-from sqlalchemy import text
 import random
+
+from app.services.cache import get_cache
 
 
 def get_difficulty_filter(difficulty: str) -> tuple:
@@ -38,7 +38,6 @@ def get_difficulty_filter(difficulty: str) -> tuple:
 def get_unvisited_neighbors(
     term_id: int,
     visited: Set[int],
-    db,
     max_tier: int = 3,
     allowed_difficulties: List[str] = None
 ) -> List[int]:
@@ -48,7 +47,6 @@ def get_unvisited_neighbors(
     Args:
         term_id: 現在のノードID
         visited: 訪問済みノードのセット
-        db: データベース接続
         max_tier: 最大Tier (難易度フィルタ用)
         allowed_difficulties: 許可されるエッジ難易度リスト
 
@@ -58,33 +56,17 @@ def get_unvisited_neighbors(
     if allowed_difficulties is None:
         allowed_difficulties = ['easy', 'normal', 'hard']
 
-    result = db.execute(
-        text("""
-        SELECT DISTINCT t.id
-        FROM terms t
-        JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
-        WHERE t.tier <= :max_tier
-          AND e.difficulty = ANY(:difficulties)
-          AND (
-              (e.term_a = :term_id AND e.term_b = t.id)
-              OR (e.term_b = :term_id AND e.term_a = t.id)
-          )
-        """),
-        {
-            "term_id": term_id,
-            "max_tier": max_tier,
-            "difficulties": allowed_difficulties
-        }
+    cache = get_cache()
+    neighbors = cache.get_neighbors_with_filter(
+        term_id, max_tier, allowed_difficulties
     )
 
-    neighbors = [row[0] for row in result]
     return [n for n in neighbors if n not in visited]
 
 
 def count_unvisited_neighbors(
     term_id: int,
     visited: Set[int],
-    db,
     max_tier: int = 3,
     allowed_difficulties: List[str] = None
 ) -> int:
@@ -94,7 +76,6 @@ def count_unvisited_neighbors(
     Args:
         term_id: ノードID
         visited: 訪問済みノードのセット
-        db: データベース接続
         max_tier: 最大Tier
         allowed_difficulties: 許可されるエッジ難易度リスト
 
@@ -102,21 +83,19 @@ def count_unvisited_neighbors(
         未訪問の隣接ノード数
     """
     neighbors = get_unvisited_neighbors(
-        term_id, visited, db, max_tier, allowed_difficulties
+        term_id, visited, max_tier, allowed_difficulties
     )
     return len(neighbors)
 
 
 def select_random_start(
-    db,
     difficulty: str = 'hard',
     seed: Optional[int] = None
 ) -> int:
     """
-    ランダムにスタート地点を選ぶ（新仕様）
+    ランダムにスタート地点を選ぶ
 
     Args:
-        db: データベース接続
         difficulty: 難易度 ('easy', 'normal', 'hard')
         seed: 乱数シード（オプション）
 
@@ -128,12 +107,8 @@ def select_random_start(
 
     max_tier, _ = get_difficulty_filter(difficulty)
 
-    result = db.execute(
-        text("SELECT id FROM terms WHERE tier <= :max_tier"),
-        {"max_tier": max_tier}
-    )
-
-    all_ids = [row[0] for row in result]
+    cache = get_cache()
+    all_ids = cache.get_terms_by_max_tier(max_tier)
 
     if not all_ids:
         raise ValueError(f"No terms found with tier <= {max_tier}")
@@ -141,14 +116,13 @@ def select_random_start(
     return random.choice(all_ids)
 
 
-def generate_route_single(
+def _random_walk(
     start_term_id: int,
     target_length: int,
-    db,
     difficulty: str = 'hard'
 ) -> List[int]:
     """
-    単一のスタート地点からルートを生成する（ランダムウォーク版）
+    1回のランダムウォークでルート生成を試みる（内部用）
 
     行き止まり回避付きランダムウォークを使用。
     候補が複数あるとき、次の手で行き止まりにならない候補を優先する。
@@ -156,11 +130,10 @@ def generate_route_single(
     Args:
         start_term_id: スタート用語ID
         target_length: 目標ルート長
-        db: データベース接続
         difficulty: 難易度 ('easy', 'normal', 'hard')
 
     Returns:
-        用語IDのリスト（ルート）
+        用語IDのリスト（ルート）。目標長に届かない可能性あり。
     """
     max_tier, allowed_difficulties = get_difficulty_filter(difficulty)
 
@@ -170,7 +143,7 @@ def generate_route_single(
     while len(route) < target_length:
         current = route[-1]
         candidates = get_unvisited_neighbors(
-            current, visited, db, max_tier, allowed_difficulties
+            current, visited, max_tier, allowed_difficulties
         )
 
         # 候補がなければ終了（詰まった）
@@ -183,7 +156,7 @@ def generate_route_single(
             for c in candidates:
                 future_visited = visited | {c}
                 future_neighbors = count_unvisited_neighbors(
-                    c, future_visited, db, max_tier, allowed_difficulties
+                    c, future_visited, max_tier, allowed_difficulties
                 )
                 if future_neighbors > 0:
                     non_dead.append(c)
@@ -198,44 +171,30 @@ def generate_route_single(
     return route
 
 
-def generate_route(
+def _try_from_start(
     start_term_id: int,
     target_length: int,
-    db,
     difficulty: str = 'hard',
-    seed: Optional[int] = None,
     max_retries: int = 10
 ) -> List[int]:
     """
-    ルートを生成する（リトライ機能付き）
+    同じスタート地点からリトライしてルート生成を試みる（内部用）
 
     要求されたステップ数に達しない場合、同じスタートから再試行する。
 
     Args:
         start_term_id: スタート用語ID
         target_length: 目標ルート長
-        db: データベース接続
         difficulty: 難易度 ('easy', 'normal', 'hard')
-        seed: 乱数シード（決定性のため）
         max_retries: 最大リトライ回数（デフォルト10）
 
     Returns:
         用語IDのリスト（ルート）
     """
-    if seed is not None:
-        random.seed(seed)
-
-    # 最初の試行
-    route = generate_route_single(start_term_id, target_length, db, difficulty)
-
-    if len(route) >= target_length:
-        return route
-
-    # リトライ（同じスタートから、ランダム選択だけ変えて再試行）
-    best_route = route
+    best_route = []
 
     for _ in range(max_retries):
-        route = generate_route_single(start_term_id, target_length, db, difficulty)
+        route = _random_walk(start_term_id, target_length, difficulty)
 
         if len(route) >= target_length:
             return route
@@ -243,20 +202,18 @@ def generate_route(
         if len(route) > len(best_route):
             best_route = route
 
-    # max_retries回試しても達成できなかった場合、最長のものを返す
     return best_route
 
 
-def generate_route_with_fallback(
+def generate_route(
     target_length: int,
-    db,
     difficulty: str = 'hard',
     seed: Optional[int] = None,
     max_start_retries: int = 10,
     max_same_start_retries: int = 10
 ) -> List[int]:
     """
-    ルートを生成する（スタート地点変更付きフォールバック）
+    ルートを生成する（メインエントリポイント）
 
     1. ランダムにスタート地点を選ぶ
     2. 同じスタートで max_same_start_retries 回試す
@@ -264,7 +221,6 @@ def generate_route_with_fallback(
 
     Args:
         target_length: 目標ルート長
-        db: データベース接続
         difficulty: 難易度 ('easy', 'normal', 'hard')
         seed: 乱数シード（決定性のため）
         max_start_retries: スタート地点を変える最大回数（デフォルト10）
@@ -280,12 +236,11 @@ def generate_route_with_fallback(
 
     for _ in range(max_start_retries):
         # ランダムにスタート地点を選ぶ
-        start_term_id = select_random_start(db, difficulty)
+        start_term_id = select_random_start(difficulty)
 
         # 同じスタートでリトライ
-        route = generate_route(
-            start_term_id, target_length, db, difficulty,
-            seed=None,  # 既にseed設定済みなのでNone
+        route = _try_from_start(
+            start_term_id, target_length, difficulty,
             max_retries=max_same_start_retries
         )
 

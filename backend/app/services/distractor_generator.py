@@ -1,5 +1,5 @@
 """
-ダミー生成ロジック（新仕様）
+ダミー生成ロジック（キャッシュ版）
 
 難易度別のデータ範囲:
 - Easy: Tier1のみ + easyエッジのみ
@@ -11,49 +11,8 @@
 
 from typing import List, Optional, Set
 import random
-from sqlalchemy import text
 
-
-def get_neighbors_for_term(term_id: int, db) -> Set[int]:
-    """
-    指定用語の隣接ノード（1hop）を取得
-
-    Args:
-        term_id: 用語ID
-        db: データベース接続
-
-    Returns:
-        隣接ノードIDのセット
-    """
-    result = db.execute(
-        text("""
-        SELECT term_b FROM edges WHERE term_a = :term_id
-        UNION
-        SELECT term_a FROM edges WHERE term_b = :term_id
-        """),
-        {"term_id": term_id}
-    )
-
-    return {row[0] for row in result}
-
-
-def get_terms_by_tier(max_tier: int, db) -> List[int]:
-    """
-    指定Tier以下の全用語IDを取得
-
-    Args:
-        max_tier: 最大Tier (1, 2, or 3)
-        db: データベース接続
-
-    Returns:
-        用語IDのリスト
-    """
-    result = db.execute(
-        text("SELECT id FROM terms WHERE tier <= :max_tier"),
-        {"max_tier": max_tier}
-    )
-
-    return [row[0] for row in result]
+from app.services.cache import get_cache
 
 
 def generate_distractors(
@@ -62,11 +21,10 @@ def generate_distractors(
     visited: Set[int],
     difficulty: str,
     count: int,
-    db,
     seed: Optional[int] = None
 ) -> List[int]:
     """
-    ダミー候補を生成（新仕様）
+    ダミー候補を生成（キャッシュ版）
 
     難易度別のデータ範囲:
     - Easy: Tier1のみ
@@ -81,7 +39,6 @@ def generate_distractors(
         visited: 訪問済み用語のセット
         difficulty: 難易度 ('easy', 'normal', 'hard')
         count: 生成するダミー数
-        db: データベース接続
         seed: 乱数シード（決定性のため）
 
     Returns:
@@ -98,11 +55,13 @@ def generate_distractors(
     else:  # hard
         max_tier = 3
 
+    cache = get_cache()
+
     # 該当Tier範囲の全用語を取得
-    all_candidates = get_terms_by_tier(max_tier, db)
+    all_candidates = cache.get_terms_by_max_tier(max_tier)
 
     # 正解の隣接ノード（1hop）を取得
-    correct_neighbors = get_neighbors_for_term(correct_id, db)
+    correct_neighbors = cache.get_neighbors(correct_id)
 
     # フィルタリング
     candidates = []

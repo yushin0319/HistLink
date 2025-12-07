@@ -25,20 +25,24 @@ def test_no_dead_points(db_session):
 
     ゲームの継続性を保証するため、すべての用語は最低2つのリレーションを持つ必要がある。
     """
-    result = db_session.execute(
-        text("SELECT COUNT(*) FROM v_dead_points")
-    ).scalar()
+    # 次数が2未満の用語を検索
+    dead_points = db_session.execute(
+        text("""
+            SELECT t.id, t.name, t.tier, COUNT(e.id) as degree
+            FROM terms t
+            LEFT JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
+            GROUP BY t.id, t.name, t.tier
+            HAVING COUNT(e.id) < 2
+        """)
+    ).fetchall()
 
     # 死に点がある場合は詳細を表示
-    if result > 0:
-        dead_points = db_session.execute(
-            text("SELECT id, name, tier, degree FROM v_dead_points")
-        ).fetchall()
+    if len(dead_points) > 0:
         details = "\n".join([f"  - ID {dp.id}: {dp.name} (Tier {dp.tier}) - degree: {dp.degree}"
                             for dp in dead_points])
-        pytest.fail(f"死に点が{result}個存在します:\n{details}")
+        pytest.fail(f"死に点が{len(dead_points)}個存在します:\n{details}")
 
-    assert result == 0, f"死に点が{result}個存在します"
+    assert len(dead_points) == 0
 
 
 def test_terms_exist(db_session):
@@ -127,11 +131,17 @@ def test_degree_statistics(db_session):
     """
     stats = db_session.execute(
         text("""
+            WITH term_degrees AS (
+                SELECT t.id, COUNT(e.id) as degree
+                FROM terms t
+                LEFT JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
+                GROUP BY t.id
+            )
             SELECT
                 MIN(degree) AS min_degree,
                 MAX(degree) AS max_degree,
                 AVG(degree) AS avg_degree
-            FROM v_term_degrees
+            FROM term_degrees
         """)
     ).fetchone()
 
@@ -245,11 +255,17 @@ def test_data_quality_summary(db_session):
     # 次数統計
     degree_stats = db_session.execute(
         text("""
+            WITH term_degrees AS (
+                SELECT t.id, COUNT(e.id) as degree
+                FROM terms t
+                LEFT JOIN edges e ON (e.term_a = t.id OR e.term_b = t.id)
+                GROUP BY t.id
+            )
             SELECT
                 MIN(degree) AS min_degree,
                 MAX(degree) AS max_degree,
                 ROUND(AVG(degree)::numeric, 2) AS avg_degree
-            FROM v_term_degrees
+            FROM term_degrees
         """)
     ).fetchone()
 

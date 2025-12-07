@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # 依存関係ファイルをコピー
 COPY pyproject.toml .
 
-# Python依存関係のインストール
-RUN pip install --no-cache-dir -e .
+# Python依存関係のインストール（dev依存含む）
+RUN pip install --no-cache-dir -e ".[dev]"
 
 # アプリケーションコードをコピー
 COPY . .

@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
 from app.main import app
+from app.services.cache import get_cache
 
 # Test database URL (use environment variable or default to localhost)
 # In Docker: DATABASE_URL uses postgres:5432
@@ -18,6 +19,13 @@ TEST_DATABASE_URL = os.getenv(
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def init_cache():
+    """テスト開始前にキャッシュを初期化"""
+    cache = get_cache()
+    print(f"[Test Setup] Cache initialized: {len(cache.terms)} terms, {len(cache.edges)} edges")
 
 
 @pytest.fixture(scope="session")

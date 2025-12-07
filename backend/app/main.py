@@ -1,14 +1,29 @@
 """FastAPI application entry point"""
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routes import routes, games
+from app.routes import games
+# routes.py は routesテーブル依存のため削除
+from app.services.cache import get_cache
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """アプリケーション起動時にキャッシュを初期化"""
+    # 起動時: キャッシュを初期化
+    cache = get_cache()
+    print(f"[Startup] Cache initialized: {len(cache.terms)} terms, {len(cache.edges)} edges")
+    yield
+    # 終了時: 特に何もしない
+
 
 app = FastAPI(
     title=settings.project_name,
     version="0.1.0",
     description="歴史をつなごう",
+    lifespan=lifespan,
 )
 
 # CORS middleware (開発環境用 - 本番では制限を強化すること)
@@ -21,7 +36,6 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(routes.router, prefix=settings.api_v1_prefix)
 app.include_router(games.router, prefix=settings.api_v1_prefix)
 
 

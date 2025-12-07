@@ -1,5 +1,5 @@
 """
-ダミー生成ロジックのテスト（新仕様）
+ダミー生成ロジックのテスト（キャッシュ版）
 
 新難易度システム:
 - easy: Tier1のみ
@@ -11,74 +11,8 @@
 
 import pytest
 from hypothesis import given, strategies as st, settings, HealthCheck
-from sqlalchemy import text
-from app.services.distractor_generator import (
-    generate_distractors,
-    get_neighbors_for_term,
-    get_terms_by_tier,
-)
-
-
-class TestGetNeighbors:
-    """隣接ノード取得のテスト"""
-
-    def test_get_neighbors_basic(self, db_session):
-        """隣接ノードを正しく取得できる"""
-        neighbors = get_neighbors_for_term(1, db_session)
-
-        assert isinstance(neighbors, set)
-        # 何らかの隣接ノードがあるはず（リレーションがあるテストデータ前提）
-
-    def test_get_neighbors_nonexistent(self, db_session):
-        """存在しない用語IDの場合は空セット"""
-        neighbors = get_neighbors_for_term(99999, db_session)
-        assert neighbors == set()
-
-
-class TestGetTermsByTier:
-    """Tier別用語取得のテスト"""
-
-    def test_get_tier1_terms(self, db_session):
-        """Tier1の用語を取得"""
-        terms = get_terms_by_tier(1, db_session)
-
-        assert isinstance(terms, list)
-
-        # 取得した全てがTier1であることを確認
-        for term_id in terms:
-            result = db_session.execute(
-                text("SELECT tier FROM terms WHERE id = :id"),
-                {"id": term_id}
-            ).fetchone()
-            assert result[0] == 1
-
-    def test_get_tier1_2_terms(self, db_session):
-        """Tier1-2の用語を取得"""
-        terms = get_terms_by_tier(2, db_session)
-
-        assert isinstance(terms, list)
-
-        # 取得した全てがTier1-2であることを確認
-        for term_id in terms:
-            result = db_session.execute(
-                text("SELECT tier FROM terms WHERE id = :id"),
-                {"id": term_id}
-            ).fetchone()
-            assert result[0] <= 2
-
-    def test_get_all_tiers(self, db_session):
-        """全Tier（1-3）の用語を取得"""
-        terms = get_terms_by_tier(3, db_session)
-
-        assert isinstance(terms, list)
-
-        # 取得した全てがTier1-3であることを確認
-        for term_id in terms:
-            result = db_session.execute(
-                text("SELECT tier FROM terms WHERE id = :id"),
-                {"id": term_id}
-            ).fetchone()
-            assert result[0] <= 3
+from app.services.distractor_generator import generate_distractors
+from app.services.cache import get_cache
 
 
 class TestEasyDistractors:
@@ -95,8 +29,7 @@ class TestEasyDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='easy',
-            count=3,
-            db=db_session
+            count=3
         )
 
         # 全て異なる
@@ -121,16 +54,14 @@ class TestEasyDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='easy',
-            count=3,
-            db=db_session
+            count=3
         )
 
+        cache = get_cache()
         for d in distractors:
-            result = db_session.execute(
-                text("SELECT tier FROM terms WHERE id = :id"),
-                {"id": d}
-            ).fetchone()
-            assert result[0] == 1
+            term = cache.get_term(d)
+            assert term is not None
+            assert term.tier == 1
 
     def test_easy_distractors_not_directly_connected(self, db_session):
         """Easy難易度のダミーは正解と直接繋がっていない（2hop以上）"""
@@ -143,11 +74,11 @@ class TestEasyDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='easy',
-            count=3,
-            db=db_session
+            count=3
         )
 
-        correct_neighbors = get_neighbors_for_term(correct_id, db_session)
+        cache = get_cache()
+        correct_neighbors = cache.get_neighbors(correct_id)
 
         for d in distractors:
             # 正解の隣接ノードではない（2hop以上離れている）
@@ -168,8 +99,7 @@ class TestNormalDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='normal',
-            count=3,
-            db=db_session
+            count=3
         )
 
         # 全て異なる
@@ -186,16 +116,14 @@ class TestNormalDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='normal',
-            count=3,
-            db=db_session
+            count=3
         )
 
+        cache = get_cache()
         for d in distractors:
-            result = db_session.execute(
-                text("SELECT tier FROM terms WHERE id = :id"),
-                {"id": d}
-            ).fetchone()
-            assert result[0] <= 2
+            term = cache.get_term(d)
+            assert term is not None
+            assert term.tier <= 2
 
     def test_normal_distractors_not_directly_connected(self, db_session):
         """Normal難易度のダミーは正解と直接繋がっていない（2hop以上）"""
@@ -208,11 +136,11 @@ class TestNormalDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='normal',
-            count=3,
-            db=db_session
+            count=3
         )
 
-        correct_neighbors = get_neighbors_for_term(correct_id, db_session)
+        cache = get_cache()
+        correct_neighbors = cache.get_neighbors(correct_id)
 
         for d in distractors:
             assert d not in correct_neighbors
@@ -232,8 +160,7 @@ class TestHardDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='hard',
-            count=3,
-            db=db_session
+            count=3
         )
 
         # 少なくとも1個は生成される
@@ -253,16 +180,14 @@ class TestHardDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='hard',
-            count=3,
-            db=db_session
+            count=3
         )
 
+        cache = get_cache()
         for d in distractors:
-            result = db_session.execute(
-                text("SELECT tier FROM terms WHERE id = :id"),
-                {"id": d}
-            ).fetchone()
-            assert result[0] <= 3
+            term = cache.get_term(d)
+            assert term is not None
+            assert term.tier <= 3
 
     def test_hard_distractors_not_directly_connected(self, db_session):
         """Hard難易度のダミーは正解と直接繋がっていない（2hop以上）"""
@@ -275,11 +200,11 @@ class TestHardDistractors:
             current_id=current_id,
             visited=visited,
             difficulty='hard',
-            count=3,
-            db=db_session
+            count=3
         )
 
-        correct_neighbors = get_neighbors_for_term(correct_id, db_session)
+        cache = get_cache()
+        correct_neighbors = cache.get_neighbors(correct_id)
 
         for d in distractors:
             assert d not in correct_neighbors
@@ -307,8 +232,7 @@ class TestDistractorProperties:
             current_id=current_id,
             visited=visited,
             difficulty=difficulty,
-            count=count,
-            db=db_session
+            count=count
         )
 
         # Property 1: 要求された数以下
@@ -331,9 +255,8 @@ class TestEdgeCases:
 
     def test_insufficient_candidates(self, db_session):
         """候補が不足している場合"""
-        # ほぼ全てのノードを訪問済みにする
-        result = db_session.execute(text("SELECT id FROM terms"))
-        all_ids = [row[0] for row in result]
+        cache = get_cache()
+        all_ids = list(cache.terms.keys())
 
         # 最後の5個だけ残す
         visited = set(all_ids[:-5])
@@ -346,8 +269,7 @@ class TestEdgeCases:
             current_id=current_id,
             visited=visited,
             difficulty='hard',
-            count=10,  # 10個要求するが、候補は少ない
-            db=db_session
+            count=10  # 10個要求するが、候補は少ない
         )
 
         # 取得可能な数だけ返す
@@ -366,7 +288,6 @@ class TestEdgeCases:
             visited=visited,
             difficulty='hard',
             count=3,
-            db=db_session,
             seed=42
         )
 
@@ -376,7 +297,6 @@ class TestEdgeCases:
             visited=visited,
             difficulty='hard',
             count=3,
-            db=db_session,
             seed=42
         )
 

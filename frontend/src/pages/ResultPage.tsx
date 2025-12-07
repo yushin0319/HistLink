@@ -67,9 +67,13 @@ export default function ResultPage() {
         // cleared_steps: ゲームオーバーの場合はcurrentStage、クリアの場合はtotalStages
         const clearedSteps = isCompleted ? totalStages : currentStage;
 
+        // ライフ換金後のスコアを計算（表示と一致させる）
+        const bonusPerLife = BONUS_POINTS[difficulty];
+        const finalScore = initialScore + initialLives * bonusPerLife;
+
         console.log('[ResultPage] Submitting game result:', {
           gameId,
-          final_score: initialScore,
+          final_score: finalScore,
           final_lives: initialLives,
           cleared_steps: clearedSteps,
           user_name: playerName,
@@ -77,7 +81,7 @@ export default function ResultPage() {
         });
 
         const response = await submitGameResult(gameId, {
-          final_score: initialScore,
+          final_score: finalScore,
           final_lives: initialLives,
           cleared_steps: clearedSteps,
           user_name: playerName,
@@ -92,7 +96,7 @@ export default function ResultPage() {
     };
 
     submitResult();
-  }, [gameId, initialScore, initialLives, currentStage, totalStages, isCompleted, playerName, falseSteps, setRankingData]);
+  }, [gameId, initialScore, initialLives, currentStage, totalStages, isCompleted, playerName, falseSteps, difficulty, setRankingData]);
 
   useEffect(() => {
     // ゲームオーバー（ライフ0）の場合はアニメーションなし、即座にコンテンツ表示

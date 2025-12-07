@@ -53,7 +53,7 @@ def get_rankings_and_my_rank(
             SELECT user_name, score, cleared_steps
             FROM games
             WHERE array_length(terms, 1) - 1 = :total_steps
-            ORDER BY score DESC, cleared_steps DESC, created_at ASC
+            ORDER BY score DESC, created_at DESC
             LIMIT :limit
         """),
         {"total_steps": total_steps, "limit": limit}
@@ -105,7 +105,7 @@ def get_overall_rankings_and_my_rank(
         text("""
             SELECT user_name, score, cleared_steps
             FROM games
-            ORDER BY score DESC, cleared_steps DESC, created_at ASC
+            ORDER BY score DESC, created_at DESC
             LIMIT :limit
         """),
         {"limit": limit}

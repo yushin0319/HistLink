@@ -45,7 +45,7 @@ interface GameState {
   setPlayerName: (name: string) => void;
   loadGameData: (gameId: string, steps: RouteStepWithChoices[]) => void;
   setRankingData: (myRank: number, rankings: RankingEntry[]) => void;
-  startGame: (difficulty: Difficulty, totalStages: TotalStages) => void;
+  startGame: (difficulty: Difficulty, totalStages: number) => void;
   answerQuestion: (selectedTermId: number) => void;
   completeFeedbackPhase: () => void; // feedbackPhase終了後のステージ遷移
   decrementTimer: () => void;

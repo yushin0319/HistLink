@@ -36,6 +36,13 @@
 | バックエンドAPI | https://histlink-backend.onrender.com |
 | データベース | Supabase PostgreSQL (Session Pooler) |
 
+### 環境変数（Renderで設定）
+
+| サービス | 変数名 | 値 |
+|----------|--------|-----|
+| Backend | `DATABASE_URL` | Supabase接続文字列 |
+| Frontend | `VITE_API_BASE_URL` | `https://histlink-backend.onrender.com` |
+
 ## ローカル開発
 
 ### セットアップ
@@ -127,4 +134,3 @@ HistLink/
 ## ドキュメント
 
 - [CLAUDE.md](./CLAUDE.md) - 開発ガイドライン
-- [PLAN.md](./PLAN.md) - 開発計画

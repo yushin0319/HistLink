@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import type { RouteStepWithChoices, RankingEntry } from '../types/api';
 
 type Difficulty = 'easy' | 'normal' | 'hard';
-type TotalStages = 10 | 30 | 50;
 
 interface GameState {
   // プレイヤー情報
@@ -10,7 +9,7 @@ interface GameState {
 
   // ゲーム設定
   difficulty: Difficulty;
-  totalStages: TotalStages;
+  totalStages: number;
 
   // ゲームデータ（バックエンドから取得）
   gameId: string | null;

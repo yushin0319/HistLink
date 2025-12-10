@@ -8,9 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 技術スタック
 - **Backend**: Python (FastAPI) + SQLAlchemy
-- **Database**: PostgreSQL 16 (Docker)
+- **Database**: PostgreSQL (ローカル: Docker, 本番: Supabase Session Pooler)
 - **Frontend**: React 19 + TypeScript + Vite + MUI
 - **Testing**: pytest (backend), Vitest + Testing Library (frontend)
+- **Hosting**: Render (Frontend: Static Site, Backend: Web Service)
 
 ### アーキテクチャ
 
@@ -327,8 +328,9 @@ Claude: 「公式ドキュメントを確認しましたが、--no-browserオプ
 
 ### データベース操作
 
-- **Docker環境**: PostgreSQL 16 (Alpine)
-- **接続情報**:
+- **ローカル開発**: Docker PostgreSQL 16 (Alpine)
+- **本番環境**: Supabase PostgreSQL (Session Pooler port 5432)
+- **ローカル接続情報**:
   ```bash
   # Docker内から
   docker compose exec postgres psql -U histlink_user -d histlink
@@ -513,7 +515,25 @@ frontend/src/
 
 ---
 
-## 開発状況（2024年12月時点）
+## 本番環境
+
+| サービス | URL |
+|----------|-----|
+| フロントエンド | https://histlink.onrender.com |
+| バックエンドAPI | https://histlink-backend.onrender.com |
+| データベース | Supabase PostgreSQL (Session Pooler) |
+
+**環境変数:**
+- Backend: `DATABASE_URL` (Supabase接続文字列、Render環境変数で設定)
+- Frontend: `VITE_API_BASE_URL` (バックエンドURL、Render環境変数で設定)
+
+**CORS設定:**
+- `http://localhost:5173` (ローカル開発)
+- `https://histlink.onrender.com` (本番フロントエンド)
+
+---
+
+## 開発状況
 
 ### 完成した機能
 
@@ -528,8 +548,9 @@ frontend/src/
 - ランキングAPI（X問別/全体）
 - 名前更新API
 
+**デプロイ:**
+- Render + Supabase で本番稼働中
+
 ### 次のステップ
 
-1. **Supabase移行**: 本番環境のDB移行
-2. **管理画面開発**: histlink-admin（データ編集用）
-3. **デプロイ**: Render.comへのデプロイ
+1. **管理画面開発**: histlink-admin（データ編集用）

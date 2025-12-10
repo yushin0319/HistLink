@@ -42,13 +42,13 @@ app.add_middleware(
 app.include_router(games.router, prefix=settings.api_v1_prefix)
 
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 async def root():
     """Health check endpoint"""
     return {"message": "HistLink API is running", "version": "0.1.0"}
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health():
     """Health check endpoint"""
     return {"status": "healthy"}

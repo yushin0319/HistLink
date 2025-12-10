@@ -28,3 +28,8 @@ storybook-static
 
 # Test coverage
 coverage
+
+# Environment variables
+.env
+.env.local
+.env.*.local

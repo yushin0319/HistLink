@@ -27,11 +27,6 @@ services:
     container_name: histlink-backend
     environment:
       DATABASE_URL: postgresql://histlink_user:histlink_dev_password@postgres:5432/histlink
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: histlink
-      DB_USER: histlink_user
-      DB_PASSWORD: histlink_dev_password
     ports:
       - "8000:8000"
     volumes:

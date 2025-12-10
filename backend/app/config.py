@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:5173"]
 
     class Config:
-        env_file = "../.env"
+        env_file = ".env"
         case_sensitive = False
 
 

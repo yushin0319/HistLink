@@ -1,0 +1,27 @@
+# Render Blueprint for HistLink
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API (FastAPI)
+  - type: web
+    name: histlink-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -e .
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Set manually: Supabase connection string
+      - key: PYTHON_VERSION
+        value: "3.11"
+
+  # Frontend (Vite + React)
+  - type: web
+    name: histlink-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false  # Set to: https://histlink-backend.onrender.com

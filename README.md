@@ -89,8 +89,8 @@ docker compose up -d
 # DB接続
 docker compose exec postgres psql -U histlink_user -d histlink
 
-# TSV更新後の再構築
-./scripts/update_migration.sh
+# キャッシュクリア
+docker compose restart backend
 ```
 
 ## 難易度システム
@@ -121,7 +121,7 @@ HistLink/
 │   │   └── schemas/      # Pydanticスキーマ
 │   └── tests/
 ├── database/          # DBマイグレーション
-├── data/              # TSVデータファイル
+├── data/              # JSONデータファイル
 └── docker-compose.yml
 ```
 

@@ -24,19 +24,16 @@ Claude Code向けガイドライン
 
 ## データ設計
 
-### TSVが唯一の真実
-- `data/terms.tsv`: 歴史用語データ
-- `data/relations.tsv`: リレーションデータ
+### JSONが唯一の真実
+- `data/terms.json`: 用語データ（id, name, tier, category, description）
+- `data/edges.json`: エッジデータ（id, term_a, term_b, difficulty, keyword, description）
 
-TSV更新後は必ず `./scripts/update_migration.sh` を実行
-
-### 用語（Terms）
-- ID範囲: 日本史 1-100、西洋史 101-200
-- Era値: 古代, 中世, 近世, 近代, 現代
-
-### リレーション（Relations）
-- タイプ: 因果, 契機, 対立, 政策, 文化, 同時代, 外交
-- 制約: 自己ループ禁止、全用語degree≥2
+### 難易度システム
+| 難易度 | Tier制限 | エッジ制限 |
+|--------|----------|------------|
+| easy | Tier1のみ | easyのみ |
+| normal | Tier1-2 | easy, normal |
+| hard | 全Tier | 全エッジ |
 
 ---
 

@@ -26,10 +26,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS middleware (開発環境用 - 本番では制限を強化すること)
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",           # ローカル開発
+        "https://histlink.onrender.com",   # 本番フロントエンド
+    ],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],

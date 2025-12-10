@@ -2,6 +2,8 @@
 
 歴史用語をつなげるクイズゲーム
 
+**本番環境:** https://histlink.onrender.com
+
 ## 概要
 
 日本史・西洋史の用語を連鎖的につなぐ歴史学習ゲーム。
@@ -22,10 +24,21 @@
 |---------|------|
 | Frontend | React 19 + TypeScript + Vite + MUI |
 | Backend | Python (FastAPI) + SQLAlchemy |
-| Database | PostgreSQL 16 (Docker) |
+| Database | PostgreSQL (Supabase) |
+| Hosting | Render (Frontend: Static Site, Backend: Web Service) |
 | Testing | Vitest (frontend), pytest (backend) |
 
-## セットアップ
+## 本番環境
+
+| サービス | URL |
+|----------|-----|
+| フロントエンド | https://histlink.onrender.com |
+| バックエンドAPI | https://histlink-backend.onrender.com |
+| データベース | Supabase PostgreSQL (Session Pooler) |
+
+## ローカル開発
+
+### セットアップ
 
 ```bash
 # Docker起動（DB + Backend）
@@ -35,9 +48,9 @@ docker compose up -d
 cd frontend && npm install && npm run dev
 ```
 
-## 開発コマンド
+### 開発コマンド
 
-### フロントエンド
+#### フロントエンド
 
 ```bash
 cd frontend
@@ -49,7 +62,7 @@ npm run test:coverage # カバレッジ付き
 npm run build         # 本番ビルド
 ```
 
-### バックエンド
+#### バックエンド
 
 ```bash
 cd backend
@@ -59,7 +72,7 @@ pytest --cov=app               # カバレッジ付き
 uvicorn app.main:app --reload  # 開発サーバー
 ```
 
-### データベース
+#### データベース
 
 ```bash
 # 初期化（クリーンスタート）
@@ -109,7 +122,7 @@ HistLink/
 
 - フロントエンド: 完成（テストカバレッジ 98%）
 - バックエンド: 完成（テストカバレッジ 93%）
-- 次のステップ: Supabase移行、管理画面開発
+- デプロイ: Render + Supabase
 
 ## ドキュメント
 

@@ -50,9 +50,11 @@ export default function ChoiceCard({ term, onClick, isSelected, feedbackState }:
         '&:hover': feedbackState
           ? {}
           : {
-              boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
-              borderColor: 'primary.main',
-              bgcolor: isSelected ? 'primary.dark' : 'action.hover',
+              '@media (hover: hover)': {
+                boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+                borderColor: 'primary.main',
+                bgcolor: isSelected ? 'primary.dark' : 'grey.100',
+              },
             },
         '&:active': feedbackState ? {} : { opacity: 0.8 },
       }}

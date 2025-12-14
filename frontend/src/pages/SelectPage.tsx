@@ -21,10 +21,10 @@ const stageLabels: Record<TotalStages, string> = {
 export default function SelectPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('normal');
   const [selectedStages, setSelectedStages] = useState<TotalStages>(10);
-  const { startGame } = useGameStore();
+  const { requestStartGame } = useGameStore();
 
   const handleStart = () => {
-    startGame(selectedDifficulty, selectedStages);
+    requestStartGame(selectedDifficulty, selectedStages);
   };
 
   return (

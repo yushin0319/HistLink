@@ -8,12 +8,12 @@ import { useGameStore } from '../../stores/gameStore';
 vi.mock('../../stores/gameStore');
 
 describe('SelectPage', () => {
-  const mockStartGame = vi.fn();
+  const mockRequestStartGame = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      startGame: mockStartGame,
+      requestStartGame: mockRequestStartGame,
     });
   });
 
@@ -168,18 +168,18 @@ describe('SelectPage', () => {
   });
 
   describe('ゲーム開始', () => {
-    it('スタートボタンをクリックするとstartGameが呼ばれる（デフォルト: normal, 10）', async () => {
+    it('スタートボタンをクリックするとrequestStartGameが呼ばれる（デフォルト: normal, 10）', async () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
       const startButton = screen.getByRole('button', { name: /スタート/i });
       await user.click(startButton);
 
-      expect(mockStartGame).toHaveBeenCalledWith('normal', 10);
-      expect(mockStartGame).toHaveBeenCalledTimes(1);
+      expect(mockRequestStartGame).toHaveBeenCalledWith('normal', 10);
+      expect(mockRequestStartGame).toHaveBeenCalledTimes(1);
     });
 
-    it('選択した難易度とステージ数でstartGameが呼ばれる（easy, 30）', async () => {
+    it('選択した難易度とステージ数でrequestStartGameが呼ばれる（easy, 30）', async () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
@@ -190,10 +190,10 @@ describe('SelectPage', () => {
       const startButton = screen.getByRole('button', { name: /スタート/i });
       await user.click(startButton);
 
-      expect(mockStartGame).toHaveBeenCalledWith('easy', 30);
+      expect(mockRequestStartGame).toHaveBeenCalledWith('easy', 30);
     });
 
-    it('選択した難易度とステージ数でstartGameが呼ばれる（hard, 50）', async () => {
+    it('選択した難易度とステージ数でrequestStartGameが呼ばれる（hard, 50）', async () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
@@ -204,7 +204,7 @@ describe('SelectPage', () => {
       const startButton = screen.getByRole('button', { name: /スタート/i });
       await user.click(startButton);
 
-      expect(mockStartGame).toHaveBeenCalledWith('hard', 50);
+      expect(mockRequestStartGame).toHaveBeenCalledWith('hard', 50);
     });
   });
 });

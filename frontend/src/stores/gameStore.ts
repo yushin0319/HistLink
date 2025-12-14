@@ -11,6 +11,9 @@ interface GameState {
   difficulty: Difficulty;
   totalStages: number;
 
+  // ゲーム開始待機状態（ルール画面表示用）
+  pendingStart: boolean;
+
   // ゲームデータ（バックエンドから取得）
   gameId: string | null;
   steps: RouteStepWithChoices[]; // 全ルート+選択肢
@@ -46,6 +49,8 @@ interface GameState {
   setPlayerName: (name: string) => void;
   loadGameData: (gameId: string, steps: RouteStepWithChoices[]) => void;
   setRankingData: (myRank: number, rankings: RankingEntry[], overallMyRank: number, overallRankings: RankingEntry[]) => void;
+  requestStartGame: (difficulty: Difficulty, totalStages: number) => void;
+  confirmStart: () => void;
   startGame: (difficulty: Difficulty, totalStages: number) => void;
   answerQuestion: (selectedTermId: number) => void;
   completeFeedbackPhase: () => void; // feedbackPhase終了後のステージ遷移
@@ -67,6 +72,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   playerName: DEFAULT_PLAYER_NAME,
   difficulty: 'normal',
   totalStages: 10,
+  pendingStart: false,
   gameId: null,
   steps: [],
   myRank: null,
@@ -107,7 +113,30 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ myRank, rankings, overallMyRank, overallRankings });
   },
 
-  // ゲーム開始
+  // ゲーム開始をリクエスト（ルール画面表示前）
+  requestStartGame: (difficulty, totalStages) => {
+    set({
+      difficulty,
+      totalStages,
+      pendingStart: true,
+    });
+  },
+
+  // ルール画面後、実際にゲームを開始
+  confirmStart: () => {
+    set({
+      pendingStart: false,
+      lives: INITIAL_LIVES,
+      score: 0,
+      currentStage: 0,
+      remainingTime: MAX_TIME,
+      falseSteps: [],
+      isPlaying: true,
+      isCompleted: false,
+    });
+  },
+
+  // ゲーム開始（GamePageから直接呼ばれる場合用）
   startGame: (difficulty, totalStages) => {
     set({
       difficulty,
@@ -262,6 +291,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       playerName: DEFAULT_PLAYER_NAME,
       difficulty: 'normal',
       totalStages: 10,
+      pendingStart: false,
       gameId: null,
       steps: [],
       myRank: null,

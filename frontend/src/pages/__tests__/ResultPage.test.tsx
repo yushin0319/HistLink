@@ -10,10 +10,12 @@ import type { RouteStepWithChoices } from '../../types/api';
 vi.mock('../../services/gameApi', () => ({
   submitGameResult: vi.fn(),
   updateGame: vi.fn(),
+  getOverallRanking: vi.fn(),
 }));
 
 const mockSubmitGameResult = vi.mocked(gameApi.submitGameResult);
 const mockUpdateGame = vi.mocked(gameApi.updateGame);
+const mockGetOverallRanking = vi.mocked(gameApi.getOverallRanking);
 
 // モックデータ
 const mockSteps: RouteStepWithChoices[] = [
@@ -59,6 +61,11 @@ describe('ResultPage', () => {
         { rank: 1, user_name: 'テストユーザー', score: 2332, cleared_steps: 10 },
         { rank: 2, user_name: 'たろう', score: 2000, cleared_steps: 10 },
       ],
+      overallMyRank: 1,
+      overallRankings: [
+        { rank: 1, user_name: 'テストユーザー', score: 5000, cleared_steps: 50 },
+        { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
+      ],
     });
     // APIモックのデフォルト動作を設定
     mockSubmitGameResult.mockResolvedValue({
@@ -85,6 +92,13 @@ describe('ResultPage', () => {
       my_rank: 1,
       rankings: [
         { rank: 1, user_name: '新しい名前', score: 2332, cleared_steps: 10 },
+      ],
+    });
+    mockGetOverallRanking.mockResolvedValue({
+      my_rank: 1,
+      rankings: [
+        { rank: 1, user_name: 'テストユーザー', score: 5000, cleared_steps: 50 },
+        { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
       ],
     });
   });

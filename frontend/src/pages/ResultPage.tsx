@@ -5,7 +5,7 @@ import RankingTable from '../components/RankingTable';
 import RouteReviewModal from '../components/RouteReviewModal';
 import BackgroundImage from '../components/BackgroundImage';
 import { useGameStore } from '../stores/gameStore';
-import { updateGame, submitGameResult } from '../services/gameApi';
+import { updateGame, submitGameResult, getOverallRanking } from '../services/gameApi';
 
 const BONUS_POINTS = {
   easy: 100,
@@ -46,6 +46,8 @@ export default function ResultPage() {
     isCompleted,
     myRank,
     rankings,
+    overallMyRank,
+    overallRankings,
     falseSteps,
     setRankingData,
     resetGame,
@@ -71,24 +73,24 @@ export default function ResultPage() {
         const bonusPerLife = BONUS_POINTS[difficulty];
         const finalScore = initialScore + initialLives * bonusPerLife;
 
-        console.log('[ResultPage] Submitting game result:', {
-          gameId,
-          final_score: finalScore,
-          final_lives: initialLives,
-          cleared_steps: clearedSteps,
-          user_name: playerName,
-          false_steps: falseSteps,
-        });
-
-        const response = await submitGameResult(gameId, {
-          final_score: finalScore,
-          final_lives: initialLives,
-          cleared_steps: clearedSteps,
-          user_name: playerName,
-          false_steps: falseSteps,
-        });
-        // ランキングデータをstoreに保存
-        setRankingData(response.my_rank, response.rankings);
+        // X問ランキングと全体ランキングを並列で取得
+        const [stageResponse, overallResponse] = await Promise.all([
+          submitGameResult(gameId, {
+            final_score: finalScore,
+            final_lives: initialLives,
+            cleared_steps: clearedSteps,
+            user_name: playerName,
+            false_steps: falseSteps,
+          }),
+          getOverallRanking(finalScore),
+        ]);
+        // 両方のランキングデータをstoreに保存
+        setRankingData(
+          stageResponse.my_rank,
+          stageResponse.rankings,
+          overallResponse.my_rank,
+          overallResponse.rankings
+        );
       } catch (err) {
         console.error('結果送信エラー:', err);
         hasSubmittedResult.current = false; // リトライ可能にする
@@ -191,9 +193,18 @@ export default function ResultPage() {
   // 名前変更時のAPI呼び出し
   const handleNameChange = async (newName: string) => {
     if (!gameId) return;
-    const response = await updateGame(gameId, { user_name: newName });
-    // ランキングデータを更新
-    setRankingData(response.my_rank, response.rankings);
+    // X問ランキング更新と全体ランキング再取得を並列で実行
+    const [stageResponse, overallResponse] = await Promise.all([
+      updateGame(gameId, { user_name: newName }),
+      getOverallRanking(score),
+    ]);
+    // 両方のランキングデータを更新
+    setRankingData(
+      stageResponse.my_rank,
+      stageResponse.rankings,
+      overallResponse.my_rank,
+      overallResponse.rankings
+    );
   };
 
   return (
@@ -227,6 +238,8 @@ export default function ResultPage() {
               currentUserScore={score}
               currentUserRank={myRank ?? 1}
               rankings={rankings}
+              overallRankings={overallRankings}
+              overallMyRank={overallMyRank ?? 1}
               gameId={gameId ?? ''}
               onNameChange={handleNameChange}
               onShowRoute={() => setIsRouteModalOpen(true)}

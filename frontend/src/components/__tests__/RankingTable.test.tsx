@@ -8,13 +8,6 @@ import type { RankingEntry } from '../../types/api';
 // モック化
 vi.mock('../../stores/gameStore');
 
-// gameApi のモック
-import { getOverallRanking } from '../../services/gameApi';
-vi.mock('../../services/gameApi', () => ({
-  getOverallRanking: vi.fn(),
-}));
-const mockGetOverallRanking = vi.mocked(getOverallRanking);
-
 // テスト用のランキングデータ
 const mockRankings: RankingEntry[] = [
   { rank: 1, user_name: 'たろう', score: 1800, cleared_steps: 10 },
@@ -33,6 +26,15 @@ const mockRankingsWithCurrentUser: RankingEntry[] = [
   { rank: 5, user_name: 'さぶろう', score: 1500, cleared_steps: 10 },
 ];
 
+// 全体ランキング用のモックデータ
+const mockOverallRankings: RankingEntry[] = [
+  { rank: 1, user_name: '全体1位', score: 5000, cleared_steps: 50 },
+  { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
+  { rank: 3, user_name: '全体3位', score: 4000, cleared_steps: 50 },
+  { rank: 4, user_name: '全体4位', score: 3500, cleared_steps: 30 },
+  { rank: 5, user_name: '全体5位', score: 3000, cleared_steps: 30 },
+];
+
 describe('RankingTable', () => {
   const mockSetPlayerName = vi.fn();
 
@@ -41,17 +43,6 @@ describe('RankingTable', () => {
     (useGameStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       playerName: 'テストユーザー',
       setPlayerName: mockSetPlayerName,
-    });
-    // デフォルトのモック動作を設定
-    mockGetOverallRanking.mockResolvedValue({
-      my_rank: 5,
-      rankings: [
-        { rank: 1, user_name: '全体1位', score: 5000, cleared_steps: 50 },
-        { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
-        { rank: 3, user_name: '全体3位', score: 4000, cleared_steps: 50 },
-        { rank: 4, user_name: '全体4位', score: 3500, cleared_steps: 30 },
-        { rank: 5, user_name: '全体5位', score: 3000, cleared_steps: 30 },
-      ],
     });
   });
 
@@ -63,6 +54,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -78,6 +71,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -95,6 +90,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
           onShowRoute={mockOnShowRoute}
         />
@@ -110,6 +107,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -127,6 +126,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -149,6 +150,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -170,6 +173,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -188,6 +193,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
           onShowRoute={mockOnShowRoute}
         />
@@ -210,6 +217,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
         />
       );
@@ -230,6 +239,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
         />
       );
@@ -255,6 +266,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
         />
       );
@@ -280,6 +293,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
         />
       );
@@ -317,6 +332,8 @@ describe('RankingTable', () => {
           currentUserScore={2000}
           currentUserRank={1}
           rankings={rankingsWithSelf}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
         />
       );
@@ -334,6 +351,8 @@ describe('RankingTable', () => {
           currentUserScore={100}
           currentUserRank={10}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={10}
           gameId="test-game-id"
         />
       );
@@ -351,6 +370,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -365,6 +386,8 @@ describe('RankingTable', () => {
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={5}
           gameId="test-game-id"
         />
       );
@@ -384,6 +407,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
         />
@@ -415,6 +440,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
         />
@@ -440,7 +467,7 @@ describe('RankingTable', () => {
       consoleSpy.mockRestore();
     });
 
-    it('全体タブ表示中に名前を変更すると全体ランキングが再取得される', async () => {
+    it('全体タブに切り替えると全体ランキングのデータが表示される', async () => {
       const user = userEvent.setup();
       const mockOnNameChange = vi.fn().mockResolvedValue(undefined);
 
@@ -450,6 +477,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
         />
@@ -459,14 +488,11 @@ describe('RankingTable', () => {
       const overallTab = screen.getByRole('tab', { name: '全体' });
       await user.click(overallTab);
 
-      // 全体ランキングが表示されるのを待つ
+      // 全体ランキングのデータが表示される
       await waitFor(() => {
         expect(screen.getByText('全体1位')).toBeInTheDocument();
+        expect(screen.getByText('全体2位')).toBeInTheDocument();
       });
-
-      // 自分の名前をクリック（全体タブでの5位）
-      // 省略記号が表示されている場合、6位以下の自分のエントリが表示される
-      // ここでは5位以内なので普通に表示される
     });
   });
 
@@ -480,6 +506,8 @@ describe('RankingTable', () => {
           currentUserScore={100}
           currentUserRank={10}
           rankings={mockRankings}
+          overallRankings={mockOverallRankings}
+          overallMyRank={10}
           gameId="test-game-id"
         />
       );
@@ -505,33 +533,6 @@ describe('RankingTable', () => {
   });
 
   describe('エラーハンドリング', () => {
-    it('全体ランキング取得失敗時にエラーがログに出力される', async () => {
-      const user = userEvent.setup();
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      mockGetOverallRanking.mockRejectedValue(new Error('API Error'));
-
-      render(
-        <RankingTable
-          totalStages={10}
-          currentUserScore={1500}
-          currentUserRank={4}
-          rankings={mockRankings}
-          gameId="test-game-id"
-        />
-      );
-
-      // 全体タブをクリック
-      const overallTab = screen.getByRole('tab', { name: '全体' });
-      await user.click(overallTab);
-
-      // エラーがログに出力される
-      await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith('全体ランキングの取得に失敗:', expect.any(Error));
-      });
-
-      consoleSpy.mockRestore();
-    });
-
     it('名前が変更されていない場合は早期リターンする', async () => {
       const user = userEvent.setup();
       const mockOnNameChange = vi.fn().mockResolvedValue(undefined);
@@ -542,6 +543,8 @@ describe('RankingTable', () => {
           currentUserScore={1900}
           currentUserRank={1}
           rankings={mockRankingsWithCurrentUser}
+          overallRankings={mockOverallRankings}
+          overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
         />
@@ -559,60 +562,6 @@ describe('RankingTable', () => {
       expect(mockOnNameChange).not.toHaveBeenCalled();
       // setPlayerNameも呼ばれない
       expect(mockSetPlayerName).not.toHaveBeenCalled();
-    });
-
-    it('全体タブ表示中に名前を変更すると全体ランキングが再取得される', async () => {
-      const user = userEvent.setup();
-      const mockOnNameChange = vi.fn().mockResolvedValue(undefined);
-
-      // 全体ランキングで自分が1位のモックデータを設定
-      mockGetOverallRanking.mockResolvedValue({
-        my_rank: 1,
-        rankings: [
-          { rank: 1, user_name: 'テストユーザー', score: 5500, cleared_steps: 50 },
-          { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
-          { rank: 3, user_name: '全体3位', score: 4000, cleared_steps: 50 },
-          { rank: 4, user_name: '全体4位', score: 3500, cleared_steps: 30 },
-          { rank: 5, user_name: '全体5位', score: 3000, cleared_steps: 30 },
-        ],
-      });
-
-      render(
-        <RankingTable
-          totalStages={10}
-          currentUserScore={5500}
-          currentUserRank={1}
-          rankings={mockRankingsWithCurrentUser}
-          gameId="test-game-id"
-          onNameChange={mockOnNameChange}
-        />
-      );
-
-      // 全体タブをクリック
-      const overallTab = screen.getByRole('tab', { name: '全体' });
-      await user.click(overallTab);
-
-      // 全体ランキングが表示されるのを待つ
-      await waitFor(() => {
-        expect(screen.getByText('全体2位')).toBeInTheDocument();
-      });
-
-      // 最初の呼び出し回数を記録
-      const initialCallCount = mockGetOverallRanking.mock.calls.length;
-
-      // 自分の名前をクリック（全体1位として表示されている）
-      const playerName = screen.getByText('テストユーザー');
-      await user.click(playerName);
-
-      // 名前を変更
-      const textField = screen.getByRole('textbox');
-      await user.clear(textField);
-      await user.type(textField, '更新後名前{Enter}');
-
-      // getOverallRankingが再度呼ばれる
-      await waitFor(() => {
-        expect(mockGetOverallRanking.mock.calls.length).toBeGreaterThan(initialCallCount);
-      });
     });
   });
 });

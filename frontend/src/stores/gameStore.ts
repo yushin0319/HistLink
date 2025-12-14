@@ -18,6 +18,8 @@ interface GameState {
   // 結果送信後のランキングデータ
   myRank: number | null;
   rankings: RankingEntry[];
+  overallMyRank: number | null;
+  overallRankings: RankingEntry[];
 
   // ゲーム進行状態
   lives: number;
@@ -43,7 +45,7 @@ interface GameState {
   // アクション
   setPlayerName: (name: string) => void;
   loadGameData: (gameId: string, steps: RouteStepWithChoices[]) => void;
-  setRankingData: (myRank: number, rankings: RankingEntry[]) => void;
+  setRankingData: (myRank: number, rankings: RankingEntry[], overallMyRank: number, overallRankings: RankingEntry[]) => void;
   startGame: (difficulty: Difficulty, totalStages: number) => void;
   answerQuestion: (selectedTermId: number) => void;
   completeFeedbackPhase: () => void; // feedbackPhase終了後のステージ遷移
@@ -69,6 +71,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   steps: [],
   myRank: null,
   rankings: [],
+  overallMyRank: null,
+  overallRankings: [],
   lives: INITIAL_LIVES,
   score: 0,
   currentStage: 0,
@@ -99,8 +103,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   // ランキングデータを設定（結果送信後）
-  setRankingData: (myRank, rankings) => {
-    set({ myRank, rankings });
+  setRankingData: (myRank, rankings, overallMyRank, overallRankings) => {
+    set({ myRank, rankings, overallMyRank, overallRankings });
   },
 
   // ゲーム開始
@@ -266,6 +270,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       steps: [],
       myRank: null,
       rankings: [],
+      overallMyRank: null,
+      overallRankings: [],
       lives: INITIAL_LIVES,
       score: 0,
       currentStage: 0,

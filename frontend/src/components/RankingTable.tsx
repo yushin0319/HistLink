@@ -1,7 +1,6 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Typography, Button, TextField, Tabs, Tab } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
-import { getOverallRanking } from '../services/gameApi';
 import type { RankingEntry as ApiRankingEntry } from '../types/api';
 
 interface DisplayRankingEntry {
@@ -16,6 +15,8 @@ interface RankingTableProps {
   currentUserScore: number;
   currentUserRank: number;
   rankings: ApiRankingEntry[];
+  overallRankings: ApiRankingEntry[];
+  overallMyRank: number;
   gameId: string;
   onNameChange?: (newName: string) => Promise<void>;
   onShowRoute?: () => void;
@@ -52,6 +53,8 @@ export default function RankingTable({
   currentUserScore,
   currentUserRank,
   rankings: apiRankings,
+  overallRankings,
+  overallMyRank,
   onNameChange,
   onShowRoute,
 }: RankingTableProps) {
@@ -60,30 +63,6 @@ export default function RankingTable({
   const [editingName, setEditingName] = useState(playerName);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tabIndex, setTabIndex] = useState(0); // 0: X問ランキング, 1: 全体
-
-  // 全体ランキング用の状態
-  const [overallRankings, setOverallRankings] = useState<ApiRankingEntry[]>([]);
-  const [overallMyRank, setOverallMyRank] = useState<number>(1);
-  const [isLoadingOverall, setIsLoadingOverall] = useState(false);
-
-  // タブ切り替え時に全体ランキングを取得
-  useEffect(() => {
-    if (tabIndex === 1 && overallRankings.length === 0) {
-      const fetchOverallRanking = async () => {
-        setIsLoadingOverall(true);
-        try {
-          const response = await getOverallRanking(currentUserScore);
-          setOverallRankings(response.rankings);
-          setOverallMyRank(response.my_rank);
-        } catch (error) {
-          console.error('全体ランキングの取得に失敗:', error);
-        } finally {
-          setIsLoadingOverall(false);
-        }
-      };
-      fetchOverallRanking();
-    }
-  }, [tabIndex, currentUserScore, overallRankings.length]);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
@@ -102,21 +81,11 @@ export default function RankingTable({
 
     setIsSubmitting(true);
     try {
-      // APIを呼んで名前を更新（X問ランキングも更新される）
+      // APIを呼んで名前を更新（ResultPageで両方のランキングが更新される）
       if (onNameChange) {
         await onNameChange(editingName);
       }
       setPlayerName(editingName);
-
-      // 全体タブ表示中なら即座に再取得、そうでなければクリアして次回取得時に再取得
-      if (tabIndex === 1) {
-        const response = await getOverallRanking(currentUserScore);
-        setOverallRankings(response.rankings);
-        setOverallMyRank(response.my_rank);
-      } else {
-        setOverallRankings([]);
-      }
-
       setIsEditing(false);
     } catch (error) {
       console.error('名前の更新に失敗しました:', error);
@@ -195,12 +164,7 @@ export default function RankingTable({
       </Box>
 
       {/* ランキングリスト */}
-      {isLoadingOverall && tabIndex === 1 ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
-          <Typography color="text.secondary">読み込み中...</Typography>
-        </Box>
-      ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           {rankings.map((entry) => (
             <Box
               key={`${entry.rank}-${entry.name}`}
@@ -340,7 +304,6 @@ export default function RankingTable({
             </>
           )}
         </Box>
-      )}
     </Box>
   );
 }

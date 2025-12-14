@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from uuid import UUID, uuid4
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.database import get_db
 from app.schemas import (
@@ -181,7 +181,7 @@ async def start_game(
 
     # ゲームIDを生成
     game_id = uuid4()
-    created_at = datetime.utcnow()
+    created_at = datetime.now(timezone.utc)
 
     # gamesテーブルに保存（新設計: route_id不要、terms配列を保存）
     db.execute(

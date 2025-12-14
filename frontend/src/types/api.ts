@@ -6,30 +6,6 @@ export interface Term {
   description: string;
 }
 
-export interface Route {
-  id: number;
-  start_term_id: number;
-  length: number;
-  difficulty: string;
-  start_term?: Term;
-}
-
-export interface RoutesResponse {
-  routes: Route[];
-  total: number;
-}
-
-export interface RouteStep {
-  step_no: number;
-  term: Term;
-}
-
-export interface RouteStepsResponse {
-  route_id: number;
-  steps: RouteStep[];
-  total_steps: number;
-}
-
 export interface Choice {
   term_id: number;
   name: string;

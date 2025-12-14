@@ -338,3 +338,94 @@ class TestGameUpdate:
     # キャッシュベースの設計では、起動時に全データがキャッシュされるため、
     # テスト中にDBに追加した用語/エッジはキャッシュに反映されない。
     # ルート生成はキャッシュからのみ行われるため、このテストは不要。
+
+
+class TestOverallRanking:
+    """GET /games/rankings/overall エンドポイントのテスト"""
+
+    def test_get_overall_ranking_empty(self, client, db_session):
+        """ゲームがない状態で全体ランキングを取得"""
+        response = client.get("/api/v1/games/rankings/overall")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert "my_rank" in data
+        assert "rankings" in data
+        assert isinstance(data["rankings"], list)
+
+    def test_get_overall_ranking_with_score(self, client, db_session):
+        """自分のスコアを指定して全体ランキングを取得"""
+        # まずゲームを作成してスコアを登録
+        start_response = client.post(
+            "/api/v1/games/start",
+            json={"difficulty": "normal", "target_length": 5}
+        )
+        game_id = start_response.json()["game_id"]
+
+        client.post(
+            f"/api/v1/games/{game_id}/result",
+            json={
+                "final_score": 1000,
+                "final_lives": 2,
+                "cleared_steps": 5,
+                "user_name": "Player1"
+            }
+        )
+
+        # 自分のスコアを指定してランキング取得
+        response = client.get(
+            "/api/v1/games/rankings/overall",
+            params={"my_score": 500}
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["my_rank"] >= 1
+        assert len(data["rankings"]) >= 1
+
+        # ランキングエントリの構造を確認
+        if len(data["rankings"]) > 0:
+            entry = data["rankings"][0]
+            assert "rank" in entry
+            assert "user_name" in entry
+            assert "score" in entry
+            assert "cleared_steps" in entry
+
+    def test_get_overall_ranking_with_multiple_games(self, client, db_session):
+        """複数のゲームがある状態で全体ランキングを取得"""
+        # 複数のゲームを作成
+        scores = [2000, 1500, 1000, 500]
+        for i, score in enumerate(scores):
+            start_response = client.post(
+                "/api/v1/games/start",
+                json={"difficulty": "normal", "target_length": 5}
+            )
+            game_id = start_response.json()["game_id"]
+
+            client.post(
+                f"/api/v1/games/{game_id}/result",
+                json={
+                    "final_score": score,
+                    "final_lives": 3,
+                    "cleared_steps": 5,
+                    "user_name": f"Player{i+1}"
+                }
+            )
+
+        # ランキング取得
+        response = client.get(
+            "/api/v1/games/rankings/overall",
+            params={"my_score": 1200}
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+
+        # ランキングがスコア順にソートされている
+        rankings = data["rankings"]
+        for i in range(len(rankings) - 1):
+            assert rankings[i]["score"] >= rankings[i + 1]["score"]
+
+        # my_rankが正の整数である（既存データがある可能性があるため具体的な値はチェックしない）
+        assert data["my_rank"] >= 1
+        assert isinstance(data["my_rank"], int)

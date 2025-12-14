@@ -38,9 +38,7 @@ export default function GamePage() {
   // feedbackPhaseが開始されたら0.5秒後にcompleteFeedbackPhaseを呼び出す
   useEffect(() => {
     if (isFeedbackPhase) {
-      console.log('[GamePage] feedbackPhase started, will complete in 0.5s');
       const timer = setTimeout(() => {
-        console.log('[GamePage] completing feedbackPhase');
         completeFeedbackPhase();
       }, 500);
 
@@ -52,7 +50,6 @@ export default function GamePage() {
   useEffect(() => {
     if (showEdge) {
       const timer = setTimeout(() => {
-        console.log('[GamePage] Hiding edge after 3.5 seconds');
         useGameStore.setState({ showEdge: false });
       }, 3500);
 
@@ -75,10 +72,8 @@ export default function GamePage() {
         setIsLoading(true);
         setError(null);
 
-        console.log('[GamePage] Starting game session...');
         // バックエンドから全ルート+選択肢を取得
         const response = await startGameSession(difficulty, totalStages);
-        console.log('[GamePage] Game session started:', response.game_id);
 
         // Zustandに読み込む
         loadGameData(response.game_id, response.steps);

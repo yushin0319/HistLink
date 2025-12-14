@@ -13,8 +13,7 @@ from app.services.cache import get_cache
 async def lifespan(app: FastAPI):
     """アプリケーション起動時にキャッシュを初期化"""
     # 起動時: キャッシュを初期化
-    cache = get_cache()
-    print(f"[Startup] Cache initialized: {len(cache.terms)} terms, {len(cache.edges)} edges")
+    get_cache()
     yield
     # 終了時: 特に何もしない
 

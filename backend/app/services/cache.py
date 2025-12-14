@@ -90,8 +90,6 @@ class DataCache:
 
             # インデックス構築
             self._build_indexes()
-
-            print(f"[Cache] Loaded {len(self.terms)} terms, {len(self.edges)} edges from DB")
         finally:
             db.close()
 

@@ -125,18 +125,12 @@ export default function ResultPage() {
     setLives(initialLives);
     setScore(initialScore);
 
-    const startTime = Date.now();
-    console.log('[START] 0ms: アニメーション開始');
-
     let currentLifeIndex = 0;
 
     const processNextLife = () => {
       if (!animationState.isRunning || currentLifeIndex >= initialLives) {
         return;
       }
-
-      const lifeNumber = currentLifeIndex + 1;
-      console.log(`[LIFE] ${Date.now() - startTime}ms: ライフ${lifeNumber}消費開始`);
 
       const bonusPoints = BONUS_POINTS[difficulty];
       const countUpSteps = bonusPoints / 10;
@@ -152,7 +146,6 @@ export default function ResultPage() {
 
         if (currentCount >= countUpSteps) {
           clearInterval(countUpInterval);
-          console.log(`[COUNT] ${Date.now() - startTime}ms: カウントアップ${lifeNumber}完了`);
           setLives((prev) => Math.max(0, prev - 1));
         }
       }, intervalPerStep);
@@ -168,7 +161,6 @@ export default function ResultPage() {
       } else {
         const finalTimer = setTimeout(() => {
           if (!animationState.isRunning) return;
-          console.log(`[FINAL] ${Date.now() - startTime}ms: 最終スコア表示`);
           setShowContent(true);
         }, 500);
         animationState.timers.push(finalTimer);
@@ -193,11 +185,9 @@ export default function ResultPage() {
   // 名前変更時のAPI呼び出し
   const handleNameChange = async (newName: string) => {
     if (!gameId) return;
-    // X問ランキング更新と全体ランキング再取得を並列で実行
-    const [stageResponse, overallResponse] = await Promise.all([
-      updateGame(gameId, { user_name: newName }),
-      getOverallRanking(score),
-    ]);
+    // X問ランキング更新（DB更新）を先に完了させてから全体ランキングを取得
+    const stageResponse = await updateGame(gameId, { user_name: newName });
+    const overallResponse = await getOverallRanking(score);
     // 両方のランキングデータを更新
     setRankingData(
       stageResponse.my_rank,

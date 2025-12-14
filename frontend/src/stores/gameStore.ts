@@ -140,8 +140,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     const lastEdgeKeyword = currentStep.keyword;
     const lastEdgeExplanation = currentStep.edge_description;
 
-    console.log('[gameStore] answerQuestion - isCorrect:', isCorrect, 'entering feedbackPhase');
-
     // feedbackPhaseに入る（0.5秒間視覚フィードバック表示）
     set({
       isFeedbackPhase: true,
@@ -179,8 +177,6 @@ export const useGameStore = create<GameState>((set, get) => ({
     const showEdge = state.showEdge; // answerQuestionで設定した値をそのまま維持
     const lastEdgeKeyword = state.lastEdgeKeyword;
     const lastEdgeExplanation = state.lastEdgeExplanation;
-
-    console.log('[gameStore] completeFeedbackPhase - isCorrect:', isCorrect, 'showEdge:', showEdge);
 
     // ライフが0になったらゲームオーバー
     if (newLives <= 0) {

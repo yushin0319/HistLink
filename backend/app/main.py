@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routes import games
+from app.routes import games, admin
 # routes.py は routesテーブル依存のため削除
 from app.services.cache import get_cache
 
@@ -29,7 +29,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",           # ローカル開発
+        "http://localhost:5173",           # ローカル開発 (frontend)
+        "http://localhost:5174",           # ローカル開発 (studio)
         "https://histlink.onrender.com",   # 本番フロントエンド
     ],
     allow_credentials=False,
@@ -39,6 +40,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(games.router, prefix=settings.api_v1_prefix)
+app.include_router(admin.router)
 
 
 @app.api_route("/", methods=["GET", "HEAD"])

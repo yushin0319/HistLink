@@ -10,6 +10,7 @@ const TUTORIAL_SEEN_KEY = 'histlink_tutorial_seen';
 export default function App() {
   const { isPlaying, isCompleted, lives, gameId, pendingStart, confirmStart } = useGameStore();
   const [showRule, setShowRule] = useState(false);
+  const [showRulePreview, setShowRulePreview] = useState(false);
 
   // チュートリアル表示判定
   useEffect(() => {
@@ -30,6 +31,11 @@ export default function App() {
     confirmStart();
   };
 
+  // ゲーム開始前のルール確認（フラグに関係なく表示）
+  if (showRulePreview) {
+    return <RulePage onStart={() => setShowRulePreview(false)} />;
+  }
+
   // ルール画面表示中
   if (showRule) {
     return <RulePage onStart={handleRuleComplete} />;
@@ -46,5 +52,5 @@ export default function App() {
   }
 
   // 初期状態 → SelectPage
-  return <SelectPage />;
+  return <SelectPage onShowRule={() => setShowRulePreview(true)} />;
 }

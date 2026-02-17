@@ -31,10 +31,22 @@ export default function ChoiceCard({ term, onClick, isSelected, feedbackState }:
     if (isSelected) return 'primary.contrastText';
     return 'text.primary';
   };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (feedbackState) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <Paper
       elevation={4}
+      tabIndex={feedbackState ? -1 : 0}
+      role="button"
+      aria-label={`選択肢: ${term}`}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
       sx={{
         height: { xs: 100, sm: 120, md: 140 },
         display: 'flex',

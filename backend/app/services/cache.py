@@ -5,6 +5,7 @@
 DBアクセスなしでルート生成・ダミー生成が可能になる。
 """
 
+import threading
 from typing import Dict, List, Set, Optional
 from dataclasses import dataclass
 from sqlalchemy import text
@@ -182,14 +183,17 @@ class DataCache:
 
 # グローバルキャッシュインスタンス
 _cache: Optional[DataCache] = None
+_lock = threading.Lock()
 
 
 def get_cache() -> DataCache:
-    """キャッシュインスタンスを取得"""
+    """キャッシュインスタンスを取得（スレッドセーフ）"""
     global _cache
     if _cache is None:
-        _cache = DataCache()
-        _cache.load_from_db()
+        with _lock:
+            if _cache is None:  # double-checked locking
+                _cache = DataCache()
+                _cache.load_from_db()
     return _cache
 
 

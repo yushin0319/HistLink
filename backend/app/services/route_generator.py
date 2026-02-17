@@ -90,7 +90,8 @@ def count_unvisited_neighbors(
 
 def select_random_start(
     difficulty: str = 'hard',
-    seed: Optional[int] = None
+    seed: Optional[int] = None,
+    rng: Optional[random.Random] = None
 ) -> int:
     """
     ランダムにスタート地点を選ぶ
@@ -98,12 +99,13 @@ def select_random_start(
     Args:
         difficulty: 難易度 ('easy', 'normal', 'hard')
         seed: 乱数シード（オプション）
+        rng: 乱数インスタンス（省略時は seed から生成）
 
     Returns:
         ランダムに選ばれた用語ID
     """
-    if seed is not None:
-        random.seed(seed)
+    if rng is None:
+        rng = random.Random(seed)
 
     max_tier, _ = get_difficulty_filter(difficulty)
 
@@ -113,13 +115,14 @@ def select_random_start(
     if not all_ids:
         raise ValueError(f"No terms found with tier <= {max_tier}")
 
-    return random.choice(all_ids)
+    return rng.choice(all_ids)
 
 
 def _random_walk(
     start_term_id: int,
     target_length: int,
-    difficulty: str = 'hard'
+    difficulty: str = 'hard',
+    rng: Optional[random.Random] = None
 ) -> List[int]:
     """
     1回のランダムウォークでルート生成を試みる（内部用）
@@ -131,10 +134,14 @@ def _random_walk(
         start_term_id: スタート用語ID
         target_length: 目標ルート長
         difficulty: 難易度 ('easy', 'normal', 'hard')
+        rng: 乱数インスタンス（省略時は新規生成）
 
     Returns:
         用語IDのリスト（ルート）。目標長に届かない可能性あり。
     """
+    if rng is None:
+        rng = random.Random()
+
     max_tier, allowed_difficulties = get_difficulty_filter(difficulty)
 
     route = [start_term_id]
@@ -164,7 +171,7 @@ def _random_walk(
             if non_dead:
                 candidates = non_dead
 
-        next_term = random.choice(candidates)
+        next_term = rng.choice(candidates)
         route.append(next_term)
         visited.add(next_term)
 
@@ -175,7 +182,8 @@ def _try_from_start(
     start_term_id: int,
     target_length: int,
     difficulty: str = 'hard',
-    max_retries: int = 10
+    max_retries: int = 10,
+    rng: Optional[random.Random] = None
 ) -> List[int]:
     """
     同じスタート地点からリトライしてルート生成を試みる（内部用）
@@ -187,14 +195,18 @@ def _try_from_start(
         target_length: 目標ルート長
         difficulty: 難易度 ('easy', 'normal', 'hard')
         max_retries: 最大リトライ回数（デフォルト10）
+        rng: 乱数インスタンス（省略時は新規生成）
 
     Returns:
         用語IDのリスト（ルート）
     """
+    if rng is None:
+        rng = random.Random()
+
     best_route = []
 
     for _ in range(max_retries):
-        route = _random_walk(start_term_id, target_length, difficulty)
+        route = _random_walk(start_term_id, target_length, difficulty, rng=rng)
 
         if len(route) >= target_length:
             return route
@@ -229,19 +241,18 @@ def generate_route(
     Returns:
         用語IDのリスト（ルート）
     """
-    if seed is not None:
-        random.seed(seed)
+    rng = random.Random(seed)
 
     best_route = []
 
     for _ in range(max_start_retries):
         # ランダムにスタート地点を選ぶ
-        start_term_id = select_random_start(difficulty)
+        start_term_id = select_random_start(difficulty, rng=rng)
 
         # 同じスタートでリトライ
         route = _try_from_start(
             start_term_id, target_length, difficulty,
-            max_retries=max_same_start_retries
+            max_retries=max_same_start_retries, rng=rng
         )
 
         if len(route) >= target_length:

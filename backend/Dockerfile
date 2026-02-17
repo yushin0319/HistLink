@@ -5,6 +5,7 @@ WORKDIR /app
 # システム依存パッケージのインストール
 RUN apt-get update && apt-get install -y \
     postgresql-client \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # 依存関係ファイルをコピー

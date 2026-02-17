@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # 依存関係ファイルをコピー
 COPY pyproject.toml .
 
-# Python依存関係のインストール（dev依存含む）
-RUN pip install --no-cache-dir -e ".[dev]"
+# Python依存関係のインストール
+RUN pip install --no-cache-dir .
 
 # アプリケーションコードをコピー
 COPY . .
@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 8000
 
 # Uvicornでアプリケーションを起動
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -6,9 +6,10 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from app.database import get_db
+from app.dependencies import verify_admin_token
 from app.services.cache import get_cache
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(verify_admin_token)])
 
 
 def refresh_cache():

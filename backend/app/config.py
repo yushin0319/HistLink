@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     db_port: int = 5432
     db_name: str = "histlink"
     db_user: str = "histlink_user"
-    db_password: str  # 必須。.env または環境変数で設定
+    db_password: str = ""
 
     # API
     api_v1_prefix: str = "/api/v1"

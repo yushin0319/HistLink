@@ -314,6 +314,28 @@ async def submit_game_result(
     if not game_row:
         raise HTTPException(status_code=404, detail="Game not found")
 
+    # --- サーバーサイド検証 ---
+    total_steps = len(game_row.terms) - 1 if game_row.terms else 0
+
+    # cleared_steps は 0 〜 total_steps の範囲
+    if not (0 <= request.cleared_steps <= total_steps):
+        raise HTTPException(status_code=400, detail="Invalid cleared_steps")
+
+    # final_lives は 0 〜 3 の範囲（初期ライフ3）
+    if not (0 <= request.final_lives <= 3):
+        raise HTTPException(status_code=400, detail="Invalid final_lives")
+
+    # cleared_steps + ミス回数 <= total_steps（答えた問題数が総問題数を超えない）
+    false_count = len(request.false_steps)
+    if request.cleared_steps + false_count > total_steps:
+        raise HTTPException(status_code=400, detail="Invalid step counts")
+
+    # final_score は 0 以上、かつ妥当な上限
+    # スコア上限: 各正解の最大タイマー残り20秒 × cleared_steps × 難易度係数(最大3)
+    max_possible_score = request.cleared_steps * 20 * 3
+    if not (0 <= request.final_score <= max_possible_score):
+        raise HTTPException(status_code=400, detail="Invalid score")
+
     # ゲーム結果をDBに保存
     db.execute(
         text("""
@@ -336,9 +358,6 @@ async def submit_game_result(
         }
     )
     db.commit()
-
-    # total_steps = エッジ数 = termsの長さ - 1
-    total_steps = len(game_row.terms) - 1 if game_row.terms else 0
 
     # ランキング情報を取得（問題数でフィルタリング）
     rankings, my_rank = get_rankings_and_my_rank(

@@ -4,18 +4,15 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: histlink-postgres
+    env_file: .env
     environment:
       POSTGRES_DB: histlink
-      POSTGRES_USER: histlink_user
-      POSTGRES_PASSWORD: histlink_dev_password
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U histlink_user -d histlink"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-histlink_user} -d histlink"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,12 +22,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: histlink-backend
-    environment:
-      DATABASE_URL: postgresql://histlink_user:histlink_dev_password@postgres:5432/histlink
+    env_file: .env
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -41,14 +35,11 @@ services:
       dockerfile: Dockerfile
     container_name: histlink-frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "80:80"
     depends_on:
       - backend
     environment:
-      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_API_BASE_URL=http://backend:8000
 
 volumes:
   postgres_data:

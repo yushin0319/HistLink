@@ -1,18 +1,21 @@
-FROM node:20-slim
+FROM node:20-slim AS build
 
 WORKDIR /app
 
-# package.jsonとpackage-lock.jsonをコピー
 COPY package*.json ./
 
-# 依存関係のインストール
-RUN npm install
+RUN npm ci
 
-# アプリケーションコードをコピー
 COPY . .
 
-# ポート5173を公開（Viteのデフォルト）
-EXPOSE 5173
+RUN npm run build
 
-# Vite dev serverを起動（ホストを0.0.0.0に設定）
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+FROM nginx:alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

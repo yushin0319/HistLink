@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     project_name: str = "HistLink API"
 
     # CORS
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: list[str] = ["http://localhost", "http://localhost:5173"]
 
     class Config:
         env_file = ".env"

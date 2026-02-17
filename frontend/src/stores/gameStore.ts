@@ -44,6 +44,7 @@ interface GameState {
   showEdge: boolean; // エッジ説明を表示するか
   lastEdgeKeyword: string; // 最後に表示したエッジのキーワード
   lastEdgeExplanation: string; // 最後に表示したエッジの説明
+  isTimedOut: boolean; // タイムアウトによる失敗かどうか
 
   // アクション
   setPlayerName: (name: string) => void;
@@ -92,6 +93,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   showEdge: false,
   lastEdgeKeyword: '',
   lastEdgeExplanation: '',
+  isTimedOut: false,
 
   // プレイヤー名を設定
   setPlayerName: (name) => {
@@ -177,6 +179,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       showEdge,
       lastEdgeKeyword,
       lastEdgeExplanation,
+      isTimedOut: false,
     });
   },
 
@@ -218,6 +221,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         selectedAnswerId: null,
         isLastAnswerCorrect: null,
         showEdge: false,
+        isTimedOut: false,
       });
       return;
     }
@@ -238,6 +242,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         showEdge,
         lastEdgeKeyword,
         lastEdgeExplanation,
+        isTimedOut: false,
       });
       return;
     }
@@ -255,6 +260,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       showEdge,
       lastEdgeKeyword,
       lastEdgeExplanation,
+      isTimedOut: false,
     });
   },
 
@@ -278,6 +284,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         selectedAnswerId: correctNextId, // 正解を緑背景で表示
         isLastAnswerCorrect: false, // タイムアウトは不正解扱い
         showEdge: false, // タイムアウト時はedge表示なし
+        isTimedOut: true,
       });
       return;
     }
@@ -312,6 +319,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       showEdge: false,
       lastEdgeKeyword: '',
       lastEdgeExplanation: '',
+      isTimedOut: false,
     });
   },
 }));

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Box, Container, Typography, Grid } from '@mui/material';
+import { Box, Button, Container, Typography, Grid } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
 import { startGameSession } from '../services/gameApi';
 import GameCard from '../components/GameCard';
@@ -17,6 +17,7 @@ export default function GamePage() {
     currentStage,
     remainingTime,
     isPlaying,
+    isTimedOut,
     steps,
     gameId,
     showEdge,
@@ -29,11 +30,18 @@ export default function GamePage() {
     answerQuestion,
     completeFeedbackPhase,
     decrementTimer,
+    resetGame,
   } = useGameStore();
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const hasInitialized = useRef(false);
+
+  const handleRetry = () => {
+    hasInitialized.current = false;
+    setRetryCount((c) => c + 1);
+  };
 
   // feedbackPhaseが開始されたら0.5秒後にcompleteFeedbackPhaseを呼び出す
   useEffect(() => {
@@ -89,7 +97,7 @@ export default function GamePage() {
     };
 
     initGame();
-  }, [difficulty, totalStages, gameId, loadGameData, startGame]);
+  }, [difficulty, totalStages, gameId, loadGameData, startGame, retryCount]);
 
   // タイマー管理（0.1秒ごと）
   useEffect(() => {
@@ -134,9 +142,20 @@ export default function GamePage() {
           justifyContent: 'center',
         }}
       >
-        <Typography variant="h5" color="error">
-          {error}
-        </Typography>
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography variant="h6" color="error" gutterBottom>
+            エラーが発生しました
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            データの読み込みに失敗しました。
+          </Typography>
+          <Button variant="contained" onClick={handleRetry} sx={{ mr: 1 }}>
+            リトライ
+          </Button>
+          <Button variant="outlined" onClick={resetGame}>
+            ホームに戻る
+          </Button>
+        </Box>
       </Box>
     );
   }
@@ -199,6 +218,18 @@ export default function GamePage() {
             description={currentStep.term.description}
           />
         </Box>
+
+        {/* タイムアウト表示 */}
+        {isFeedbackPhase && isTimedOut && (
+          <Typography
+            variant="h5"
+            color="error"
+            align="center"
+            sx={{ mb: 1, fontWeight: 'bold' }}
+          >
+            時間切れ！
+          </Typography>
+        )}
 
         {/* 選択肢（2×2グリッド） */}
         {currentStep.choices.length > 0 && (

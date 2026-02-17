@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
     project_name: str = "HistLink API"
 
-    # CORS
+    # CORS（環境変数 CORS_ORIGINS で上書き可能。JSON配列形式: '["http://localhost","https://example.com"]'）
     cors_origins: list[str] = ["http://localhost", "http://localhost:5173"]
 
     class Config:

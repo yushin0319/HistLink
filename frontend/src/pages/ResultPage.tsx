@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Box, Container, Button, Fade } from '@mui/material';
+import { Box, Container, Button, Fade, CircularProgress, Snackbar, Alert } from '@mui/material';
 import ResultHeader from '../components/ResultHeader';
 import RankingTable from '../components/RankingTable';
 import RouteReviewModal from '../components/RouteReviewModal';
@@ -57,6 +57,7 @@ export default function ResultPage() {
   const [score, setScore] = useState(initialScore);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const [showContent, setShowContent] = useState(false); // ライフ換金完了後にtrue
+  const [submitError, setSubmitError] = useState(false); // 結果送信エラー通知
   const hasSubmittedResult = useRef(false);
 
   // ゲーム結果送信（マウント時に1回だけ）
@@ -94,6 +95,7 @@ export default function ResultPage() {
       } catch (err) {
         console.error('結果送信エラー:', err);
         hasSubmittedResult.current = false; // リトライ可能にする
+        setSubmitError(true);
       }
     };
 
@@ -223,17 +225,23 @@ export default function ResultPage() {
         {/* ランキング（ライフ換金完了後にフェードイン） */}
         <Fade in={showContent} timeout={500}>
           <Box sx={{ mt: 2 }}>
-            <RankingTable
-              totalStages={totalStages}
-              currentUserScore={score}
-              currentUserRank={myRank ?? 1}
-              rankings={rankings}
-              overallRankings={overallRankings}
-              overallMyRank={overallMyRank ?? 1}
-              gameId={gameId ?? ''}
-              onNameChange={handleNameChange}
-              onShowRoute={() => setIsRouteModalOpen(true)}
-            />
+            {myRank === null ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <RankingTable
+                totalStages={totalStages}
+                currentUserScore={score}
+                currentUserRank={myRank}
+                rankings={rankings}
+                overallRankings={overallRankings}
+                overallMyRank={overallMyRank ?? 1}
+                gameId={gameId ?? ''}
+                onNameChange={handleNameChange}
+                onShowRoute={() => setIsRouteModalOpen(true)}
+              />
+            )}
           </Box>
         </Fade>
 
@@ -270,6 +278,18 @@ export default function ResultPage() {
           falseSteps={falseSteps}
         />
       </Container>
+
+      {/* 結果送信エラー通知 */}
+      <Snackbar
+        open={submitError}
+        autoHideDuration={6000}
+        onClose={() => setSubmitError(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="error" onClose={() => setSubmitError(false)}>
+          結果の保存に失敗しました。リロードして再度お試しください。
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

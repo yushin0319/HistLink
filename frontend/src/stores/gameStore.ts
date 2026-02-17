@@ -287,8 +287,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   // ゲームリセット
   resetGame: () => {
+    const currentName = get().playerName;
     set({
-      playerName: DEFAULT_PLAYER_NAME,
+      playerName: currentName,
       difficulty: 'normal',
       totalStages: 10,
       pendingStart: false,

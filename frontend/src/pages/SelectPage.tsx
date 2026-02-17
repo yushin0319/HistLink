@@ -18,7 +18,11 @@ const stageLabels: Record<TotalStages, string> = {
   50: '50問',
 };
 
-export default function SelectPage() {
+interface SelectPageProps {
+  onShowRule?: () => void;
+}
+
+export default function SelectPage({ onShowRule }: SelectPageProps) {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('normal');
   const [selectedStages, setSelectedStages] = useState<TotalStages>(10);
   const { requestStartGame } = useGameStore();
@@ -188,6 +192,20 @@ export default function SelectPage() {
         >
           スタート
         </Button>
+
+        {/* あそびかたリンク */}
+        {onShowRule && (
+          <Box sx={{ mt: 2 }}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={onShowRule}
+              sx={{ color: 'text.secondary', fontSize: '0.875rem' }}
+            >
+              あそびかた
+            </Button>
+          </Box>
+        )}
       </Box>
       </Container>
     </Box>

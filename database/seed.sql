@@ -1566,3 +1566,8 @@ INSERT INTO edges (id, term_a, term_b, difficulty, keyword, description) VALUES 
 INSERT INTO edges (id, term_a, term_b, difficulty, keyword, description) VALUES (957, 15, 16, 'easy', 'ユダヤ教の聖典', '唯一神ヤハウェへの信仰と選民の歴史を記した聖典');
 INSERT INTO edges (id, term_a, term_b, difficulty, keyword, description) VALUES (958, 23, 32, 'easy', '市民の政治参加', '市民が民会で直接政治に参加する統治形態の原型が生まれた');
 INSERT INTO edges (id, term_a, term_b, difficulty, keyword, description) VALUES (959, 46, 54, 'easy', '共和政の成文法', '平民と貴族の法的平等を定めたローマ最古の成文法');
+
+-- IDENTITYシーケンスをシードデータの最大IDに合わせてリセット
+-- これにより次のINSERT（id省略時）がシードデータと衝突しなくなる
+SELECT setval(pg_get_serial_sequence('terms', 'id'), (SELECT MAX(id) FROM terms));
+SELECT setval(pg_get_serial_sequence('edges', 'id'), (SELECT MAX(id) FROM edges));

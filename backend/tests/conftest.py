@@ -2,7 +2,7 @@
 import os
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
@@ -21,11 +21,31 @@ engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
+def is_db_available() -> bool:
+    """DB接続チェック（テスト起動時に一度だけ実行）"""
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return True
+    except Exception:
+        return False
+
+
+# DB依存テストのskipマーカー。DB未起動環境ではDB不要テストのみ実行される。
+requires_db = pytest.mark.skipif(
+    not is_db_available(),
+    reason="Database not available"
+)
+
+
 @pytest.fixture(scope="session", autouse=True)
 def init_cache():
-    """テスト開始前にキャッシュを初期化"""
-    cache = get_cache()
-    print(f"[Test Setup] Cache initialized: {len(cache.terms)} terms, {len(cache.edges)} edges")
+    """テスト開始前にキャッシュを初期化（DB未起動時はスキップ）"""
+    try:
+        cache = get_cache()
+        print(f"[Test Setup] Cache initialized: {len(cache.terms)} terms, {len(cache.edges)} edges")
+    except Exception as e:
+        print(f"[Test Setup] Cache init skipped (DB unavailable): {e}")
 
 
 @pytest.fixture(scope="session")

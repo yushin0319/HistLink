@@ -1,80 +1,55 @@
 """Admin API endpoints for HistLink Studio"""
-from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 
 from app.database import get_db
 from app.dependencies import verify_admin_token
+from app.schemas.admin import (
+    TermCreate,
+    TermUpdate,
+    TermResponse,
+    EdgeCreate,
+    EdgeUpdate,
+    EdgeResponse,
+    PaginatedResponse,
+)
 from app.services.cache import get_cache
 
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(verify_admin_token)])
+
+# Sort column allowlists: query param name -> actual SQL column reference
+_TERM_SORT_COLUMNS: dict[str, str] = {
+    "id": "id",
+    "name": "name",
+    "category": "category",
+    "tier": "tier",
+}
+_EDGE_SORT_COLUMNS: dict[str, str] = {
+    "id": "e.id",
+    "keyword": "e.keyword",
+    "difficulty": "e.difficulty",
+}
+_GAME_SORT_COLUMNS: dict[str, str] = {
+    "id": "id",
+    "score": "score",
+    "created_at": "created_at",
+    "difficulty": "difficulty",
+}
+
+
+def build_order_clause(sort_by: str, order: str, allowed: dict[str, str]) -> str:
+    """Validate sort_by against allowlist and return ORDER BY clause."""
+    if sort_by not in allowed:
+        raise HTTPException(status_code=400, detail=f"Invalid sort field: {sort_by}")
+    direction = "DESC" if order.upper() == "DESC" else "ASC"
+    return f"ORDER BY {allowed[sort_by]} {direction}"
 
 
 def refresh_cache():
     """Refresh the data cache after CRUD operations"""
     cache = get_cache()
     cache.load_from_db()
-
-
-# ========== Schemas ==========
-
-class TermBase(BaseModel):
-    name: str
-    category: str
-    description: str = ""
-    tier: int = 1
-
-
-class TermCreate(TermBase):
-    id: Optional[int] = None
-
-
-class TermUpdate(TermBase):
-    pass
-
-
-class TermResponse(TermBase):
-    id: int
-
-    class Config:
-        from_attributes = True
-
-
-class EdgeBase(BaseModel):
-    from_term_id: int
-    to_term_id: int
-    keyword: str = ""
-    description: str = ""
-    difficulty: str = "normal"
-
-
-class EdgeCreate(EdgeBase):
-    id: Optional[int] = None
-
-
-class EdgeUpdate(EdgeBase):
-    pass
-
-
-class EdgeResponse(BaseModel):
-    id: int
-    from_term_id: int
-    to_term_id: int
-    from_term_name: str
-    to_term_name: str
-    keyword: str
-    description: str
-    difficulty: str
-
-    class Config:
-        from_attributes = True
-
-
-class PaginatedResponse(BaseModel):
-    items: list
-    total: int
 
 
 # ========== Terms CRUD ==========
@@ -105,22 +80,15 @@ async def list_terms(
     db: Session = Depends(get_db),
 ):
     """Get paginated list of terms"""
-    # Validate sort column
-    allowed_sort = {"id", "name", "category", "tier"}
-    if sort_by not in allowed_sort:
-        sort_by = "id"
+    order_clause = build_order_clause(sort_by, sort_order, _TERM_SORT_COLUMNS)
 
-    order = "DESC" if sort_order.lower() == "desc" else "ASC"
-
-    # Get total count
     count_result = db.execute(text("SELECT COUNT(*) FROM terms"))
     total = count_result.scalar()
 
-    # Get paginated items
     query = text(f"""
         SELECT id, name, tier, category, description
         FROM terms
-        ORDER BY {sort_by} {order}
+        {order_clause}
         LIMIT :limit OFFSET :skip
     """)
     result = db.execute(query, {"limit": limit, "skip": skip})
@@ -133,7 +101,6 @@ async def list_terms(
             "tier": row[2],
             "category": row[3],
             "description": row[4],
-            "difficulty": "easy" if row[2] == 1 else "hard" if row[2] == 3 else "normal",
         }
         for row in rows
     ]
@@ -157,7 +124,6 @@ async def get_term(term_id: int, db: Session = Depends(get_db)):
         "tier": row[2],
         "category": row[3],
         "description": row[4],
-        "difficulty": "easy" if row[2] == 1 else "hard" if row[2] == 3 else "normal",
     }
 
 
@@ -195,23 +161,14 @@ async def get_term_edges(term_id: int, db: Session = Depends(get_db)):
 @router.post("/terms", response_model=TermResponse)
 async def create_term(term: TermCreate, db: Session = Depends(get_db)):
     """Create a new term"""
-    # Map difficulty to tier
     tier = 1 if term.tier == 1 else 3 if term.tier == 3 else 2
 
-    # Get next ID if not provided
-    if term.id is None:
-        max_id_result = db.execute(text("SELECT COALESCE(MAX(id), 0) + 1 FROM terms"))
-        term_id = max_id_result.scalar()
-    else:
-        term_id = term.id
-
     query = text("""
-        INSERT INTO terms (id, name, tier, category, description)
-        VALUES (:id, :name, :tier, :category, :description)
+        INSERT INTO terms (name, tier, category, description)
+        VALUES (:name, :tier, :category, :description)
         RETURNING id, name, tier, category, description
     """)
     result = db.execute(query, {
-        "id": term_id,
         "name": term.name,
         "tier": tier,
         "category": term.category,
@@ -269,12 +226,10 @@ async def update_term(term_id: int, term: TermUpdate, db: Session = Depends(get_
 @router.delete("/terms/{term_id}")
 async def delete_term(term_id: int, db: Session = Depends(get_db)):
     """Delete a term"""
-    # Check if term exists
     check = db.execute(text("SELECT id FROM terms WHERE id = :id"), {"id": term_id})
     if not check.fetchone():
         raise HTTPException(status_code=404, detail="Term not found")
 
-    # Delete related edges first
     db.execute(text("DELETE FROM edges WHERE term_a = :id OR term_b = :id"), {"id": term_id})
     db.execute(text("DELETE FROM terms WHERE id = :id"), {"id": term_id})
     db.commit()
@@ -315,17 +270,11 @@ async def list_edges(
     db: Session = Depends(get_db),
 ):
     """Get paginated list of edges with term names"""
-    allowed_sort = {"id", "keyword", "difficulty"}
-    if sort_by not in allowed_sort:
-        sort_by = "id"
+    order_clause = build_order_clause(sort_by, sort_order, _EDGE_SORT_COLUMNS)
 
-    order = "DESC" if sort_order.lower() == "desc" else "ASC"
-
-    # Get total count
     count_result = db.execute(text("SELECT COUNT(*) FROM edges"))
     total = count_result.scalar()
 
-    # Get paginated items with term names
     query = text(f"""
         SELECT
             e.id, e.term_a, e.term_b, e.keyword, e.description, e.difficulty,
@@ -333,7 +282,7 @@ async def list_edges(
         FROM edges e
         JOIN terms t1 ON e.term_a = t1.id
         JOIN terms t2 ON e.term_b = t2.id
-        ORDER BY e.{sort_by} {order}
+        {order_clause}
         LIMIT :limit OFFSET :skip
     """)
     result = db.execute(query, {"limit": limit, "skip": skip})
@@ -389,28 +338,19 @@ async def get_edge(edge_id: int, db: Session = Depends(get_db)):
 @router.post("/edges", response_model=EdgeResponse)
 async def create_edge(edge: EdgeCreate, db: Session = Depends(get_db)):
     """Create a new edge"""
-    # Ensure term_a < term_b (DB constraint)
     term_a = min(edge.from_term_id, edge.to_term_id)
     term_b = max(edge.from_term_id, edge.to_term_id)
 
     if term_a == term_b:
         raise HTTPException(status_code=400, detail="Cannot create edge between same terms")
 
-    # Get next ID if not provided
-    if edge.id is None:
-        max_id_result = db.execute(text("SELECT COALESCE(MAX(id), 0) + 1 FROM edges"))
-        edge_id = max_id_result.scalar()
-    else:
-        edge_id = edge.id
-
     query = text("""
-        INSERT INTO edges (id, term_a, term_b, keyword, description, difficulty)
-        VALUES (:id, :term_a, :term_b, :keyword, :description, :difficulty)
+        INSERT INTO edges (term_a, term_b, keyword, description, difficulty)
+        VALUES (:term_a, :term_b, :keyword, :description, :difficulty)
         RETURNING id
     """)
     try:
         result = db.execute(query, {
-            "id": edge_id,
             "term_a": term_a,
             "term_b": term_b,
             "keyword": edge.keyword,
@@ -422,9 +362,9 @@ async def create_edge(edge: EdgeCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
 
+    edge_id = result.fetchone()[0]
     refresh_cache()
 
-    # Fetch created edge with term names
     return await get_edge(edge_id, db)
 
 
@@ -486,22 +426,16 @@ async def list_games(
     db: Session = Depends(get_db),
 ):
     """Get paginated list of games"""
-    allowed_sort = {"id", "score", "created_at", "difficulty"}
-    if sort_by not in allowed_sort:
-        sort_by = "created_at"
+    order_clause = build_order_clause(sort_by, sort_order, _GAME_SORT_COLUMNS)
 
-    order = "DESC" if sort_order.lower() == "desc" else "ASC"
-
-    # Get total count
     count_result = db.execute(text("SELECT COUNT(*) FROM games"))
     total = count_result.scalar()
 
-    # Get paginated items
     query = text(f"""
         SELECT id, difficulty, score, array_length(terms, 1) as total_stages,
                cleared_steps, lives, user_name, created_at
         FROM games
-        ORDER BY {sort_by} {order}
+        {order_clause}
         LIMIT :limit OFFSET :skip
     """)
     result = db.execute(query, {"limit": limit, "skip": skip})

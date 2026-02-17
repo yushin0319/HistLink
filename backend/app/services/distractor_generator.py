@@ -44,8 +44,7 @@ def generate_distractors(
     Returns:
         ダミー用語IDのリスト
     """
-    if seed is not None:
-        random.seed(seed)
+    rng = random.Random(seed)
 
     # 難易度に応じたTier範囲を決定
     if difficulty == 'easy':
@@ -84,4 +83,4 @@ def generate_distractors(
     if len(candidates) <= count:
         return candidates
     else:
-        return random.sample(candidates, count)
+        return rng.sample(candidates, count)

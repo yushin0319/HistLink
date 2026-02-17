@@ -1,6 +1,6 @@
 """FastAPI application entry point"""
 from contextlib import asynccontextmanager
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -59,4 +59,4 @@ async def health(db: Session = Depends(get_db)):
         db.execute(text("SELECT 1"))
         return {"status": "healthy", "database": "connected"}
     except Exception:
-        return {"status": "unhealthy", "database": "disconnected"}
+        raise HTTPException(status_code=503, detail="Database connection failed")

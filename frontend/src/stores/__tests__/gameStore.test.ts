@@ -537,7 +537,7 @@ describe('gameStore', () => {
         { rank: 2, user_name: 'はなこ', score: 1700, cleared_steps: 10 },
       ];
 
-      setRankingData(1, rankings);
+      setRankingData(1, rankings, 1, []);
       const state = useGameStore.getState();
 
       expect(state.myRank).toBe(1);
@@ -551,13 +551,13 @@ describe('gameStore', () => {
       const initialRankings = [
         { rank: 1, user_name: 'たろう', score: 1800, cleared_steps: 10 },
       ];
-      setRankingData(2, initialRankings);
+      setRankingData(2, initialRankings, 2, []);
 
       const updatedRankings = [
         { rank: 1, user_name: '新トップ', score: 2000, cleared_steps: 10 },
         { rank: 2, user_name: 'たろう', score: 1800, cleared_steps: 10 },
       ];
-      setRankingData(1, updatedRankings);
+      setRankingData(1, updatedRankings, 1, []);
       const state = useGameStore.getState();
 
       expect(state.myRank).toBe(1);

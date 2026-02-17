@@ -1,9 +1,12 @@
 """FastAPI application entry point"""
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.database import get_db
 from app.routes import games, admin
 # routes.py は routesテーブル依存のため削除
 from app.services.cache import get_cache
@@ -50,6 +53,10 @@ async def root():
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])
-async def health():
-    """Health check endpoint"""
-    return {"status": "healthy"}
+async def health(db: Session = Depends(get_db)):
+    """Health check endpoint（DB疎通確認付き）"""
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "healthy", "database": "connected"}
+    except Exception:
+        return {"status": "unhealthy", "database": "disconnected"}

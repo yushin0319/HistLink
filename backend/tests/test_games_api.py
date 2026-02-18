@@ -178,7 +178,7 @@ class TestGameResult:
         game_id = start_response.json()["game_id"]
 
         # 結果送信（base_score: タイマーベースの素点、ライフボーナスはサーバーが計算）
-        # hard: max_base_score = cleared_steps * 20 * 3 = 8 * 60 = 480
+        # max_base_score = cleared_steps * 200 = 8 * 200 = 1600
         # サーバー計算: final_score = 400 + 2 * 300 = 1000
         response = client.post(
             f"/api/v1/games/{game_id}/result",
@@ -240,7 +240,7 @@ class TestGameResult:
         game_id = start_response.json()["game_id"]
 
         # カスタム名で結果送信
-        # hard: max_base_score = 3 * 20 * 3 = 180
+        # max_base_score = 3 * 200 = 600
         response = client.post(
             f"/api/v1/games/{game_id}/result",
             json={
@@ -294,7 +294,7 @@ class TestGameUpdate:
         game_id = start_response.json()["game_id"]
 
         # 結果送信（GUESTで）
-        # hard: max_base_score = 5 * 20 * 3 = 300
+        # max_base_score = 5 * 200 = 1000
         # サーバー計算: final_score = 300 + 3 * 300 = 1200
         client.post(
             f"/api/v1/games/{game_id}/result",
@@ -367,7 +367,7 @@ class TestOverallRanking:
         )
         game_id = start_response.json()["game_id"]
 
-        # normal: max_base_score = 5 * 20 * 2 = 200
+        # max_base_score = 5 * 200 = 1000
         client.post(
             f"/api/v1/games/{game_id}/result",
             json={
@@ -400,7 +400,7 @@ class TestOverallRanking:
     def test_get_overall_ranking_with_multiple_games(self, client, db_session):
         """複数のゲームがある状態で全体ランキングを取得"""
         # 複数のゲームを作成
-        # normal: max_base_score = 5 * 20 * 2 = 200
+        # max_base_score = 5 * 200 = 1000
         # サーバー計算: final_score = base_score + 3 * 200 = base_score + 600
         base_scores = [200, 150, 100, 50]
         for i, base_score in enumerate(base_scores):

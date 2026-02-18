@@ -26,7 +26,6 @@ import random
 router = APIRouter(prefix="/games", tags=["games"])
 
 RANKING_LIMIT = 10  # 上位何件を返すか
-DIFFICULTY_MULTIPLIER = {"easy": 1, "normal": 2, "hard": 3}
 LIFE_BONUS = {"easy": 100, "normal": 200, "hard": 300}
 
 
@@ -334,9 +333,9 @@ async def submit_game_result(
     if request.cleared_steps + false_count > total_steps:
         raise HTTPException(status_code=400, detail="Invalid step counts")
 
-    # base_score は 0 以上、かつ妥当な上限（難易度に応じた厳密な検証）
-    multiplier = DIFFICULTY_MULTIPLIER[difficulty]
-    max_base_score = request.cleared_steps * 20 * multiplier
+    # base_score は 0 以上、かつ妥当な上限
+    # フロントエンドは1ステップあたり最大200点（残り時間=MAX_TIME=200）
+    max_base_score = request.cleared_steps * 200
     if not (0 <= request.base_score <= max_base_score):
         raise HTTPException(status_code=400, detail="Invalid score")
 

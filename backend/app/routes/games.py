@@ -26,6 +26,8 @@ import random
 router = APIRouter(prefix="/games", tags=["games"])
 
 RANKING_LIMIT = 10  # 上位何件を返すか
+DIFFICULTY_MULTIPLIER = {"easy": 1, "normal": 2, "hard": 3}
+LIFE_BONUS = {"easy": 100, "normal": 200, "hard": 300}
 
 
 def get_rankings_and_my_rank(
@@ -299,10 +301,10 @@ async def submit_game_result(
     db: Session = Depends(get_db)
 ):
     """
-    ゲーム結果を送信（フロントエンド主体設計）
+    ゲーム結果を送信
 
-    フロントエンドで全てのゲームロジックを実行した後、
-    最終スコア・残りライフ・クリア状況をバックエンドに送信してDBを更新する。
+    フロントエンドからタイマーベースの素点（base_score）と結果データを受け取り、
+    ライフボーナスの計算はサーバー側で行ってDBに保存する。
     """
     # ゲームが存在するか確認し、難易度とルート情報を取得
     game_result = db.execute(
@@ -313,6 +315,8 @@ async def submit_game_result(
 
     if not game_row:
         raise HTTPException(status_code=404, detail="Game not found")
+
+    difficulty = game_row.difficulty
 
     # --- サーバーサイド検証 ---
     total_steps = len(game_row.terms) - 1 if game_row.terms else 0
@@ -330,12 +334,15 @@ async def submit_game_result(
     if request.cleared_steps + false_count > total_steps:
         raise HTTPException(status_code=400, detail="Invalid step counts")
 
-    # final_score は 0 以上、かつ妥当な上限
-    # スコア上限: 各正解の最大タイマー残り20秒 × cleared_steps × 難易度係数(最大3) + ライフボーナス(最大3×300)
-    max_life_bonus = 3 * 300
-    max_possible_score = request.cleared_steps * 20 * 3 + max_life_bonus
-    if not (0 <= request.final_score <= max_possible_score):
+    # base_score は 0 以上、かつ妥当な上限（難易度に応じた厳密な検証）
+    multiplier = DIFFICULTY_MULTIPLIER[difficulty]
+    max_base_score = request.cleared_steps * 20 * multiplier
+    if not (0 <= request.base_score <= max_base_score):
         raise HTTPException(status_code=400, detail="Invalid score")
+
+    # サーバー側でライフボーナスを計算し、最終スコアを確定
+    life_bonus = request.final_lives * LIFE_BONUS[difficulty]
+    final_score = request.base_score + life_bonus
 
     # ゲーム結果をDBに保存
     db.execute(
@@ -351,7 +358,7 @@ async def submit_game_result(
         """),
         {
             "game_id": str(game_id),
-            "score": request.final_score,
+            "score": final_score,
             "lives": request.final_lives,
             "cleared_steps": request.cleared_steps,
             "user_name": request.user_name,
@@ -362,14 +369,14 @@ async def submit_game_result(
 
     # ランキング情報を取得（問題数でフィルタリング）
     rankings, my_rank = get_rankings_and_my_rank(
-        db, total_steps, request.final_score
+        db, total_steps, final_score
     )
 
     return GameResultResponse(
         game_id=game_id,
-        difficulty=game_row.difficulty,
+        difficulty=difficulty,
         total_steps=total_steps,
-        final_score=request.final_score,
+        final_score=final_score,
         final_lives=request.final_lives,
         cleared_steps=request.cleared_steps,
         user_name=request.user_name,

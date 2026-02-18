@@ -70,22 +70,18 @@ export default function ResultPage() {
         // cleared_steps: ゲームオーバーの場合はcurrentStage、クリアの場合はtotalStages
         const clearedSteps = isCompleted ? totalStages : currentStage;
 
-        // ライフ換金後のスコアを計算（表示と一致させる）
-        const bonusPerLife = BONUS_POINTS[difficulty];
-        const finalScore = initialScore + initialLives * bonusPerLife;
+        // 素点（ライフボーナスなし）を送信し、ライフボーナスはサーバーが計算
+        const stageResponse = await submitGameResult(gameId, {
+          base_score: initialScore,
+          final_lives: initialLives,
+          cleared_steps: clearedSteps,
+          user_name: playerName,
+          false_steps: falseSteps,
+        });
 
-        // X問ランキングと全体ランキングを並列で取得
-        const [stageResponse, overallResponse] = await Promise.all([
-          submitGameResult(gameId, {
-            final_score: finalScore,
-            final_lives: initialLives,
-            cleared_steps: clearedSteps,
-            user_name: playerName,
-            false_steps: falseSteps,
-          }),
-          getOverallRanking(finalScore),
-        ]);
-        // 両方のランキングデータをstoreに保存
+        // サーバーが確定したfinal_scoreで全体ランキングを取得
+        const overallResponse = await getOverallRanking(stageResponse.final_score);
+
         setRankingData(
           stageResponse.my_rank,
           stageResponse.rankings,

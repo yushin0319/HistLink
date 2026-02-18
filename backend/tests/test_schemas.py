@@ -83,7 +83,7 @@ class TestGameResultRequest:
     def test_default_values(self):
         """Test default values"""
         request = GameResultRequest(
-            final_score=100,
+            base_score=100,
             final_lives=3,
             cleared_steps=10,
         )
@@ -93,13 +93,13 @@ class TestGameResultRequest:
     def test_valid_request(self):
         """Test valid request with all fields"""
         request = GameResultRequest(
-            final_score=500,
+            base_score=500,
             final_lives=2,
             cleared_steps=15,
             user_name="Player1",
             false_steps=[2, 5, 8],
         )
-        assert request.final_score == 500
+        assert request.base_score == 500
         assert request.final_lives == 2
         assert request.cleared_steps == 15
         assert request.user_name == "Player1"
@@ -109,17 +109,17 @@ class TestGameResultRequest:
         """Test negative score is invalid"""
         with pytest.raises(ValidationError) as exc_info:
             GameResultRequest(
-                final_score=-1,
+                base_score=-1,
                 final_lives=3,
                 cleared_steps=10,
             )
-        assert "final_score" in str(exc_info.value)
+        assert "base_score" in str(exc_info.value)
 
     def test_negative_lives(self):
         """Test negative lives is invalid"""
         with pytest.raises(ValidationError) as exc_info:
             GameResultRequest(
-                final_score=100,
+                base_score=100,
                 final_lives=-1,
                 cleared_steps=10,
             )
@@ -129,7 +129,7 @@ class TestGameResultRequest:
         """Test negative cleared_steps is invalid"""
         with pytest.raises(ValidationError) as exc_info:
             GameResultRequest(
-                final_score=100,
+                base_score=100,
                 final_lives=3,
                 cleared_steps=-1,
             )
@@ -138,7 +138,7 @@ class TestGameResultRequest:
     def test_user_name_max_length(self):
         """Test user_name max length (20)"""
         request = GameResultRequest(
-            final_score=100,
+            base_score=100,
             final_lives=3,
             cleared_steps=10,
             user_name="A" * 20,
@@ -149,7 +149,7 @@ class TestGameResultRequest:
         """Test user_name exceeds max length"""
         with pytest.raises(ValidationError) as exc_info:
             GameResultRequest(
-                final_score=100,
+                base_score=100,
                 final_lives=3,
                 cleared_steps=10,
                 user_name="A" * 21,

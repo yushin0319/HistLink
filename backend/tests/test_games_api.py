@@ -177,11 +177,13 @@ class TestGameResult:
         )
         game_id = start_response.json()["game_id"]
 
-        # 結果送信
+        # 結果送信（base_score: タイマーベースの素点、ライフボーナスはサーバーが計算）
+        # hard: max_base_score = cleared_steps * 20 * 3 = 8 * 60 = 480
+        # サーバー計算: final_score = 400 + 2 * 300 = 1000
         response = client.post(
             f"/api/v1/games/{game_id}/result",
             json={
-                "final_score": 1500,
+                "base_score": 400,
                 "final_lives": 2,
                 "cleared_steps": 8
             }
@@ -192,7 +194,7 @@ class TestGameResult:
         assert data["game_id"] == game_id
         assert data["difficulty"] == "hard"
         assert data["total_steps"] == 10  # target_length=10 → 11ノード → 10エッジ
-        assert data["final_score"] == 1500
+        assert data["final_score"] == 1000  # base_score(400) + life_bonus(2*300)
         assert data["final_lives"] == 2
         assert data["cleared_steps"] == 8
         assert data["user_name"] == "GUEST"  # デフォルト値
@@ -203,13 +205,13 @@ class TestGameResult:
         assert "rankings" in data
         assert isinstance(data["rankings"], list)
 
-        # DBが更新されていることを確認
+        # DBが更新されていることを確認（scoreはサーバー計算のfinal_score）
         from sqlalchemy import text
         game_result = db_session.execute(
             text("SELECT score, lives, cleared_steps, user_name FROM games WHERE id = :game_id"),
             {"game_id": game_id}
         ).fetchone()
-        assert game_result[0] == 1500    # score
+        assert game_result[0] == 1000    # final_score = 400 + 2*300
         assert game_result[1] == 2       # lives
         assert game_result[2] == 8       # cleared_steps
         assert game_result[3] == "GUEST" # user_name
@@ -220,7 +222,7 @@ class TestGameResult:
         response = client.post(
             f"/api/v1/games/{fake_uuid}/result",
             json={
-                "final_score": 1000,
+                "base_score": 100,
                 "final_lives": 1,
                 "cleared_steps": 5
             }
@@ -238,10 +240,11 @@ class TestGameResult:
         game_id = start_response.json()["game_id"]
 
         # カスタム名で結果送信
+        # hard: max_base_score = 3 * 20 * 3 = 180
         response = client.post(
             f"/api/v1/games/{game_id}/result",
             json={
-                "final_score": 500,
+                "base_score": 150,
                 "final_lives": 0,
                 "cleared_steps": 3,
                 "user_name": "TestPlayer"
@@ -291,10 +294,12 @@ class TestGameUpdate:
         game_id = start_response.json()["game_id"]
 
         # 結果送信（GUESTで）
+        # hard: max_base_score = 5 * 20 * 3 = 300
+        # サーバー計算: final_score = 300 + 3 * 300 = 1200
         client.post(
             f"/api/v1/games/{game_id}/result",
             json={
-                "final_score": 1000,
+                "base_score": 300,
                 "final_lives": 3,
                 "cleared_steps": 5
             }
@@ -309,7 +314,7 @@ class TestGameUpdate:
         assert response.status_code == 200
         data = response.json()
         assert data["user_name"] == "NewName"
-        assert data["final_score"] == 1000
+        assert data["final_score"] == 1200  # base_score(300) + life_bonus(3*300)
         assert data["final_lives"] == 3
 
         # ランキング情報が含まれている
@@ -362,10 +367,11 @@ class TestOverallRanking:
         )
         game_id = start_response.json()["game_id"]
 
+        # normal: max_base_score = 5 * 20 * 2 = 200
         client.post(
             f"/api/v1/games/{game_id}/result",
             json={
-                "final_score": 1000,
+                "base_score": 200,
                 "final_lives": 2,
                 "cleared_steps": 5,
                 "user_name": "Player1"
@@ -394,8 +400,10 @@ class TestOverallRanking:
     def test_get_overall_ranking_with_multiple_games(self, client, db_session):
         """複数のゲームがある状態で全体ランキングを取得"""
         # 複数のゲームを作成
-        scores = [2000, 1500, 1000, 500]
-        for i, score in enumerate(scores):
+        # normal: max_base_score = 5 * 20 * 2 = 200
+        # サーバー計算: final_score = base_score + 3 * 200 = base_score + 600
+        base_scores = [200, 150, 100, 50]
+        for i, base_score in enumerate(base_scores):
             start_response = client.post(
                 "/api/v1/games/start",
                 json={"difficulty": "normal", "target_length": 5}
@@ -405,17 +413,17 @@ class TestOverallRanking:
             client.post(
                 f"/api/v1/games/{game_id}/result",
                 json={
-                    "final_score": score,
+                    "base_score": base_score,
                     "final_lives": 3,
                     "cleared_steps": 5,
                     "user_name": f"Player{i+1}"
                 }
             )
 
-        # ランキング取得
+        # ランキング取得（final_scores: [800, 750, 700, 650]）
         response = client.get(
             "/api/v1/games/rankings/overall",
-            params={"my_score": 1200}
+            params={"my_score": 720}
         )
 
         assert response.status_code == 200

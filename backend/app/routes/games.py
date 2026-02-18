@@ -26,6 +26,8 @@ import random
 router = APIRouter(prefix="/games", tags=["games"])
 
 RANKING_LIMIT = 10  # 上位何件を返すか
+DIFFICULTY_MULTIPLIER = {"easy": 1, "normal": 2, "hard": 3}
+LIFE_BONUS = {"easy": 100, "normal": 200, "hard": 300}
 
 
 def get_rankings_and_my_rank(
@@ -304,10 +306,6 @@ async def submit_game_result(
     フロントエンドからタイマーベースの素点（base_score）と結果データを受け取り、
     ライフボーナスの計算はサーバー側で行ってDBに保存する。
     """
-    # 難易度ごとの定数
-    DIFFICULTY_MULTIPLIER = {"easy": 1, "normal": 2, "hard": 3}
-    LIFE_BONUS = {"easy": 100, "normal": 200, "hard": 300}
-
     # ゲームが存在するか確認し、難易度とルート情報を取得
     game_result = db.execute(
         text("SELECT id, difficulty, terms FROM games WHERE id = :game_id"),

@@ -25,7 +25,7 @@ class ChoiceResponse(BaseModel):
 
 class GameResultRequest(BaseModel):
     """ゲーム結果送信リクエスト"""
-    final_score: int = Field(ge=0)
+    base_score: int = Field(ge=0)  # タイマーベースの素点（ライフボーナス含まない）
     final_lives: int = Field(ge=0)
     cleared_steps: int = Field(ge=0)
     user_name: str = Field(default="GUEST", max_length=20)

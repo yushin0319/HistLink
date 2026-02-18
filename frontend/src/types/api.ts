@@ -31,7 +31,7 @@ export interface GameStartResponse {
 }
 
 export interface GameResultRequest {
-  final_score: number;
+  base_score: number;  // タイマーベースの素点（ライフボーナス含まない）
   final_lives: number;
   cleared_steps: number;
   user_name?: string;  // デフォルト: "GUEST"

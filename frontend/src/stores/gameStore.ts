@@ -226,14 +226,14 @@ export const useGameStore = create<GameState>((set, get) => ({
       return;
     }
 
-    // 最終ステージをクリアしたらゲーム完了
-    // totalStagesはstartGameで設定された値を使用（steps.length - 1）
-    // 最後のステップは回答不要（correct_next_id: null）なので、newStage >= totalStages でゲーム完了
-    if (isCorrect && newStage >= state.totalStages) {
+    // 最終ステージに達したらゲーム完了（正解・不正解問わず）
+    // 不正解でもゲームは進行するため、最後の問題を間違えても完了扱い
+    if (newStage >= state.totalStages) {
       set({
         score: newScore,
         lives: newLives,
-        currentStage: state.totalStages - 1, // 最終ステージ（COMPLETE表示用: currentStage + 1 === totalStages）
+        currentStage: state.totalStages - 1,
+        falseSteps: newFalseSteps,
         isPlaying: false,
         isCompleted: true,
         isFeedbackPhase: false,

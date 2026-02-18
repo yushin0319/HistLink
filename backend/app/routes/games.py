@@ -328,11 +328,13 @@ async def submit_game_result(
     if not (0 <= request.final_lives <= 3):
         raise HTTPException(status_code=400, detail="Invalid final_lives")
 
-    # cleared_steps + ミス回数 <= total_steps（答えた問題数が総問題数を超えない）
+    # false_steps の妥当性チェック
+    # cleared_stepsは到達ステージ、false_stepsはその中の不正解ステージ（サブセット）
     false_steps = request.false_steps or []
     false_count = len(false_steps)
-    if request.cleared_steps + false_count > total_steps:
-        raise HTTPException(status_code=400, detail="Invalid step counts")
+    for step_idx in false_steps:
+        if not (0 <= step_idx < total_steps):
+            raise HTTPException(status_code=400, detail="Invalid false_steps index")
 
     # base_score は 0 以上、かつ妥当な上限
     # フロントエンドは1ステップあたり最大200点（残り時間=MAX_TIME=200）

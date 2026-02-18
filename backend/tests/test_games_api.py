@@ -264,6 +264,58 @@ class TestGameResult:
         ).fetchone()
         assert game_result[0] == "TestPlayer"
 
+    def test_submit_result_with_false_steps(self, client, db_session):
+        """false_stepsを含むゲーム結果を正常に送信（cleared_steps + false_count > total_stepsでもOK）"""
+        # ゲーム開始（10問）
+        start_response = client.post(
+            "/api/v1/games/start",
+            json={"difficulty": "hard", "target_length": 10}
+        )
+        game_id = start_response.json()["game_id"]
+
+        # 10問中3問間違い（ステージ3, 6, 9で不正解）、ライフ0でゲームオーバー
+        # cleared_steps=9（ステージ9で最後のライフを失った）
+        # false_steps=[3, 6, 9]（3つ）
+        # 旧バリデーション: 9 + 3 = 12 > 10 → 400（誤判定）
+        # 新バリデーション: false_stepsの各値が0-9の範囲内 → OK
+        # base_score: 正解7問 × 最大200点 = 最大1400、100を送信
+        response = client.post(
+            f"/api/v1/games/{game_id}/result",
+            json={
+                "base_score": 100,
+                "final_lives": 0,
+                "cleared_steps": 9,
+                "false_steps": [3, 6, 9]
+            }
+        )
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["cleared_steps"] == 9
+        # ライフ0なのでボーナスなし
+        assert data["final_score"] == 100
+
+    def test_submit_result_invalid_false_steps_index(self, client, db_session):
+        """不正なfalse_stepsインデックスで400エラー"""
+        start_response = client.post(
+            "/api/v1/games/start",
+            json={"difficulty": "hard", "target_length": 10}
+        )
+        game_id = start_response.json()["game_id"]
+
+        # false_stepsに範囲外のインデックス（10は無効、0-9が有効）
+        response = client.post(
+            f"/api/v1/games/{game_id}/result",
+            json={
+                "base_score": 0,
+                "final_lives": 0,
+                "cleared_steps": 5,
+                "false_steps": [1, 10]
+            }
+        )
+
+        assert response.status_code == 400
+
     def test_game_start_no_terms_error(self, client, db_session, monkeypatch):
         """termがない場合は400エラー"""
         def mock_generate_route(target_length, difficulty='hard', seed=None, max_start_retries=10, max_same_start_retries=10):

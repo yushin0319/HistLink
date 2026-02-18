@@ -331,8 +331,9 @@ async def submit_game_result(
         raise HTTPException(status_code=400, detail="Invalid step counts")
 
     # final_score は 0 以上、かつ妥当な上限
-    # スコア上限: 各正解の最大タイマー残り20秒 × cleared_steps × 難易度係数(最大3)
-    max_possible_score = request.cleared_steps * 20 * 3
+    # スコア上限: 各正解の最大タイマー残り20秒 × cleared_steps × 難易度係数(最大3) + ライフボーナス(最大3×300)
+    max_life_bonus = 3 * 300
+    max_possible_score = request.cleared_steps * 20 * 3 + max_life_bonus
     if not (0 <= request.final_score <= max_possible_score):
         raise HTTPException(status_code=400, detail="Invalid score")
 

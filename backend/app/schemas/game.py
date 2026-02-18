@@ -29,7 +29,7 @@ class GameResultRequest(BaseModel):
     final_lives: int = Field(ge=0)
     cleared_steps: int = Field(ge=0)
     user_name: str = Field(default="GUEST", max_length=20)
-    false_steps: list[int] = Field(default_factory=list)  # 間違えたステージのインデックス配列
+    false_steps: Optional[list[int]] = Field(default_factory=list)  # 間違えたステージのインデックス配列
 
 
 class RankingEntry(BaseModel):

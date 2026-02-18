@@ -329,7 +329,8 @@ async def submit_game_result(
         raise HTTPException(status_code=400, detail="Invalid final_lives")
 
     # cleared_steps + ミス回数 <= total_steps（答えた問題数が総問題数を超えない）
-    false_count = len(request.false_steps)
+    false_steps = request.false_steps or []
+    false_count = len(false_steps)
     if request.cleared_steps + false_count > total_steps:
         raise HTTPException(status_code=400, detail="Invalid step counts")
 
@@ -361,7 +362,7 @@ async def submit_game_result(
             "lives": request.final_lives,
             "cleared_steps": request.cleared_steps,
             "user_name": request.user_name,
-            "false_steps": request.false_steps
+            "false_steps": false_steps
         }
     )
     db.commit()

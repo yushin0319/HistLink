@@ -1,0 +1,31 @@
+#!/bin/bash
+# Pre-push hook: push前にテストを実行
+# セットアップ: bash scripts/setup-hooks.sh
+
+set -e
+
+echo "=== Pre-push: Running tests ==="
+
+# プロジェクトルートに移動
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+# Backend tests（DB未起動時はDB依存テストがスキップされる）
+echo ""
+echo "--- Backend tests ---"
+cd "$ROOT_DIR/backend"
+python -m pytest -x -q --no-header 2>&1 || {
+    echo "Backend tests failed. Push aborted."
+    exit 1
+}
+
+# Frontend tests
+echo ""
+echo "--- Frontend tests ---"
+cd "$ROOT_DIR/frontend"
+npx vitest run --reporter=dot 2>&1 || {
+    echo "Frontend tests failed. Push aborted."
+    exit 1
+}
+
+echo ""
+echo "=== All tests passed ==="

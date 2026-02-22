@@ -275,15 +275,19 @@ describe('GamePage', () => {
 
       await screen.findByText('邪馬台国');
 
+      // mockStepsは3ステップ(totalStages=2)だが、3回不正解にはtotalStages>=3が必要
+      // ゲーム完了判定を回避するためtotalStagesを大きくする（ゲームオーバーが先に判定される）
+      useGameStore.setState({ totalStages: 10 });
+
       // 3回不正解でゲームオーバー
       await act(async () => {
-        const { answerQuestion } = useGameStore.getState();
+        const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
         answerQuestion(999); // 不正解
-        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
+        completeFeedbackPhase();
         answerQuestion(999); // 不正解
-        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
+        completeFeedbackPhase();
         answerQuestion(999); // 不正解
-        await new Promise((resolve) => setTimeout(resolve, 600)); // feedbackPhase完了待ち
+        completeFeedbackPhase();
       });
 
       // ゲームオーバーを確認

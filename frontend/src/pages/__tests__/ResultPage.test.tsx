@@ -304,7 +304,7 @@ describe('ResultPage', () => {
         expect(mockSubmitGameResult).toHaveBeenCalledWith(
           'submit-test-game',
           expect.objectContaining({
-            final_score: 2332,
+            base_score: 2332,
             final_lives: 0,
             user_name: 'テストユーザー',
             false_steps: [],

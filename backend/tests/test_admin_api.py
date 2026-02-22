@@ -23,10 +23,10 @@ class TestAdminAuth:
     """認証テスト"""
 
     @requires_db
-    def test_returns_403_without_token(self, client):
-        """認証なしでアクセスすると403"""
+    def test_returns_401_without_token(self, client):
+        """認証なしでアクセスすると401"""
         response = client.get("/admin/terms")
-        assert response.status_code == 403
+        assert response.status_code == 401
 
     @requires_db
     def test_returns_401_with_invalid_token(self, client):
@@ -564,10 +564,10 @@ class TestGamesAdmin:
         assert response.status_code == 404
 
     @requires_db
-    def test_delete_game_method_not_allowed(self, client, db_session):
-        """Games APIはRead-only: DELETEは405"""
+    def test_delete_game_returns_404(self, client, db_session):
+        """Games APIはRead-only: DELETEルートは未定義で404"""
         response = client.delete(
             "/admin/games/00000000-0000-0000-0000-000000000000",
             headers=AUTH_HEADERS,
         )
-        assert response.status_code == 405
+        assert response.status_code == 404

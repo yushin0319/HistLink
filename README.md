@@ -43,9 +43,9 @@
 | サービス | 変数名 | 説明 |
 |----------|--------|------|
 | Backend | `DATABASE_URL` | Supabase接続文字列 |
-| Backend | `ADMIN_SECRET` | 管理API認証トークン |
-| Backend | `CORS_ORIGINS` | 許可オリジン（JSON配列） |
 | Frontend | `VITE_API_BASE_URL` | `https://histlink-backend.onrender.com` |
+
+> `CORS_ORIGINS` はデフォルトで本番URL含むため設定不要。`ADMIN_SECRET` は Studio（ローカル専用）の認証用で、ローカル `.env` に設定。
 
 ## ローカル開発
 

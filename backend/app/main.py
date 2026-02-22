@@ -31,11 +31,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",           # ローカル開発 (frontend)
-        "http://localhost:5174",           # ローカル開発 (studio)
-        "https://histlink.onrender.com",   # 本番フロントエンド
-    ],
+    allow_origins=settings.cors_origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],

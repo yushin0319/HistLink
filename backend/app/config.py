@@ -18,7 +18,11 @@ class Settings(BaseSettings):
     project_name: str = "HistLink API"
 
     # CORS（環境変数 CORS_ORIGINS で上書き可能。JSON配列形式: '["http://localhost","https://example.com"]'）
-    cors_origins: list[str] = ["http://localhost", "http://localhost:5173"]
+    cors_origins: list[str] = [
+        "http://localhost:5173",           # ローカル開発 (frontend)
+        "http://localhost:5174",           # ローカル開発 (studio)
+        "https://histlink.onrender.com",   # 本番フロントエンド
+    ]
 
     class Config:
         env_file = ".env"

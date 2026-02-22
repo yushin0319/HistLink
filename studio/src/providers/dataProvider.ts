@@ -1,13 +1,14 @@
 import type { DataProvider } from '@refinedev/core';
+import type { Term, Edge } from '../contexts/DataContext';
 
 const API_URL = '/api/admin';
 
 export interface CacheUpdaters {
-  addTerm?: (term: unknown) => void;
-  updateTerm?: (term: unknown) => void;
+  addTerm?: (term: Term) => void;
+  updateTerm?: (term: Term) => void;
   deleteTerm?: (id: number) => void;
-  addEdge?: (edge: unknown) => void;
-  updateEdge?: (edge: unknown) => void;
+  addEdge?: (edge: Edge) => void;
+  updateEdge?: (edge: Edge) => void;
   deleteEdge?: (id: number) => void;
 }
 

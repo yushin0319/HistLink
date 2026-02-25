@@ -113,7 +113,7 @@ describe('gameApi', () => {
       expect(result.total_steps).toBe(50);
     });
 
-    it('APIエラー時はエラーをthrowする', async () => {
+    it('ゲーム開始APIエラー時はエラーをthrowする', async () => {
       mock.onPost('/games/start').reply(500, { error: 'Server Error' });
 
       await expect(startGameSession('standard', 30)).rejects.toThrow();
@@ -197,7 +197,7 @@ describe('gameApi', () => {
       expect(result.final_score).toBe(500);
     });
 
-    it('APIエラー時はエラーをthrowする', async () => {
+    it('結果送信APIエラー時はエラーをthrowする', async () => {
       const gameId = 'invalid-game-id';
       const request: GameResultRequest = {
         final_score: 0,
@@ -243,7 +243,7 @@ describe('gameApi', () => {
       expect(result.my_rank).toBe(3);
     });
 
-    it('APIエラー時はエラーをthrowする', async () => {
+    it('ゲーム更新APIエラー時はエラーをthrowする', async () => {
       const gameId = 'invalid-game-id';
       const request: GameUpdateRequest = {
         user_name: 'テスト',
@@ -292,7 +292,7 @@ describe('gameApi', () => {
       expect(result.my_rank).toBe(1);
     });
 
-    it('APIエラー時はエラーをthrowする', async () => {
+    it('全体ランキングAPIエラー時はエラーをthrowする', async () => {
       mock.onGet('/games/rankings/overall').reply(500, { error: 'Server Error' });
 
       await expect(getOverallRanking(1000)).rejects.toThrow();

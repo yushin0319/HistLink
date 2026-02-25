@@ -26,7 +26,7 @@ describe('GameHeader', () => {
 
     // 整数部分 "3" をチェック
     const integerPart = screen.getByText('3');
-    expect(integerPart).toHaveStyle({ color: 'rgb(211, 47, 47)' }); // error.main color (#F44336)
+    expect(integerPart).toHaveStyle({ color: '#d32f2f' }); // error.main color
 
     rerender(
       <GameHeader lives={3} score={500} currentStage={5} totalStages={10} remainingTime={31} />
@@ -34,7 +34,7 @@ describe('GameHeader', () => {
 
     // 31以上では通常色に戻る
     const normalIntegerPart = screen.getByText('3');
-    expect(normalIntegerPart).not.toHaveStyle({ color: 'rgb(211, 47, 47)' });
+    expect(normalIntegerPart).not.toHaveStyle({ color: '#d32f2f' });
   });
 
   it('currentStageは0-indexedなので表示は+1される', () => {

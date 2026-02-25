@@ -94,7 +94,7 @@ describe('ChoiceCard', () => {
       render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />);
 
       const text = screen.getByText('徳川家康');
-      expect(text).toHaveStyle({ color: 'rgb(255, 255, 255)' });
+      expect(text).toHaveStyle({ color: 'white' });
     });
 
     it('feedbackState="incorrect"の時、error色が適用される', () => {
@@ -102,7 +102,7 @@ describe('ChoiceCard', () => {
       render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="incorrect" />);
 
       const text = screen.getByText('徳川家康');
-      expect(text).toHaveStyle({ color: 'rgb(255, 255, 255)' });
+      expect(text).toHaveStyle({ color: 'white' });
     });
 
     it('feedbackStateがある時、カーソルがdefaultになる', () => {
@@ -157,7 +157,7 @@ describe('ChoiceCard', () => {
 
       const text = screen.getByText('徳川家康');
       // feedbackStateが優先されるのでwhiteになる
-      expect(text).toHaveStyle({ color: 'rgb(255, 255, 255)' });
+      expect(text).toHaveStyle({ color: 'white' });
 
       const paper = container.querySelector('.MuiPaper-root');
       // feedbackStateがあるのでcursor: default

@@ -15,11 +15,16 @@ from app.services.distractor_generator import generate_distractors
 from app.services.cache import get_cache
 
 
-class TestEasyDistractors:
-    """Easy難易度ダミー生成のテスト"""
+class TestDistractorsByDifficulty:
+    """難易度別ダミー生成のテスト（parametrize版）"""
 
-    def test_generate_easy_distractors(self, db_session):
-        """Easy難易度のダミーを生成"""
+    @pytest.mark.parametrize("difficulty,min_count", [
+        ('easy', 0),
+        ('normal', 0),
+        ('hard', 1),
+    ])
+    def test_generate_distractors(self, difficulty, min_count, db_session):
+        """ダミーは重複なし・訪問済みでない・正解と異なる"""
         correct_id = 1
         current_id = 2
         visited = {1, 2}
@@ -28,23 +33,24 @@ class TestEasyDistractors:
             correct_id=correct_id,
             current_id=current_id,
             visited=visited,
-            difficulty='easy',
+            difficulty=difficulty,
             count=3
         )
 
-        # 全て異なる
+        if min_count > 0:
+            assert len(distractors) >= min_count
         assert len(distractors) == len(set(distractors))
-
-        # 訪問済みでない
         for d in distractors:
             assert d not in visited
-
-        # 正解と異なる
-        for d in distractors:
             assert d != correct_id
 
-    def test_easy_distractors_tier1_only(self, db_session):
-        """Easy難易度のダミーはTier1のみ"""
+    @pytest.mark.parametrize("difficulty,max_tier", [
+        ('easy', 1),
+        ('normal', 2),
+        ('hard', 3),
+    ])
+    def test_distractors_tier_constraint(self, difficulty, max_tier, db_session):
+        """難易度に応じたTier制約を満たす"""
         correct_id = 1
         current_id = 2
         visited = {1, 2}
@@ -53,7 +59,7 @@ class TestEasyDistractors:
             correct_id=correct_id,
             current_id=current_id,
             visited=visited,
-            difficulty='easy',
+            difficulty=difficulty,
             count=3
         )
 
@@ -61,10 +67,11 @@ class TestEasyDistractors:
         for d in distractors:
             term = cache.get_term(d)
             assert term is not None
-            assert term.tier == 1
+            assert term.tier <= max_tier
 
-    def test_easy_distractors_not_directly_connected(self, db_session):
-        """Easy難易度のダミーは正解と直接繋がっていない（2hop以上）"""
+    @pytest.mark.parametrize("difficulty", ['easy', 'normal', 'hard'])
+    def test_distractors_not_directly_connected(self, difficulty, db_session):
+        """ダミーは正解と直接繋がっていない（2hop以上）"""
         correct_id = 1
         current_id = 2
         visited = {1, 2}
@@ -73,133 +80,7 @@ class TestEasyDistractors:
             correct_id=correct_id,
             current_id=current_id,
             visited=visited,
-            difficulty='easy',
-            count=3
-        )
-
-        cache = get_cache()
-        correct_neighbors = cache.get_neighbors(correct_id)
-
-        for d in distractors:
-            # 正解の隣接ノードではない（2hop以上離れている）
-            assert d not in correct_neighbors
-
-
-class TestNormalDistractors:
-    """Normal難易度ダミー生成のテスト"""
-
-    def test_generate_normal_distractors(self, db_session):
-        """Normal難易度のダミーを生成"""
-        correct_id = 1
-        current_id = 2
-        visited = {1, 2}
-
-        distractors = generate_distractors(
-            correct_id=correct_id,
-            current_id=current_id,
-            visited=visited,
-            difficulty='normal',
-            count=3
-        )
-
-        # 全て異なる
-        assert len(distractors) == len(set(distractors))
-
-    def test_normal_distractors_tier1_2_only(self, db_session):
-        """Normal難易度のダミーはTier1-2のみ"""
-        correct_id = 1
-        current_id = 2
-        visited = {1, 2}
-
-        distractors = generate_distractors(
-            correct_id=correct_id,
-            current_id=current_id,
-            visited=visited,
-            difficulty='normal',
-            count=3
-        )
-
-        cache = get_cache()
-        for d in distractors:
-            term = cache.get_term(d)
-            assert term is not None
-            assert term.tier <= 2
-
-    def test_normal_distractors_not_directly_connected(self, db_session):
-        """Normal難易度のダミーは正解と直接繋がっていない（2hop以上）"""
-        correct_id = 1
-        current_id = 2
-        visited = {1, 2}
-
-        distractors = generate_distractors(
-            correct_id=correct_id,
-            current_id=current_id,
-            visited=visited,
-            difficulty='normal',
-            count=3
-        )
-
-        cache = get_cache()
-        correct_neighbors = cache.get_neighbors(correct_id)
-
-        for d in distractors:
-            assert d not in correct_neighbors
-
-
-class TestHardDistractors:
-    """Hard難易度ダミー生成のテスト"""
-
-    def test_generate_hard_distractors(self, db_session):
-        """Hard難易度のダミーを生成"""
-        correct_id = 1
-        current_id = 2
-        visited = {1, 2}
-
-        distractors = generate_distractors(
-            correct_id=correct_id,
-            current_id=current_id,
-            visited=visited,
-            difficulty='hard',
-            count=3
-        )
-
-        # 少なくとも1個は生成される
-        assert len(distractors) >= 1
-
-        # 全て異なる
-        assert len(distractors) == len(set(distractors))
-
-    def test_hard_distractors_all_tiers(self, db_session):
-        """Hard難易度のダミーは全Tier"""
-        correct_id = 1
-        current_id = 2
-        visited = {1, 2}
-
-        distractors = generate_distractors(
-            correct_id=correct_id,
-            current_id=current_id,
-            visited=visited,
-            difficulty='hard',
-            count=3
-        )
-
-        cache = get_cache()
-        for d in distractors:
-            term = cache.get_term(d)
-            assert term is not None
-            assert term.tier <= 3
-
-    def test_hard_distractors_not_directly_connected(self, db_session):
-        """Hard難易度のダミーは正解と直接繋がっていない（2hop以上）"""
-        correct_id = 1
-        current_id = 2
-        visited = {1, 2}
-
-        distractors = generate_distractors(
-            correct_id=correct_id,
-            current_id=current_id,
-            visited=visited,
-            difficulty='hard',
+            difficulty=difficulty,
             count=3
         )
 

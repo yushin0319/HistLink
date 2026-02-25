@@ -145,10 +145,10 @@ describe('RankingTable 表示', () => {
       expect(screen.getByText('たろう')).toBeInTheDocument();
     });
 
-    it('タブのステージ数がtotalStagesに応じて変わる', () => {
+    it.each([10, 30, 50])('タブのステージ数が%i問に応じて変わる', (totalStages) => {
       render(
         <RankingTable
-          totalStages={30}
+          totalStages={totalStages}
           currentUserScore={1500}
           currentUserRank={4}
           rankings={mockRankings}
@@ -158,7 +158,7 @@ describe('RankingTable 表示', () => {
         />
       );
 
-      expect(screen.getByRole('tab', { name: '30問' })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: `${totalStages}問` })).toBeInTheDocument();
     });
   });
 
@@ -228,37 +228,5 @@ describe('RankingTable 表示', () => {
     });
   });
 
-  describe('ステージ数の表示', () => {
-    it('totalStagesに応じてタブが変わる', () => {
-      render(
-        <RankingTable
-          totalStages={30}
-          currentUserScore={1500}
-          currentUserRank={4}
-          rankings={mockRankings}
-          overallRankings={mockOverallRankings}
-          overallMyRank={5}
-          gameId="test-game-id"
-        />
-      );
-
-      expect(screen.getByRole('tab', { name: '30問' })).toBeInTheDocument();
-    });
-
-    it('50問の場合も正しく表示される', () => {
-      render(
-        <RankingTable
-          totalStages={50}
-          currentUserScore={1500}
-          currentUserRank={4}
-          rankings={mockRankings}
-          overallRankings={mockOverallRankings}
-          overallMyRank={5}
-          gameId="test-game-id"
-        />
-      );
-
-      expect(screen.getByRole('tab', { name: '50問' })).toBeInTheDocument();
-    });
-  });
 });
+

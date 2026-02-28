@@ -75,7 +75,7 @@ cd frontend
 
 npm run dev           # 開発サーバー起動（http://localhost:5173）
 npm test              # テスト（watch mode）
-npm run test:run      # テスト（1回実行）
+npx vitest run        # テスト（1回実行）
 npm run test:coverage # カバレッジ付き
 npm run build         # 本番ビルド
 ```

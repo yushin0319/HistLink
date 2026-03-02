@@ -31,29 +31,27 @@ LIFE_BONUS = {"easy": 100, "normal": 200, "hard": 300}
 
 def get_rankings_and_my_rank(
     db: Session,
-    total_steps: int,
     my_score: int,
+    total_steps: int | None = None,
     limit: int = RANKING_LIMIT
 ) -> tuple[list[RankingEntry], int]:
     """
-    指定問題数のランキングと自分の順位を取得
+    ランキングと自分の順位を取得
 
     Args:
         db: DBセッション
-        total_steps: 問題数（10, 30, 50など）
         my_score: 自分のスコア
+        total_steps: 問題数フィルタ（None = 全体ランキング）
         limit: 取得する上位件数
 
     Returns:
         (ランキングリスト, 自分の順位)
     """
-    # 上位ランキングを取得（問題数でフィルタリング）
-    # total_steps = array_length(terms, 1) - 1
     ranking_result = db.execute(
         text("""
             SELECT user_name, score, cleared_steps
             FROM games
-            WHERE array_length(terms, 1) - 1 = :total_steps
+            WHERE (:total_steps IS NULL OR array_length(terms, 1) - 1 = :total_steps)
             ORDER BY score DESC, created_at DESC
             LIMIT :limit
         """),
@@ -74,63 +72,12 @@ def get_rankings_and_my_rank(
     # 自分の順位を取得（自分より高いスコアの数 + 1）
     rank_result = db.execute(
         text("""
-            SELECT COUNT(*) + 1 as rank
+            SELECT COUNT(*) + 1 AS rank
             FROM games
-            WHERE array_length(terms, 1) - 1 = :total_steps AND score > :my_score
+            WHERE (:total_steps IS NULL OR array_length(terms, 1) - 1 = :total_steps)
+              AND score > :my_score
         """),
         {"total_steps": total_steps, "my_score": my_score}
-    )
-    my_rank = rank_result.fetchone().rank
-
-    return rankings, my_rank
-
-
-def get_overall_rankings_and_my_rank(
-    db: Session,
-    my_score: int,
-    limit: int = RANKING_LIMIT
-) -> tuple[list[RankingEntry], int]:
-    """
-    全体ランキングと自分の順位を取得（難易度関係なし）
-
-    Args:
-        db: DBセッション
-        my_score: 自分のスコア
-        limit: 取得する上位件数
-
-    Returns:
-        (ランキングリスト, 自分の順位)
-    """
-    # 上位ランキングを取得（全難易度）
-    ranking_result = db.execute(
-        text("""
-            SELECT user_name, score, cleared_steps
-            FROM games
-            ORDER BY score DESC, created_at DESC
-            LIMIT :limit
-        """),
-        {"limit": limit}
-    )
-    ranking_rows = ranking_result.fetchall()
-
-    rankings = [
-        RankingEntry(
-            rank=i + 1,
-            user_name=row.user_name,
-            score=row.score,
-            cleared_steps=row.cleared_steps
-        )
-        for i, row in enumerate(ranking_rows)
-    ]
-
-    # 自分の順位を取得（自分より高いスコアの数 + 1）
-    rank_result = db.execute(
-        text("""
-            SELECT COUNT(*) + 1 as rank
-            FROM games
-            WHERE score > :my_score
-        """),
-        {"my_score": my_score}
     )
     my_rank = rank_result.fetchone().rank
 
@@ -371,7 +318,7 @@ async def submit_game_result(
 
     # ランキング情報を取得（問題数でフィルタリング）
     rankings, my_rank = get_rankings_and_my_rank(
-        db, total_steps, final_score
+        db, final_score, total_steps
     )
 
     return GameResultResponse(
@@ -431,7 +378,7 @@ async def update_game(
 
     # ランキング情報を取得（問題数でフィルタリング）
     rankings, my_rank = get_rankings_and_my_rank(
-        db, total_steps, game_row.score
+        db, game_row.score, total_steps
     )
 
     return GameResultResponse(
@@ -462,7 +409,7 @@ async def get_overall_ranking(
     Returns:
         OverallRankingResponse: 全体ランキングと自分の順位
     """
-    rankings, my_rank = get_overall_rankings_and_my_rank(db, my_score)
+    rankings, my_rank = get_rankings_and_my_rank(db, my_score)
 
     return OverallRankingResponse(
         my_rank=my_rank,

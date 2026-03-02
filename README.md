@@ -125,6 +125,14 @@ docker compose exec postgres psql -U histlink_user -d histlink
 docker compose restart backend
 ```
 
+seed.sql の再生成:
+
+```bash
+# database/seed.sql を JSON データから再生成する場合
+python database/scripts/generate_seed.py
+# ※ generate_seed.js は削除済み。Python スクリプトのみ使用すること。
+```
+
 ## テスト
 
 ### テスト構成

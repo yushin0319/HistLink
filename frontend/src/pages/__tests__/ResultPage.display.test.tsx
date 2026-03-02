@@ -154,6 +154,20 @@ describe('ResultPage 表示・アニメーション', () => {
     expect(clearIntervalSpy).toHaveBeenCalled();
   });
 
+  it('アンマウント後にペンディングタイマーが残らない', () => {
+    vi.clearAllTimers();
+
+    const { unmount } = render(<ResultPage />);
+
+    // Timers should be running after render
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
+
+    unmount();
+
+    // Cleanup must clear all pending timers
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it('レイアウトが正しく表示される', () => {
     const { container } = render(<ResultPage />);
 

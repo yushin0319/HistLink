@@ -12,6 +12,14 @@ function jsonResponse(data: unknown) {
   });
 }
 
+function errorResponse(status: number) {
+  return Promise.resolve({
+    ok: false,
+    status,
+    json: () => Promise.resolve({ detail: 'Error' }),
+  });
+}
+
 describe('createDataProvider', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -214,6 +222,44 @@ describe('createDataProvider', () => {
     it('/api/adminを返す', () => {
       const provider = createDataProvider();
       expect(provider.getApiUrl()).toBe('/api/admin');
+    });
+  });
+
+  describe('response.ok チェック', () => {
+    it('getList: !response.ok でエラーをthrowする', async () => {
+      mockFetch.mockReturnValue(errorResponse(500));
+      const provider = createDataProvider();
+      await expect(provider.getList({ resource: 'terms' })).rejects.toThrow();
+    });
+
+    it('getOne: !response.ok でエラーをthrowする', async () => {
+      mockFetch.mockReturnValue(errorResponse(404));
+      const provider = createDataProvider();
+      await expect(provider.getOne({ resource: 'terms', id: 999 })).rejects.toThrow();
+    });
+
+    it('create: !response.ok でエラーをthrowする', async () => {
+      mockFetch.mockReturnValue(errorResponse(400));
+      const provider = createDataProvider();
+      await expect(provider.create({ resource: 'terms', variables: {} })).rejects.toThrow();
+    });
+
+    it('update: !response.ok でエラーをthrowする', async () => {
+      mockFetch.mockReturnValue(errorResponse(400));
+      const provider = createDataProvider();
+      await expect(provider.update({ resource: 'terms', id: 1, variables: {} })).rejects.toThrow();
+    });
+
+    it('deleteOne: !response.ok でエラーをthrowする', async () => {
+      mockFetch.mockReturnValue(errorResponse(404));
+      const provider = createDataProvider();
+      await expect(provider.deleteOne({ resource: 'terms', id: 999 })).rejects.toThrow();
+    });
+
+    it('custom: !response.ok でエラーをthrowする', async () => {
+      mockFetch.mockReturnValue(errorResponse(500));
+      const provider = createDataProvider();
+      await expect(provider.custom!({ url: '/stats', method: 'get' })).rejects.toThrow();
     });
   });
 

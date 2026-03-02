@@ -299,4 +299,29 @@ describe('GamePage', () => {
   });
 
   // 結果送信はResultPageに移動したため、GamePageからは削除
+
+  describe('cleanup / キャンセル', () => {
+    it('アンマウント中にAPIコールが完了しても状態を更新しない', async () => {
+      let resolveStartGame!: (value: GameStartResponse) => void;
+      mockStartGameSession.mockImplementation(
+        () => new Promise((resolve) => { resolveStartGame = resolve; })
+      );
+
+      const { unmount } = render(<GamePage />);
+
+      // API呼び出しが開始されたことを確認
+      expect(mockStartGameSession).toHaveBeenCalled();
+
+      // アンマウント（useEffect cleanup が走り cancelled = true になる）
+      unmount();
+
+      // アンマウント後にAPIレスポンスを解決（遅延完了を模擬）
+      await act(async () => {
+        resolveStartGame(mockGameStartResponse);
+      });
+
+      // キャンセルされているためgameIdはnullのまま
+      expect(useGameStore.getState().gameId).toBeNull();
+    });
+  });
 });

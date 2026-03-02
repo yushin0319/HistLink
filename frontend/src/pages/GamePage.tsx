@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Container, Typography, Grid } from '@mui/material';
 import { useGameStore } from '../stores/gameStore';
 import { startGameSession } from '../services/gameApi';
@@ -36,10 +36,8 @@ export default function GamePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
-  const hasInitialized = useRef(false);
 
   const handleRetry = () => {
-    hasInitialized.current = false;
     setRetryCount((c) => c + 1);
   };
 
@@ -67,13 +65,13 @@ export default function GamePage() {
 
   // ゲームセッション開始（全ルート+選択肢を一括取得）- 初回のみ
   useEffect(() => {
-    // 既に初期化済み、またはgameIdがある場合はスキップ
-    if (hasInitialized.current || gameId) {
+    // gameIdがある場合はスキップ（既存ゲームの継続）
+    if (gameId) {
       setIsLoading(false);
       return;
     }
 
-    hasInitialized.current = true;
+    let cancelled = false;
 
     const initGame = async () => {
       try {
@@ -83,20 +81,24 @@ export default function GamePage() {
         // バックエンドから全ルート+選択肢を取得
         const response = await startGameSession(difficulty, totalStages);
 
+        if (cancelled) return;
+
         // Zustandに読み込む
         loadGameData(response.game_id, response.steps);
 
         // ゲーム開始（ステップ数 = ノード数 - 1）
         startGame(difficulty, response.steps.length - 1);
       } catch (err) {
+        if (cancelled) return;
         setError('エラーが発生しました');
         console.error(err);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
 
     initGame();
+    return () => { cancelled = true; };
   }, [difficulty, totalStages, gameId, loadGameData, startGame, retryCount]);
 
   // タイマー管理（0.1秒ごと）

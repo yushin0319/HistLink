@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, Container, Button, Fade, CircularProgress, Snackbar, Alert } from '@mui/material';
 import ResultHeader from '../components/ResultHeader';
 import RankingTable from '../components/RankingTable';
@@ -12,26 +12,6 @@ const BONUS_POINTS = {
   normal: 200,
   hard: 300,
 } as const;
-
-// モジュールスコープでアニメーション状態を管理（StrictMode対策）
-let animationState: {
-  isRunning: boolean;
-  gameId: string | null;
-  timers: ReturnType<typeof setTimeout>[];
-  intervals: ReturnType<typeof setInterval>[];
-} = {
-  isRunning: false,
-  gameId: null,
-  timers: [],
-  intervals: [],
-};
-
-function clearAnimationTimers() {
-  animationState.timers.forEach(clearTimeout);
-  animationState.intervals.forEach(clearInterval);
-  animationState.timers = [];
-  animationState.intervals = [];
-}
 
 export default function ResultPage() {
   const {
@@ -58,15 +38,29 @@ export default function ResultPage() {
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const [showContent, setShowContent] = useState(false); // ライフ換金完了後にtrue
   const [submitError, setSubmitError] = useState(false); // 結果送信エラー通知
-  const hasSubmittedResult = useRef(false);
 
-  // ゲーム結果送信（マウント時に1回だけ）
+  // #4: アニメーション状態をuseRefで管理（モジュールスコープではなくインスタンス単位）
+  const animationStateRef = useRef({
+    isRunning: false,
+    timers: [] as ReturnType<typeof setTimeout>[],
+    intervals: [] as ReturnType<typeof setInterval>[],
+  });
+
+  const clearAnimationTimers = useCallback(() => {
+    const s = animationStateRef.current;
+    s.timers.forEach(clearTimeout);
+    s.intervals.forEach(clearInterval);
+    s.timers = [];
+    s.intervals = [];
+  }, []);
+
+  // #5: ゲーム結果送信（cleanup関数でキャンセル対応）
   useEffect(() => {
-    if (!gameId || hasSubmittedResult.current) return;
+    if (!gameId) return;
+    let active = true;
 
     const submitResult = async () => {
       try {
-        hasSubmittedResult.current = true;
         // cleared_steps: ゲームオーバーの場合はcurrentStage、クリアの場合はtotalStages
         const clearedSteps = isCompleted ? totalStages : currentStage;
 
@@ -78,9 +72,11 @@ export default function ResultPage() {
           user_name: playerName,
           false_steps: falseSteps,
         });
+        if (!active) return;
 
         // サーバーが確定したfinal_scoreで全体ランキングを取得
         const overallResponse = await getOverallRanking(stageResponse.final_score);
+        if (!active) return;
 
         setRankingData(
           stageResponse.my_rank,
@@ -89,13 +85,14 @@ export default function ResultPage() {
           overallResponse.rankings
         );
       } catch (err) {
+        if (!active) return;
         console.error('結果送信エラー:', err);
-        hasSubmittedResult.current = false; // リトライ可能にする
         setSubmitError(true);
       }
     };
 
     submitResult();
+    return () => { active = false; };
   }, [gameId, initialScore, initialLives, currentStage, totalStages, isCompleted, playerName, falseSteps, difficulty, setRankingData]);
 
   useEffect(() => {
@@ -107,18 +104,9 @@ export default function ResultPage() {
       return;
     }
 
-    // 同じゲームIDで既にアニメーション中ならスキップ
-    if (animationState.isRunning && animationState.gameId === gameId) {
-      return;
-    }
-
-    // 新しいゲームの場合は前のタイマーをクリア
-    if (animationState.gameId !== gameId) {
-      clearAnimationTimers();
-    }
-
-    animationState.isRunning = true;
-    animationState.gameId = gameId;
+    const s = animationStateRef.current;
+    clearAnimationTimers();
+    s.isRunning = true;
 
     setLives(initialLives);
     setScore(initialScore);
@@ -126,7 +114,7 @@ export default function ResultPage() {
     let currentLifeIndex = 0;
 
     const processNextLife = () => {
-      if (!animationState.isRunning || currentLifeIndex >= initialLives) {
+      if (!s.isRunning || currentLifeIndex >= initialLives) {
         return;
       }
 
@@ -137,7 +125,7 @@ export default function ResultPage() {
 
       let currentCount = 0;
       const countUpInterval = setInterval(() => {
-        if (!animationState.isRunning) return;
+        if (!s.isRunning) return;
 
         currentCount++;
         setScore((prev) => prev + 10);
@@ -147,36 +135,36 @@ export default function ResultPage() {
           setLives((prev) => Math.max(0, prev - 1));
         }
       }, intervalPerStep);
-      animationState.intervals.push(countUpInterval);
+      s.intervals.push(countUpInterval);
 
       currentLifeIndex++;
 
       if (currentLifeIndex < initialLives) {
         const nextLifeTimer = setTimeout(() => {
-          if (animationState.isRunning) processNextLife();
+          if (s.isRunning) processNextLife();
         }, 600);
-        animationState.timers.push(nextLifeTimer);
+        s.timers.push(nextLifeTimer);
       } else {
         const finalTimer = setTimeout(() => {
-          if (!animationState.isRunning) return;
+          if (!s.isRunning) return;
           setShowContent(true);
         }, 500);
-        animationState.timers.push(finalTimer);
+        s.timers.push(finalTimer);
       }
     };
 
     processNextLife();
 
-    // クリーンアップではタイマーをクリアしない（StrictMode対策）
-    // 実際のクリーンアップは新しいゲーム開始時に行う
-  }, [initialLives, initialScore, difficulty, gameId]);
+    return () => {
+      s.isRunning = false;
+      clearAnimationTimers();
+    };
+  }, [initialLives, initialScore, difficulty, gameId, clearAnimationTimers]);
 
   const handleRetry = () => {
-    // アニメーション状態をリセット
-    animationState.isRunning = false;
+    const s = animationStateRef.current;
+    s.isRunning = false;
     clearAnimationTimers();
-    // 結果送信フラグをリセット
-    hasSubmittedResult.current = false;
     resetGame();
   };
 

@@ -38,6 +38,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
       }
 
       const response = await fetch(`${API_URL}/${resource}?${params}`);
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
 
       return {
@@ -48,6 +49,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
 
     getOne: async ({ resource, id }) => {
       const response = await fetch(`${API_URL}/${resource}/${id}`);
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
 
       return { data };
@@ -59,6 +61,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(variables),
       });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
 
       // Update local cache
@@ -77,6 +80,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(variables),
       });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
 
       // Update local cache
@@ -93,6 +97,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
       const response = await fetch(`${API_URL}/${resource}/${id}`, {
         method: 'DELETE',
       });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
 
       // Update local cache
@@ -123,6 +128,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
         headers: payload ? { 'Content-Type': 'application/json' } : undefined,
         body: payload ? JSON.stringify(payload) : undefined,
       });
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
       const data = await response.json();
 
       return { data };

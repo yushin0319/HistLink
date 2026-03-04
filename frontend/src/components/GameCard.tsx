@@ -1,4 +1,4 @@
-import { Paper, Typography, Box } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 interface GameCardProps {
   term: string;
@@ -6,7 +6,11 @@ interface GameCardProps {
   description?: string;
 }
 
-export default function GameCard({ term, category, description }: GameCardProps) {
+export default function GameCard({
+  term,
+  category,
+  description,
+}: GameCardProps) {
   return (
     <Paper
       elevation={2}
@@ -23,8 +27,8 @@ export default function GameCard({ term, category, description }: GameCardProps)
         transition: 'all 0.3s ease',
         '&:hover': {
           transform: 'scale(1.02)',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.3)'
-        }
+          boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
+        },
       }}
     >
       {/* Top: Name & Category */}
@@ -35,7 +39,7 @@ export default function GameCard({ term, category, description }: GameCardProps)
           sx={{
             fontSize: { xs: '1.5rem', sm: '2rem', md: '2.25rem' },
             mb: 0.5,
-            color: 'text.primary'
+            color: 'text.primary',
           }}
         >
           {term}
@@ -46,7 +50,7 @@ export default function GameCard({ term, category, description }: GameCardProps)
             fontSize: { xs: '0.9rem', sm: '1rem' },
             color: 'text.secondary',
             fontWeight: 500,
-            mb: description ? 0.5 : 0
+            mb: description ? 0.5 : 0,
           }}
         >
           {category}
@@ -62,7 +66,7 @@ export default function GameCard({ term, category, description }: GameCardProps)
               fontSize: '0.75rem',
               color: 'text.secondary',
               lineHeight: 1.4,
-              textAlign: 'center'
+              textAlign: 'center',
             }}
           >
             {description}

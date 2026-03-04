@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDataProvider } from '../dataProvider';
 
 // fetch をモック
@@ -31,7 +31,10 @@ describe('createDataProvider', () => {
       mockFetch.mockReturnValue(jsonResponse({ items, total: 1 }));
 
       const provider = createDataProvider();
-      const result = await provider.getList({ resource: 'terms', pagination: { current: 2, pageSize: 5 } });
+      const result = await provider.getList({
+        resource: 'terms',
+        pagination: { current: 2, pageSize: 5 },
+      });
 
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms?skip=5&limit=5');
       expect(result.data).toEqual(items);
@@ -44,7 +47,9 @@ describe('createDataProvider', () => {
       const provider = createDataProvider();
       await provider.getList({ resource: 'edges' });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/edges?skip=0&limit=10');
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/edges?skip=0&limit=10',
+      );
     });
 
     it('ソートパラメータを送信する', async () => {
@@ -124,7 +129,10 @@ describe('createDataProvider', () => {
 
       const addTerm = vi.fn();
       const provider = createDataProvider({ addTerm });
-      await provider.create({ resource: 'terms', variables: { name: '卑弥呼' } });
+      await provider.create({
+        resource: 'terms',
+        variables: { name: '卑弥呼' },
+      });
 
       expect(addTerm).toHaveBeenCalledWith(newTerm);
     });
@@ -135,7 +143,10 @@ describe('createDataProvider', () => {
 
       const addEdge = vi.fn();
       const provider = createDataProvider({ addEdge });
-      await provider.create({ resource: 'edges', variables: { from_term_id: 1, to_term_id: 2 } });
+      await provider.create({
+        resource: 'edges',
+        variables: { from_term_id: 1, to_term_id: 2 },
+      });
 
       expect(addEdge).toHaveBeenCalledWith(newEdge);
     });
@@ -167,7 +178,11 @@ describe('createDataProvider', () => {
 
       const updateTerm = vi.fn();
       const provider = createDataProvider({ updateTerm });
-      await provider.update({ resource: 'terms', id: 1, variables: { name: '更新済み' } });
+      await provider.update({
+        resource: 'terms',
+        id: 1,
+        variables: { name: '更新済み' },
+      });
 
       expect(updateTerm).toHaveBeenCalledWith(updated);
     });
@@ -180,7 +195,9 @@ describe('createDataProvider', () => {
       const provider = createDataProvider();
       await provider.deleteOne({ resource: 'terms', id: 1 });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms/1', { method: 'DELETE' });
+      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms/1', {
+        method: 'DELETE',
+      });
     });
 
     it('削除後にcacheUpdaterが呼ばれる（terms）', async () => {
@@ -211,10 +228,16 @@ describe('createDataProvider', () => {
         .mockReturnValueOnce(jsonResponse({ id: 2, name: 'B' }));
 
       const provider = createDataProvider();
-      const result = await provider.getMany!({ resource: 'terms', ids: [1, 2] });
+      const result = await provider.getMany!({
+        resource: 'terms',
+        ids: [1, 2],
+      });
 
       expect(mockFetch).toHaveBeenCalledTimes(2);
-      expect(result.data).toEqual([{ id: 1, name: 'A' }, { id: 2, name: 'B' }]);
+      expect(result.data).toEqual([
+        { id: 1, name: 'A' },
+        { id: 2, name: 'B' },
+      ]);
     });
   });
 
@@ -235,31 +258,41 @@ describe('createDataProvider', () => {
     it('getOne: !response.ok でエラーをthrowする', async () => {
       mockFetch.mockReturnValue(errorResponse(404));
       const provider = createDataProvider();
-      await expect(provider.getOne({ resource: 'terms', id: 999 })).rejects.toThrow();
+      await expect(
+        provider.getOne({ resource: 'terms', id: 999 }),
+      ).rejects.toThrow();
     });
 
     it('create: !response.ok でエラーをthrowする', async () => {
       mockFetch.mockReturnValue(errorResponse(400));
       const provider = createDataProvider();
-      await expect(provider.create({ resource: 'terms', variables: {} })).rejects.toThrow();
+      await expect(
+        provider.create({ resource: 'terms', variables: {} }),
+      ).rejects.toThrow();
     });
 
     it('update: !response.ok でエラーをthrowする', async () => {
       mockFetch.mockReturnValue(errorResponse(400));
       const provider = createDataProvider();
-      await expect(provider.update({ resource: 'terms', id: 1, variables: {} })).rejects.toThrow();
+      await expect(
+        provider.update({ resource: 'terms', id: 1, variables: {} }),
+      ).rejects.toThrow();
     });
 
     it('deleteOne: !response.ok でエラーをthrowする', async () => {
       mockFetch.mockReturnValue(errorResponse(404));
       const provider = createDataProvider();
-      await expect(provider.deleteOne({ resource: 'terms', id: 999 })).rejects.toThrow();
+      await expect(
+        provider.deleteOne({ resource: 'terms', id: 999 }),
+      ).rejects.toThrow();
     });
 
     it('custom: !response.ok でエラーをthrowする', async () => {
       mockFetch.mockReturnValue(errorResponse(500));
       const provider = createDataProvider();
-      await expect(provider.custom!({ url: '/stats', method: 'get' })).rejects.toThrow();
+      await expect(
+        provider.custom!({ url: '/stats', method: 'get' }),
+      ).rejects.toThrow();
     });
   });
 
@@ -282,7 +315,11 @@ describe('createDataProvider', () => {
       mockFetch.mockReturnValue(jsonResponse({ created: true }));
 
       const provider = createDataProvider();
-      await provider.custom!({ url: '/import', method: 'post', payload: { data: [1, 2] } });
+      await provider.custom!({
+        url: '/import',
+        method: 'post',
+        payload: { data: [1, 2] },
+      });
 
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/import', {
         method: 'post',

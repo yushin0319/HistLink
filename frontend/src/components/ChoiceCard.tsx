@@ -1,4 +1,4 @@
-import { Paper, Typography, Box } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 
 interface ChoiceCardProps {
   term: string;
@@ -7,7 +7,12 @@ interface ChoiceCardProps {
   feedbackState?: 'correct' | 'incorrect' | null;
 }
 
-export default function ChoiceCard({ term, onClick, isSelected, feedbackState }: ChoiceCardProps) {
+export default function ChoiceCard({
+  term,
+  onClick,
+  isSelected,
+  feedbackState,
+}: ChoiceCardProps) {
   // フィードバック状態に応じた背景色を決定
   const getBgColor = () => {
     if (feedbackState === 'correct') return 'success.light';

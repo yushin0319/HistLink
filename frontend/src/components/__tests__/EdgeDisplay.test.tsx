@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import EdgeDisplay from '../EdgeDisplay';
 
 describe('EdgeDisplay', () => {
@@ -9,7 +9,7 @@ describe('EdgeDisplay', () => {
         keyword="女王卑弥呼"
         explanation="邪馬台国を統治した女王"
         show={true}
-      />
+      />,
     );
 
     expect(screen.getByText('女王卑弥呼')).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('EdgeDisplay', () => {
         keyword="女王卑弥呼"
         explanation="邪馬台国を統治した女王"
         show={false}
-      />
+      />,
     );
 
     // Fadeコンポーネントでも要素自体は存在する
@@ -31,39 +31,25 @@ describe('EdgeDisplay', () => {
   });
 
   it('keywordが空文字でも正常に表示される', () => {
-    render(
-      <EdgeDisplay
-        keyword=""
-        explanation="説明文"
-        show={true}
-      />
-    );
+    render(<EdgeDisplay keyword="" explanation="説明文" show={true} />);
 
     expect(screen.getByText('説明文')).toBeInTheDocument();
   });
 
   it('explanationが空文字でも正常に表示される', () => {
-    render(
-      <EdgeDisplay
-        keyword="キーワード"
-        explanation=""
-        show={true}
-      />
-    );
+    render(<EdgeDisplay keyword="キーワード" explanation="" show={true} />);
 
     expect(screen.getByText('キーワード')).toBeInTheDocument();
   });
 
   it('両方空文字でも正常にレンダリングされる', () => {
     const { container } = render(
-      <EdgeDisplay
-        keyword=""
-        explanation=""
-        show={true}
-      />
+      <EdgeDisplay keyword="" explanation="" show={true} />,
     );
 
     // エラーなくレンダリングされる
-    expect(container.querySelector('[class*="MuiBox-root"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[class*="MuiBox-root"]'),
+    ).toBeInTheDocument();
   });
 });

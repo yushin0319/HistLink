@@ -1,12 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { useGameStore } from '../gameStore';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { RouteStepWithChoices } from '../../types/api';
+import { useGameStore } from '../gameStore';
 
 // モックデータ: 4ステップのルート（3回の回答が必要）
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: '邪馬台国', tier: 1, category: '弥生時代', description: '' },
+    term: {
+      id: 1,
+      name: '邪馬台国',
+      tier: 1,
+      category: '弥生時代',
+      description: '',
+    },
     correct_next_id: 2,
     choices: [
       { term_id: 2, name: '卑弥呼', tier: 1 },
@@ -20,7 +26,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 1,
-    term: { id: 2, name: '卑弥呼', tier: 1, category: '弥生時代', description: '' },
+    term: {
+      id: 2,
+      name: '卑弥呼',
+      tier: 1,
+      category: '弥生時代',
+      description: '',
+    },
     correct_next_id: 6,
     choices: [
       { term_id: 6, name: '大化の改新', tier: 1 },
@@ -34,7 +46,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 2,
-    term: { id: 6, name: '大化の改新', tier: 1, category: '飛鳥時代', description: '' },
+    term: {
+      id: 6,
+      name: '大化の改新',
+      tier: 1,
+      category: '飛鳥時代',
+      description: '',
+    },
     correct_next_id: 10,
     choices: [
       { term_id: 10, name: '壬申の乱', tier: 1 },
@@ -48,7 +66,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 3,
-    term: { id: 10, name: '壬申の乱', tier: 1, category: '飛鳥時代', description: '' },
+    term: {
+      id: 10,
+      name: '壬申の乱',
+      tier: 1,
+      category: '飛鳥時代',
+      description: '',
+    },
     correct_next_id: null,
     choices: [],
     difficulty: '',
@@ -263,8 +287,13 @@ describe('gameStore ゲームフロー', () => {
 
   describe('resetGame', () => {
     it('ゲーム状態を初期化できる', () => {
-      const { loadGameData, startGame, answerQuestion, completeFeedbackPhase, resetGame } =
-        useGameStore.getState();
+      const {
+        loadGameData,
+        startGame,
+        answerQuestion,
+        completeFeedbackPhase,
+        resetGame,
+      } = useGameStore.getState();
 
       loadGameData('test-game-id', mockSteps);
       startGame('hard', 3);

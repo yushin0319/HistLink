@@ -1,5 +1,5 @@
+import { Box, MenuItem, TextField } from '@mui/material';
 import { Create } from '@refinedev/mui';
-import { Box, TextField, MenuItem } from '@mui/material';
 import { useForm } from '@refinedev/react-hook-form';
 
 const DIFFICULTIES = [
@@ -21,7 +21,10 @@ export function TermCreate() {
 
   return (
     <Create saveButtonProps={saveButtonProps}>
-      <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        component="form"
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+      >
         <TextField
           {...register('name', { required: '用語名は必須です' })}
           label="用語名"

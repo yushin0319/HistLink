@@ -1,6 +1,6 @@
-import { Box, Typography, Grid } from '@mui/material';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import DiamondOutlinedIcon from '@mui/icons-material/DiamondOutlined';
+import { Box, Grid, Typography } from '@mui/material';
 
 interface GameHeaderProps {
   lives: number;
@@ -39,17 +39,33 @@ export default function GameHeader({
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               LIFE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, height: '2.125rem' }}>
-              {Array.from({ length: 3 }).map((_, index) => (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 0.5,
+                height: '2.125rem',
+              }}
+            >
+              {Array.from({ length: 3 }).map((_, index) =>
                 index < lives ? (
                   <DiamondIcon key={index} color="error" fontSize="medium" />
                 ) : (
-                  <DiamondOutlinedIcon key={index} color="disabled" fontSize="medium" />
-                )
-              ))}
+                  <DiamondOutlinedIcon
+                    key={index}
+                    color="disabled"
+                    fontSize="medium"
+                  />
+                ),
+              )}
             </Box>
           </Box>
         </Grid>
@@ -65,10 +81,21 @@ export default function GameHeader({
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               STAGE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '2.125rem',
+              }}
+            >
               <Typography variant="h4" fontWeight="bold">
                 {currentStage + 1} / {totalStages}
               </Typography>
@@ -87,10 +114,21 @@ export default function GameHeader({
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               SCORE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '2.125rem',
+              }}
+            >
               <Typography variant="h4" fontWeight="bold">
                 {score}
               </Typography>
@@ -109,10 +147,21 @@ export default function GameHeader({
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               TIMER
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '2.125rem',
+              }}
+            >
               <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
                 <Typography
                   variant="h4"

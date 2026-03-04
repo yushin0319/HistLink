@@ -1,5 +1,5 @@
-import { Box, Button, Container, Typography, Paper } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import BackgroundImage from '../components/BackgroundImage';
 
 interface RulePageProps {
@@ -97,7 +97,14 @@ export default function RulePage({ onStart }: RulePageProps) {
             </Paper>
 
             {/* 矢印と説明 */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1.5 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 1.5,
+              }}
+            >
               <ArrowDownwardIcon sx={{ color: 'primary.main', fontSize: 28 }} />
               <Typography
                 variant="body2"
@@ -108,7 +115,14 @@ export default function RulePage({ onStart }: RulePageProps) {
             </Box>
 
             {/* 選択肢（2×2グリッド縮小版） */}
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, mb: 1.5 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 1,
+                mb: 1.5,
+              }}
+            >
               <Paper
                 elevation={1}
                 sx={{
@@ -118,10 +132,17 @@ export default function RulePage({ onStart }: RulePageProps) {
                   textAlign: 'center',
                 }}
               >
-                <Typography variant="caption" fontWeight="bold" sx={{ color: 'white' }}>
+                <Typography
+                  variant="caption"
+                  fontWeight="bold"
+                  sx={{ color: 'white' }}
+                >
                   エルサレム
                 </Typography>
-                <Typography variant="caption" sx={{ color: 'white', display: 'block', fontSize: '0.6rem' }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'white', display: 'block', fontSize: '0.6rem' }}
+                >
                   正解！即答で点数UP！
                 </Typography>
               </Paper>
@@ -134,7 +155,11 @@ export default function RulePage({ onStart }: RulePageProps) {
                   textAlign: 'center',
                 }}
               >
-                <Typography variant="caption" fontWeight="bold" sx={{ color: 'text.primary' }}>
+                <Typography
+                  variant="caption"
+                  fontWeight="bold"
+                  sx={{ color: 'text.primary' }}
+                >
                   EEC
                 </Typography>
               </Paper>
@@ -147,10 +172,17 @@ export default function RulePage({ onStart }: RulePageProps) {
                   textAlign: 'center',
                 }}
               >
-                <Typography variant="caption" fontWeight="bold" sx={{ color: 'white' }}>
+                <Typography
+                  variant="caption"
+                  fontWeight="bold"
+                  sx={{ color: 'white' }}
+                >
                   冷戦
                 </Typography>
-                <Typography variant="caption" sx={{ color: 'white', display: 'block', fontSize: '0.6rem' }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: 'white', display: 'block', fontSize: '0.6rem' }}
+                >
                   不正解！ライフ-1
                 </Typography>
               </Paper>
@@ -163,14 +195,22 @@ export default function RulePage({ onStart }: RulePageProps) {
                   textAlign: 'center',
                 }}
               >
-                <Typography variant="caption" fontWeight="bold" sx={{ color: 'text.primary' }}>
+                <Typography
+                  variant="caption"
+                  fontWeight="bold"
+                  sx={{ color: 'text.primary' }}
+                >
                   戦国時代
                 </Typography>
               </Paper>
             </Box>
 
             {/* ライフ0でゲームオーバー */}
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ textAlign: 'center' }}
+            >
               ライフ0でゲームオーバー
             </Typography>
           </Paper>

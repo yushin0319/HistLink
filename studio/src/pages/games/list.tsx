@@ -1,6 +1,6 @@
-import { useDataGrid, List, ShowButton, DeleteButton } from '@refinedev/mui';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Stack, Chip } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { DeleteButton, List, ShowButton, useDataGrid } from '@refinedev/mui';
 
 export function GameList() {
   const { dataGridProps } = useDataGrid({
@@ -16,8 +16,20 @@ export function GameList() {
       width: 100,
       renderCell: ({ value }) => (
         <Chip
-          label={value === 'easy' ? 'かんたん' : value === 'hard' ? '難しい' : 'ふつう'}
-          color={value === 'easy' ? 'success' : value === 'hard' ? 'error' : 'default'}
+          label={
+            value === 'easy'
+              ? 'かんたん'
+              : value === 'hard'
+                ? '難しい'
+                : 'ふつう'
+          }
+          color={
+            value === 'easy'
+              ? 'success'
+              : value === 'hard'
+                ? 'error'
+                : 'default'
+          }
           size="small"
         />
       ),

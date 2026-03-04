@@ -1,6 +1,6 @@
-import { Box, Typography, Grid } from '@mui/material';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import DiamondOutlinedIcon from '@mui/icons-material/DiamondOutlined';
+import { Box, Grid, Typography } from '@mui/material';
 
 interface ResultHeaderProps {
   lives: number;
@@ -9,7 +9,12 @@ interface ResultHeaderProps {
   totalStages: number;
 }
 
-export default function ResultHeader({ lives, score, currentStage, totalStages }: ResultHeaderProps) {
+export default function ResultHeader({
+  lives,
+  score,
+  currentStage,
+  totalStages,
+}: ResultHeaderProps) {
   return (
     <Box
       sx={{
@@ -32,10 +37,22 @@ export default function ResultHeader({ lives, score, currentStage, totalStages }
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               LIFE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5, height: '2.125rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 0.5,
+                height: '2.125rem',
+              }}
+            >
               {Array.from({ length: 3 }).map((_, index) => {
                 // 右から消費（index 0, 1 が表示されている状態 = lives 2）
                 const isFilled = index < lives;
@@ -84,12 +101,25 @@ export default function ResultHeader({ lives, score, currentStage, totalStages }
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               STAGE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '2.125rem',
+              }}
+            >
               <Typography variant="h5" fontWeight="bold">
-                {currentStage + 1 === totalStages ? 'COMPLETE' : `${currentStage + 1} / ${totalStages}`}
+                {currentStage + 1 === totalStages
+                  ? 'COMPLETE'
+                  : `${currentStage + 1} / ${totalStages}`}
               </Typography>
             </Box>
           </Box>
@@ -106,10 +136,21 @@ export default function ResultHeader({ lives, score, currentStage, totalStages }
               flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="medium">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight="medium"
+            >
               SCORE
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '2.125rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '2.125rem',
+              }}
+            >
               <Typography
                 variant="h4"
                 fontWeight="bold"

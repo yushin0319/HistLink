@@ -1,11 +1,23 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Box, Container, Button, Fade, CircularProgress, Snackbar, Alert } from '@mui/material';
-import ResultHeader from '../components/ResultHeader';
-import RankingTable from '../components/RankingTable';
-import RouteReviewModal from '../components/RouteReviewModal';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Fade,
+  Snackbar,
+} from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import BackgroundImage from '../components/BackgroundImage';
+import RankingTable from '../components/RankingTable';
+import ResultHeader from '../components/ResultHeader';
+import RouteReviewModal from '../components/RouteReviewModal';
+import {
+  getOverallRanking,
+  submitGameResult,
+  updateGame,
+} from '../services/gameApi';
 import { useGameStore } from '../stores/gameStore';
-import { updateGame, submitGameResult, getOverallRanking } from '../services/gameApi';
 
 const BONUS_POINTS = {
   easy: 100,
@@ -75,14 +87,16 @@ export default function ResultPage() {
         if (!active) return;
 
         // サーバーが確定したfinal_scoreで全体ランキングを取得
-        const overallResponse = await getOverallRanking(stageResponse.final_score);
+        const overallResponse = await getOverallRanking(
+          stageResponse.final_score,
+        );
         if (!active) return;
 
         setRankingData(
           stageResponse.my_rank,
           stageResponse.rankings,
           overallResponse.my_rank,
-          overallResponse.rankings
+          overallResponse.rankings,
         );
       } catch (err) {
         if (!active) return;
@@ -92,8 +106,20 @@ export default function ResultPage() {
     };
 
     submitResult();
-    return () => { active = false; };
-  }, [gameId, initialScore, initialLives, currentStage, totalStages, isCompleted, playerName, falseSteps, difficulty, setRankingData]);
+    return () => {
+      active = false;
+    };
+  }, [
+    gameId,
+    initialScore,
+    initialLives,
+    currentStage,
+    totalStages,
+    isCompleted,
+    playerName,
+    falseSteps,
+    setRankingData,
+  ]);
 
   useEffect(() => {
     // ゲームオーバー（ライフ0）の場合はアニメーションなし、即座にコンテンツ表示
@@ -159,7 +185,7 @@ export default function ResultPage() {
       s.isRunning = false;
       clearAnimationTimers();
     };
-  }, [initialLives, initialScore, difficulty, gameId, clearAnimationTimers]);
+  }, [initialLives, initialScore, difficulty, clearAnimationTimers]);
 
   const handleRetry = () => {
     const s = animationStateRef.current;
@@ -179,7 +205,7 @@ export default function ResultPage() {
       stageResponse.my_rank,
       stageResponse.rankings,
       overallResponse.my_rank,
-      overallResponse.rankings
+      overallResponse.rankings,
     );
   };
 

@@ -1,7 +1,13 @@
-import { Create } from '@refinedev/mui';
-import { Box, TextField, FormControlLabel, Switch, Autocomplete } from '@mui/material';
-import { useForm } from '@refinedev/react-hook-form';
+import {
+  Autocomplete,
+  Box,
+  FormControlLabel,
+  Switch,
+  TextField,
+} from '@mui/material';
 import { useList } from '@refinedev/core';
+import { Create } from '@refinedev/mui';
+import { useForm } from '@refinedev/react-hook-form';
 import { Controller } from 'react-hook-form';
 
 interface Term {
@@ -29,7 +35,10 @@ export function EdgeCreate() {
 
   return (
     <Create saveButtonProps={saveButtonProps}>
-      <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        component="form"
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+      >
         <Controller
           name="from_term_id"
           control={control}

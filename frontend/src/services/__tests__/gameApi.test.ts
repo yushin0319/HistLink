@@ -1,8 +1,19 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
-import { startGameSession, submitGameResult, updateGame, getOverallRanking } from '../gameApi';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type {
+  GameResultRequest,
+  GameResultResponse,
+  GameStartResponse,
+  GameUpdateRequest,
+  OverallRankingResponse,
+} from '../../types/api';
 import { apiClient } from '../api';
-import type { GameStartResponse, GameResultRequest, GameResultResponse, GameUpdateRequest, OverallRankingResponse } from '../../types/api';
+import {
+  getOverallRanking,
+  startGameSession,
+  submitGameResult,
+  updateGame,
+} from '../gameApi';
 
 describe('gameApi', () => {
   let mock: MockAdapter;
@@ -105,7 +116,9 @@ describe('gameApi', () => {
         created_at: '2025-11-23T10:00:00Z',
       };
 
-      mock.onPost('/games/start', { difficulty: 'hard', target_length: 50 }).reply(200, mockData);
+      mock
+        .onPost('/games/start', { difficulty: 'hard', target_length: 50 })
+        .reply(200, mockData);
 
       const result = await startGameSession('hard', 50);
 
@@ -188,9 +201,7 @@ describe('gameApi', () => {
         message: 'ゲームクリア！最終スコア: 500点',
       };
 
-      mock
-        .onPost(`/games/${gameId}/result`, request)
-        .reply(200, mockData);
+      mock.onPost(`/games/${gameId}/result`, request).reply(200, mockData);
 
       const result = await submitGameResult(gameId, request);
 
@@ -205,7 +216,9 @@ describe('gameApi', () => {
         is_completed: false,
       };
 
-      mock.onPost(`/games/${gameId}/result`).reply(404, { error: 'Game not found' });
+      mock
+        .onPost(`/games/${gameId}/result`)
+        .reply(404, { error: 'Game not found' });
 
       await expect(submitGameResult(gameId, request)).rejects.toThrow();
     });
@@ -285,7 +298,9 @@ describe('gameApi', () => {
         ],
       };
 
-      mock.onGet('/games/rankings/overall', { params: { my_score: 10000 } }).reply(200, mockData);
+      mock
+        .onGet('/games/rankings/overall', { params: { my_score: 10000 } })
+        .reply(200, mockData);
 
       const result = await getOverallRanking(10000);
 
@@ -293,7 +308,9 @@ describe('gameApi', () => {
     });
 
     it('全体ランキングAPIエラー時はエラーをthrowする', async () => {
-      mock.onGet('/games/rankings/overall').reply(500, { error: 'Server Error' });
+      mock
+        .onGet('/games/rankings/overall')
+        .reply(500, { error: 'Server Error' });
 
       await expect(getOverallRanking(1000)).rejects.toThrow();
     });

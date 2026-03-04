@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import ChoiceCard from '../ChoiceCard';
 
 describe('ChoiceCard', () => {
@@ -25,7 +25,7 @@ describe('ChoiceCard', () => {
   it('選択されていない状態で正しくレンダリングされる', () => {
     const mockOnClick = vi.fn();
     const { container } = render(
-      <ChoiceCard term="井伊直弼" onClick={mockOnClick} isSelected={false} />
+      <ChoiceCard term="井伊直弼" onClick={mockOnClick} isSelected={false} />,
     );
 
     const paper = container.querySelector('.MuiPaper-root');
@@ -35,7 +35,7 @@ describe('ChoiceCard', () => {
   it('選択された状態で正しくレンダリングされる', () => {
     const mockOnClick = vi.fn();
     const { container } = render(
-      <ChoiceCard term="井伊直弼" onClick={mockOnClick} isSelected={true} />
+      <ChoiceCard term="井伊直弼" onClick={mockOnClick} isSelected={true} />,
     );
 
     const paper = container.querySelector('.MuiPaper-root');
@@ -58,7 +58,7 @@ describe('ChoiceCard', () => {
       <>
         <ChoiceCard term="選択肢1" onClick={mockOnClick1} />
         <ChoiceCard term="選択肢2" onClick={mockOnClick2} />
-      </>
+      </>,
     );
 
     const cards = container.querySelectorAll('.MuiPaper-root');
@@ -75,14 +75,24 @@ describe('ChoiceCard', () => {
 
   it('長い用語名でも正しく表示される', () => {
     const mockOnClick = vi.fn();
-    render(<ChoiceCard term="ヴェルサイユ条約（ヴェルサイユ講和条約）" onClick={mockOnClick} />);
-    expect(screen.getByText('ヴェルサイユ条約（ヴェルサイユ講和条約）')).toBeInTheDocument();
+    render(
+      <ChoiceCard
+        term="ヴェルサイユ条約（ヴェルサイユ講和条約）"
+        onClick={mockOnClick}
+      />,
+    );
+    expect(
+      screen.getByText('ヴェルサイユ条約（ヴェルサイユ講和条約）'),
+    ).toBeInTheDocument();
   });
 
   it('複数行になる長い用語でもレイアウトが崩れない', () => {
     const mockOnClick = vi.fn();
     const { container } = render(
-      <ChoiceCard term="第一次世界大戦後のパリ講和会議" onClick={mockOnClick} />
+      <ChoiceCard
+        term="第一次世界大戦後のパリ講和会議"
+        onClick={mockOnClick}
+      />,
     );
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).toBeInTheDocument();
@@ -91,7 +101,13 @@ describe('ChoiceCard', () => {
   describe('フィードバック状態', () => {
     it('feedbackState="correct"の時、success色が適用される', () => {
       const mockOnClick = vi.fn();
-      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />);
+      render(
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          feedbackState="correct"
+        />,
+      );
 
       const text = screen.getByText('徳川家康');
       expect(text).toHaveStyle({ color: 'white' });
@@ -99,7 +115,13 @@ describe('ChoiceCard', () => {
 
     it('feedbackState="incorrect"の時、error色が適用される', () => {
       const mockOnClick = vi.fn();
-      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="incorrect" />);
+      render(
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          feedbackState="incorrect"
+        />,
+      );
 
       const text = screen.getByText('徳川家康');
       expect(text).toHaveStyle({ color: 'white' });
@@ -108,7 +130,11 @@ describe('ChoiceCard', () => {
     it('feedbackStateがある時、カーソルがdefaultになる', () => {
       const mockOnClick = vi.fn();
       const { container } = render(
-        <ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          feedbackState="correct"
+        />,
       );
 
       const paper = container.querySelector('.MuiPaper-root');
@@ -117,7 +143,13 @@ describe('ChoiceCard', () => {
 
     it('feedbackStateがnullの時、通常のスタイルが適用される', () => {
       const mockOnClick = vi.fn();
-      const { container } = render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState={null} />);
+      const { container } = render(
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          feedbackState={null}
+        />,
+      );
 
       const paper = container.querySelector('.MuiPaper-root');
       expect(paper).toHaveStyle({ cursor: 'pointer' });
@@ -126,7 +158,13 @@ describe('ChoiceCard', () => {
     it('正解フィードバック状態でクリックハンドラが呼ばれる', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
-      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="correct" />);
+      render(
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          feedbackState="correct"
+        />,
+      );
 
       const card = screen.getByText('徳川家康').closest('.MuiPaper-root');
       if (card) {
@@ -139,7 +177,13 @@ describe('ChoiceCard', () => {
     it('不正解フィードバック状態でクリックハンドラが呼ばれる', async () => {
       const user = userEvent.setup();
       const mockOnClick = vi.fn();
-      render(<ChoiceCard term="徳川家康" onClick={mockOnClick} feedbackState="incorrect" />);
+      render(
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          feedbackState="incorrect"
+        />,
+      );
 
       const card = screen.getByText('徳川家康').closest('.MuiPaper-root');
       if (card) {
@@ -152,7 +196,12 @@ describe('ChoiceCard', () => {
     it('feedbackStateとisSelectedが同時に指定された場合、feedbackStateが優先される', () => {
       const mockOnClick = vi.fn();
       const { container } = render(
-        <ChoiceCard term="徳川家康" onClick={mockOnClick} isSelected={true} feedbackState="correct" />
+        <ChoiceCard
+          term="徳川家康"
+          onClick={mockOnClick}
+          isSelected={true}
+          feedbackState="correct"
+        />,
       );
 
       const text = screen.getByText('徳川家康');

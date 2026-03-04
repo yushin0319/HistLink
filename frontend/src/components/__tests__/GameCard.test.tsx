@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import GameCard from '../GameCard';
 
 describe('GameCard', () => {
@@ -20,7 +20,9 @@ describe('GameCard', () => {
   });
 
   it('カードが正しくレンダリングされる', () => {
-    const { container } = render(<GameCard term="テスト用語" category="現代" />);
+    const { container } = render(
+      <GameCard term="テスト用語" category="現代" />,
+    );
     // MUI Paperコンポーネントが存在することを確認
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).toBeInTheDocument();
@@ -32,7 +34,7 @@ describe('GameCard', () => {
         term="サンフランシスコ平和条約"
         category="現代"
         description="1951年に調印された第二次世界大戦の講和条約。日本の主権回復と占領終結を実現し、戦後の国際社会への復帰を果たした。"
-      />
+      />,
     );
     expect(screen.getByText(/1951年に調印された/)).toBeInTheDocument();
   });
@@ -49,12 +51,14 @@ describe('GameCard', () => {
         term="サンフランシスコ平和条約"
         category="現代"
         description="1951年に調印された第二次世界大戦の講和条約。日本の主権回復と占領終結を実現し、戦後の国際社会への復帰を果たした。"
-      />
+      />,
     );
     // MUI Paperコンポーネントが正常に存在することを確認
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).toBeInTheDocument();
     // 長いdescriptionが表示されることを確認
-    expect(screen.getByText(/1951年に調印された第二次世界大戦の講和条約/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/1951年に調印された第二次世界大戦の講和条約/),
+    ).toBeInTheDocument();
   });
 });

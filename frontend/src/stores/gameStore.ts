@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { RouteStepWithChoices, RankingEntry } from '../types/api';
+import type { RankingEntry, RouteStepWithChoices } from '../types/api';
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 
@@ -49,7 +49,12 @@ interface GameState {
   // アクション
   setPlayerName: (name: string) => void;
   loadGameData: (gameId: string, steps: RouteStepWithChoices[]) => void;
-  setRankingData: (myRank: number, rankings: RankingEntry[], overallMyRank: number, overallRankings: RankingEntry[]) => void;
+  setRankingData: (
+    myRank: number,
+    rankings: RankingEntry[],
+    overallMyRank: number,
+    overallRankings: RankingEntry[],
+  ) => void;
   requestStartGame: (difficulty: Difficulty, totalStages: number) => void;
   confirmStart: () => void;
   startGame: (difficulty: Difficulty, totalStages: number) => void;
@@ -158,7 +163,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   answerQuestion: (selectedTermId) => {
     const state = get();
 
-    if (!state.isPlaying || state.steps.length === 0 || state.isFeedbackPhase) return;
+    if (!state.isPlaying || state.steps.length === 0 || state.isFeedbackPhase)
+      return;
 
     const currentStep = state.steps[state.currentStage];
     if (!currentStep) return;

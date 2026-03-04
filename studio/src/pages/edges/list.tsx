@@ -1,6 +1,12 @@
-import { useDataGrid, List, EditButton, ShowButton, DeleteButton } from '@refinedev/mui';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Stack, Chip } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DeleteButton,
+  EditButton,
+  List,
+  ShowButton,
+  useDataGrid,
+} from '@refinedev/mui';
 
 export function EdgeList() {
   const { dataGridProps } = useDataGrid({
@@ -20,7 +26,13 @@ export function EdgeList() {
       renderCell: ({ value }) => (
         <Chip
           label={value === 'easy' ? '易' : value === 'hard' ? '難' : '普'}
-          color={value === 'easy' ? 'success' : value === 'hard' ? 'error' : 'default'}
+          color={
+            value === 'easy'
+              ? 'success'
+              : value === 'hard'
+                ? 'error'
+                : 'default'
+          }
           size="small"
         />
       ),

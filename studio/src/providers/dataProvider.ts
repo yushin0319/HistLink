@@ -1,5 +1,5 @@
 import type { DataProvider } from '@refinedev/core';
-import type { Term, Edge } from '../contexts/DataContext';
+import type { Edge, Term } from '../contexts/DataContext';
 
 const API_URL = '/api/admin';
 
@@ -12,7 +12,9 @@ export interface CacheUpdaters {
   deleteEdge?: (id: number) => void;
 }
 
-export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvider {
+export function createDataProvider(
+  cacheUpdaters: CacheUpdaters = {},
+): DataProvider {
   return {
     getList: async ({ resource, pagination, sorters, filters }) => {
       const { current = 1, pageSize = 10 } = pagination ?? {};
@@ -115,7 +117,7 @@ export function createDataProvider(cacheUpdaters: CacheUpdaters = {}): DataProvi
     // Optional methods
     getMany: async ({ resource, ids }) => {
       const promises = ids.map((id) =>
-        fetch(`${API_URL}/${resource}/${id}`).then((res) => res.json())
+        fetch(`${API_URL}/${resource}/${id}`).then((res) => res.json()),
       );
       const data = await Promise.all(promises);
 

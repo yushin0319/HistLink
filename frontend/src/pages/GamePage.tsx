@@ -1,12 +1,12 @@
+import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Box, Button, Container, Typography, Grid } from '@mui/material';
-import { useGameStore } from '../stores/gameStore';
-import { startGameSession } from '../services/gameApi';
-import GameCard from '../components/GameCard';
-import ChoiceCard from '../components/ChoiceCard';
-import GameHeader from '../components/GameHeader';
-import EdgeDisplay from '../components/EdgeDisplay';
 import BackgroundImage from '../components/BackgroundImage';
+import ChoiceCard from '../components/ChoiceCard';
+import EdgeDisplay from '../components/EdgeDisplay';
+import GameCard from '../components/GameCard';
+import GameHeader from '../components/GameHeader';
+import { startGameSession } from '../services/gameApi';
+import { useGameStore } from '../stores/gameStore';
 
 export default function GamePage() {
   const {
@@ -35,7 +35,7 @@ export default function GamePage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
+  const [_retryCount, setRetryCount] = useState(0);
 
   const handleRetry = () => {
     setRetryCount((c) => c + 1);
@@ -61,7 +61,7 @@ export default function GamePage() {
 
       return () => clearTimeout(timer);
     }
-  }, [showEdge, lastEdgeKeyword, lastEdgeExplanation]);
+  }, [showEdge]);
 
   // ゲームセッション開始（全ルート+選択肢を一括取得）- 初回のみ
   useEffect(() => {
@@ -98,8 +98,10 @@ export default function GamePage() {
     };
 
     initGame();
-    return () => { cancelled = true; };
-  }, [difficulty, totalStages, gameId, loadGameData, startGame, retryCount]);
+    return () => {
+      cancelled = true;
+    };
+  }, [difficulty, totalStages, gameId, loadGameData, startGame]);
 
   // タイマー管理（0.1秒ごと）
   useEffect(() => {

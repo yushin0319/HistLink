@@ -1,18 +1,18 @@
-import { apiClient } from './api';
 import type {
-  GameStartResponse,
   GameResultRequest,
   GameResultResponse,
+  GameStartResponse,
   GameUpdateRequest,
   OverallRankingResponse,
 } from '../types/api';
+import { apiClient } from './api';
 
 /**
  * ゲームセッションを開始（全ルート+選択肢を一括取得）
  */
 export async function startGameSession(
   difficulty: string,
-  length: number
+  length: number,
 ): Promise<GameStartResponse> {
   const response = await apiClient.post<GameStartResponse>('/games/start', {
     difficulty,
@@ -26,9 +26,12 @@ export async function startGameSession(
  */
 export async function submitGameResult(
   gameId: string,
-  result: GameResultRequest
+  result: GameResultRequest,
 ): Promise<GameResultResponse> {
-  const response = await apiClient.post<GameResultResponse>(`/games/${gameId}/result`, result);
+  const response = await apiClient.post<GameResultResponse>(
+    `/games/${gameId}/result`,
+    result,
+  );
   return response.data;
 }
 
@@ -37,9 +40,12 @@ export async function submitGameResult(
  */
 export async function updateGame(
   gameId: string,
-  request: GameUpdateRequest
+  request: GameUpdateRequest,
 ): Promise<GameResultResponse> {
-  const response = await apiClient.patch<GameResultResponse>(`/games/${gameId}`, request);
+  const response = await apiClient.patch<GameResultResponse>(
+    `/games/${gameId}`,
+    request,
+  );
   return response.data;
 }
 
@@ -47,10 +53,13 @@ export async function updateGame(
  * 全体ランキングを取得
  */
 export async function getOverallRanking(
-  myScore: number
+  myScore: number,
 ): Promise<OverallRankingResponse> {
-  const response = await apiClient.get<OverallRankingResponse>('/games/rankings/overall', {
-    params: { my_score: myScore },
-  });
+  const response = await apiClient.get<OverallRankingResponse>(
+    '/games/rankings/overall',
+    {
+      params: { my_score: myScore },
+    },
+  );
   return response.data;
 }

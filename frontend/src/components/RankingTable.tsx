@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Box, Typography, Button, TextField, Tabs, Tab } from '@mui/material';
+import { Box, Button, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '../stores/gameStore';
 import type { RankingEntry as ApiRankingEntry } from '../types/api';
 
@@ -26,7 +26,7 @@ interface RankingTableProps {
 function buildDisplayRanking(
   apiRankings: ApiRankingEntry[],
   userScore: number,
-  userRank: number
+  userRank: number,
 ): { rankings: DisplayRankingEntry[]; showEllipsis: boolean } {
   // 6位以下の場合：5位まで表示 + 省略 + ユーザー（下部に別途表示）
   if (userRank > 5) {
@@ -39,12 +39,14 @@ function buildDisplayRanking(
   }
 
   // 5位以内の場合：そのまま表示し、自分のエントリをマーク
-  const result: DisplayRankingEntry[] = apiRankings.slice(0, 5).map((entry) => ({
-    rank: entry.rank,
-    name: entry.user_name,
-    score: entry.score,
-    isCurrentUser: entry.rank === userRank && entry.score === userScore,
-  }));
+  const result: DisplayRankingEntry[] = apiRankings
+    .slice(0, 5)
+    .map((entry) => ({
+      rank: entry.rank,
+      name: entry.user_name,
+      score: entry.score,
+      isCurrentUser: entry.rank === userRank && entry.score === userScore,
+    }));
   return { rankings: result, showEllipsis: false };
 }
 
@@ -111,7 +113,7 @@ export default function RankingTable({
 
   const { rankings, showEllipsis } = useMemo(
     () => buildDisplayRanking(activeRankings, currentUserScore, activeMyRank),
-    [activeRankings, currentUserScore, activeMyRank]
+    [activeRankings, currentUserScore, activeMyRank],
   );
 
   return (
@@ -124,7 +126,14 @@ export default function RankingTable({
       }}
     >
       {/* タブとルートボタン */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 1,
+        }}
+      >
         <Tabs
           value={tabIndex}
           onChange={handleTabChange}
@@ -165,36 +174,120 @@ export default function RankingTable({
 
       {/* ランキングリスト */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          {rankings.map((entry) => (
+        {rankings.map((entry) => (
+          <Box
+            key={`${entry.rank}-${entry.name}`}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              px: 1.5,
+              py: 1,
+              bgcolor: entry.isCurrentUser ? 'transparent' : 'grey.100',
+              borderRadius: 1,
+              ...(entry.isCurrentUser && {
+                border: '2px solid',
+                borderColor: 'primary.main',
+              }),
+            }}
+          >
+            {/* 順位 */}
+            <Typography
+              sx={{
+                width: '2rem',
+                fontWeight: 'bold',
+                fontSize: entry.rank <= 3 ? '1.1rem' : '1rem',
+                color:
+                  entry.rank === 1
+                    ? '#FFD700'
+                    : entry.rank === 2
+                      ? '#C0C0C0'
+                      : entry.rank === 3
+                        ? '#CD7F32'
+                        : 'text.primary',
+              }}
+            >
+              {entry.rank}
+            </Typography>
+
+            {/* 名前 */}
+            {entry.isCurrentUser && isEditing ? (
+              <TextField
+                value={editingName}
+                onChange={(e) => setEditingName(e.target.value)}
+                onBlur={handleNameSubmit}
+                onKeyDown={handleKeyDown}
+                autoFocus
+                disabled={isSubmitting}
+                size="small"
+                variant="standard"
+                sx={{
+                  flex: 1,
+                  '& .MuiInputBase-input': {
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    py: 0,
+                  },
+                }}
+                inputProps={{ maxLength: 20 }}
+              />
+            ) : (
+              <Typography
+                onClick={entry.isCurrentUser ? handleNameClick : undefined}
+                sx={{
+                  flex: 1,
+                  fontWeight: entry.isCurrentUser ? 'bold' : 'medium',
+                  color: entry.isCurrentUser ? 'primary.main' : 'text.primary',
+                  cursor: entry.isCurrentUser ? 'pointer' : 'default',
+                  '&:hover': entry.isCurrentUser
+                    ? { textDecoration: 'underline' }
+                    : {},
+                }}
+              >
+                {entry.name}
+              </Typography>
+            )}
+
+            {/* スコア */}
+            <Typography
+              sx={{
+                fontWeight: 'bold',
+                fontVariantNumeric: 'tabular-nums',
+                color: entry.isCurrentUser ? 'primary.main' : 'text.primary',
+              }}
+            >
+              {entry.score}
+            </Typography>
+          </Box>
+        ))}
+
+        {/* 現在のユーザー（6位以下の場合） */}
+        {showEllipsis && (
+          <>
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 0.5 }}>
+              <Typography color="text.secondary">・・・</Typography>
+            </Box>
             <Box
-              key={`${entry.rank}-${entry.name}`}
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 px: 1.5,
                 py: 1,
-                bgcolor: entry.isCurrentUser ? 'transparent' : 'grey.100',
+                bgcolor: 'transparent',
                 borderRadius: 1,
-                ...(entry.isCurrentUser && {
-                  border: '2px solid',
-                  borderColor: 'primary.main',
-                }),
+                border: '2px solid',
+                borderColor: 'primary.main',
               }}
             >
-              {/* 順位 */}
               <Typography
                 sx={{
                   width: '2rem',
                   fontWeight: 'bold',
-                  fontSize: entry.rank <= 3 ? '1.1rem' : '1rem',
-                  color: entry.rank === 1 ? '#FFD700' : entry.rank === 2 ? '#C0C0C0' : entry.rank === 3 ? '#CD7F32' : 'text.primary',
+                  color: 'primary.main',
                 }}
               >
-                {entry.rank}
+                {activeMyRank}
               </Typography>
-
-              {/* 名前 */}
-              {entry.isCurrentUser && isEditing ? (
+              {isEditing ? (
                 <TextField
                   value={editingName}
                   onChange={(e) => setEditingName(e.target.value)}
@@ -216,94 +309,31 @@ export default function RankingTable({
                 />
               ) : (
                 <Typography
-                  onClick={entry.isCurrentUser ? handleNameClick : undefined}
+                  onClick={handleNameClick}
                   sx={{
                     flex: 1,
-                    fontWeight: entry.isCurrentUser ? 'bold' : 'medium',
-                    color: entry.isCurrentUser ? 'primary.main' : 'text.primary',
-                    cursor: entry.isCurrentUser ? 'pointer' : 'default',
-                    '&:hover': entry.isCurrentUser ? { textDecoration: 'underline' } : {},
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    cursor: 'pointer',
+                    '&:hover': { textDecoration: 'underline' },
                   }}
                 >
-                  {entry.name}
+                  {playerName}
                 </Typography>
               )}
-
-              {/* スコア */}
               <Typography
                 sx={{
                   fontWeight: 'bold',
                   fontVariantNumeric: 'tabular-nums',
-                  color: entry.isCurrentUser ? 'primary.main' : 'text.primary',
+                  color: 'primary.main',
                 }}
               >
-                {entry.score}
+                {currentUserScore}
               </Typography>
             </Box>
-          ))}
-
-          {/* 現在のユーザー（6位以下の場合） */}
-          {showEllipsis && (
-            <>
-              <Box sx={{ display: 'flex', justifyContent: 'center', py: 0.5 }}>
-                <Typography color="text.secondary">・・・</Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  px: 1.5,
-                  py: 1,
-                  bgcolor: 'transparent',
-                  borderRadius: 1,
-                  border: '2px solid',
-                  borderColor: 'primary.main',
-                }}
-              >
-                <Typography sx={{ width: '2rem', fontWeight: 'bold', color: 'primary.main' }}>
-                  {activeMyRank}
-                </Typography>
-                {isEditing ? (
-                  <TextField
-                    value={editingName}
-                    onChange={(e) => setEditingName(e.target.value)}
-                    onBlur={handleNameSubmit}
-                    onKeyDown={handleKeyDown}
-                    autoFocus
-                    disabled={isSubmitting}
-                    size="small"
-                    variant="standard"
-                    sx={{
-                      flex: 1,
-                      '& .MuiInputBase-input': {
-                        fontWeight: 'bold',
-                        color: 'primary.main',
-                        py: 0,
-                      },
-                    }}
-                    inputProps={{ maxLength: 20 }}
-                  />
-                ) : (
-                  <Typography
-                    onClick={handleNameClick}
-                    sx={{
-                      flex: 1,
-                      fontWeight: 'bold',
-                      color: 'primary.main',
-                      cursor: 'pointer',
-                      '&:hover': { textDecoration: 'underline' },
-                    }}
-                  >
-                    {playerName}
-                  </Typography>
-                )}
-                <Typography sx={{ fontWeight: 'bold', fontVariantNumeric: 'tabular-nums', color: 'primary.main' }}>
-                  {currentUserScore}
-                </Typography>
-              </Box>
-            </>
-          )}
-        </Box>
+          </>
+        )}
+      </Box>
     </Box>
   );
 }

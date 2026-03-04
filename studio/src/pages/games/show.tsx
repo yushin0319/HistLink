@@ -1,6 +1,16 @@
-import { Show } from '@refinedev/mui';
+import {
+  Chip,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import { useShow } from '@refinedev/core';
-import { Typography, Stack, Chip, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
+import { Show } from '@refinedev/mui';
 
 const DIFFICULTY_LABELS: Record<string, string> = {
   easy: 'かんたん',
@@ -39,7 +49,9 @@ export function GameShow() {
             </Typography>
             <div>
               <Chip
-                label={DIFFICULTY_LABELS[record?.difficulty] ?? record?.difficulty}
+                label={
+                  DIFFICULTY_LABELS[record?.difficulty] ?? record?.difficulty
+                }
                 color={
                   record?.difficulty === 'easy'
                     ? 'success'

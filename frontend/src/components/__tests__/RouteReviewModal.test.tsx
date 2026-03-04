@@ -1,14 +1,20 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import RouteReviewModal from '../RouteReviewModal';
+import { describe, expect, it, vi } from 'vitest';
 import type { RouteStepWithChoices } from '../../types/api';
+import RouteReviewModal from '../RouteReviewModal';
 
 // モックデータ
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: '邪馬台国', tier: 1, category: '弥生時代', description: '' },
+    term: {
+      id: 1,
+      name: '邪馬台国',
+      tier: 1,
+      category: '弥生時代',
+      description: '',
+    },
     correct_next_id: 2,
     choices: [],
     difficulty: 'easy',
@@ -17,7 +23,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 1,
-    term: { id: 2, name: '卑弥呼', tier: 1, category: '弥生時代', description: '' },
+    term: {
+      id: 2,
+      name: '卑弥呼',
+      tier: 1,
+      category: '弥生時代',
+      description: '',
+    },
     correct_next_id: 3,
     choices: [],
     difficulty: 'normal',
@@ -26,7 +38,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 2,
-    term: { id: 3, name: '大化の改新', tier: 1, category: '飛鳥時代', description: '' },
+    term: {
+      id: 3,
+      name: '大化の改新',
+      tier: 1,
+      category: '飛鳥時代',
+      description: '',
+    },
     correct_next_id: null,
     choices: [],
     difficulty: '',
@@ -44,7 +62,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       expect(screen.getByRole('presentation')).toBeInTheDocument();
@@ -57,7 +75,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       expect(screen.queryByRole('presentation')).not.toBeInTheDocument();
@@ -72,7 +90,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       expect(screen.getByText('邪馬台国')).toBeInTheDocument();
@@ -89,7 +107,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       expect(screen.getByText('女王卑弥呼')).toBeInTheDocument();
@@ -105,7 +123,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       expect(screen.getByText('邪馬台国を統治した女王')).toBeInTheDocument();
@@ -121,7 +139,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       expect(screen.getByRole('button')).toBeInTheDocument();
@@ -136,7 +154,7 @@ describe('RouteReviewModal', () => {
           onClose={mockOnClose}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       const closeButton = screen.getByRole('button');
@@ -155,7 +173,7 @@ describe('RouteReviewModal', () => {
             onClose={vi.fn()}
             steps={[]}
             falseSteps={[]}
-          />
+          />,
         );
       }).not.toThrow();
     });
@@ -166,7 +184,13 @@ describe('RouteReviewModal', () => {
       const stepsWithoutDesc: RouteStepWithChoices[] = [
         {
           step_no: 0,
-          term: { id: 1, name: 'テスト用語', tier: 1, category: 'テスト時代', description: '' },
+          term: {
+            id: 1,
+            name: 'テスト用語',
+            tier: 1,
+            category: 'テスト時代',
+            description: '',
+          },
           correct_next_id: 2,
           choices: [],
           difficulty: '',
@@ -175,7 +199,13 @@ describe('RouteReviewModal', () => {
         },
         {
           step_no: 1,
-          term: { id: 2, name: '次の用語', tier: 1, category: 'テスト時代', description: '' },
+          term: {
+            id: 2,
+            name: '次の用語',
+            tier: 1,
+            category: 'テスト時代',
+            description: '',
+          },
           correct_next_id: null,
           choices: [],
           difficulty: '',
@@ -190,7 +220,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={stepsWithoutDesc}
           falseSteps={[]}
-        />
+        />,
       );
 
       // キーワードは表示される
@@ -207,11 +237,13 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[]}
-        />
+        />,
       );
 
       // MUI Modalのコンテンツボックスを確認
-      const contentBox = screen.getByRole('presentation').querySelector('[class*="MuiBox-root"]');
+      const contentBox = screen
+        .getByRole('presentation')
+        .querySelector('[class*="MuiBox-root"]');
       expect(contentBox).toBeInTheDocument();
     });
   });
@@ -224,7 +256,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[0]} // index 0のエッジで間違えた
-        />
+        />,
       );
 
       // 「女王卑弥呼」キーワードが存在することを確認
@@ -238,7 +270,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={mockSteps}
           falseSteps={[0]} // index 0のエッジで間違えた → index 1のtermに赤枠
-        />
+        />,
       );
 
       // 卑弥呼（index 1）が表示されることを確認
@@ -250,7 +282,13 @@ describe('RouteReviewModal', () => {
       const fiveSteps: RouteStepWithChoices[] = [
         {
           step_no: 0,
-          term: { id: 1, name: 'Term1', tier: 1, category: '', description: '' },
+          term: {
+            id: 1,
+            name: 'Term1',
+            tier: 1,
+            category: '',
+            description: '',
+          },
           correct_next_id: 2,
           choices: [],
           difficulty: 'easy',
@@ -259,7 +297,13 @@ describe('RouteReviewModal', () => {
         },
         {
           step_no: 1,
-          term: { id: 2, name: 'Term2', tier: 1, category: '', description: '' },
+          term: {
+            id: 2,
+            name: 'Term2',
+            tier: 1,
+            category: '',
+            description: '',
+          },
           correct_next_id: 3,
           choices: [],
           difficulty: 'easy',
@@ -268,7 +312,13 @@ describe('RouteReviewModal', () => {
         },
         {
           step_no: 2,
-          term: { id: 3, name: 'Term3', tier: 1, category: '', description: '' },
+          term: {
+            id: 3,
+            name: 'Term3',
+            tier: 1,
+            category: '',
+            description: '',
+          },
           correct_next_id: 4,
           choices: [],
           difficulty: 'easy',
@@ -277,7 +327,13 @@ describe('RouteReviewModal', () => {
         },
         {
           step_no: 3,
-          term: { id: 4, name: 'Term4', tier: 1, category: '', description: '' },
+          term: {
+            id: 4,
+            name: 'Term4',
+            tier: 1,
+            category: '',
+            description: '',
+          },
           correct_next_id: 5,
           choices: [],
           difficulty: 'easy',
@@ -286,7 +342,13 @@ describe('RouteReviewModal', () => {
         },
         {
           step_no: 4,
-          term: { id: 5, name: 'Term5', tier: 1, category: '', description: '' },
+          term: {
+            id: 5,
+            name: 'Term5',
+            tier: 1,
+            category: '',
+            description: '',
+          },
           correct_next_id: null,
           choices: [],
           difficulty: '',
@@ -301,7 +363,7 @@ describe('RouteReviewModal', () => {
           onClose={vi.fn()}
           steps={fiveSteps}
           falseSteps={[0, 1, 2]} // 3回ミス：index 0, 1, 2
-        />
+        />,
       );
 
       // 全てのTermが表示されることを確認

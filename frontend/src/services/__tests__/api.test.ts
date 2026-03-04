@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiClient } from '../api';
 
 describe('api', () => {
@@ -22,17 +22,20 @@ describe('api', () => {
 
       await expect(apiClient.get('/test')).rejects.toThrow();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'API Error:',
-        { error: 'Server Error' }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('API Error:', {
+        error: 'Server Error',
+      });
     });
 
     it('ネットワークエラー時にconsole.errorが呼ばれる', async () => {
       // リクエストが送信されたがレスポンスがない場合をシミュレート
       mock.onGet('/test').reply(() => {
-        const error: any = new Error('Network Error');
-        error.request = { /* mock request object */ };
+        const error = new Error('Network Error') as Error & {
+          request: unknown;
+        };
+        error.request = {
+          /* mock request object */
+        };
         return Promise.reject(error);
       });
 
@@ -40,7 +43,7 @@ describe('api', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'Network Error:',
-        expect.anything()
+        expect.anything(),
       );
     });
 
@@ -52,7 +55,7 @@ describe('api', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'Request Error:',
-        expect.any(String)
+        expect.any(String),
       );
     });
   });
@@ -63,7 +66,9 @@ describe('api', () => {
     });
 
     it('Content-Typeヘッダーが設定されている', () => {
-      expect(apiClient.defaults.headers['Content-Type']).toBe('application/json');
+      expect(apiClient.defaults.headers['Content-Type']).toBe(
+        'application/json',
+      );
     });
 
     it('タイムアウトが設定されている', () => {

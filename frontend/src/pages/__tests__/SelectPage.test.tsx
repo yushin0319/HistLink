@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SelectPage from '../SelectPage';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useGameStore } from '../../stores/gameStore';
+import SelectPage from '../SelectPage';
 
 // モック化
 vi.mock('../../stores/gameStore');
@@ -25,9 +25,15 @@ describe('SelectPage', () => {
 
     it('難易度選択ボタンが3つ表示される', () => {
       render(<SelectPage />);
-      expect(screen.getByRole('button', { name: /かんたん/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /ふつう/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /難しい/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /かんたん/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /ふつう/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /難しい/i }),
+      ).toBeInTheDocument();
     });
 
     it('ステージ数選択ボタンが3つ表示される', () => {
@@ -39,7 +45,9 @@ describe('SelectPage', () => {
 
     it('スタートボタンが表示される', () => {
       render(<SelectPage />);
-      expect(screen.getByRole('button', { name: /スタート/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /スタート/i }),
+      ).toBeInTheDocument();
     });
 
     it('初期状態では「ふつう」と「10問」が選択されている', () => {

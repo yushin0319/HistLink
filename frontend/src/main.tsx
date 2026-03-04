@@ -1,6 +1,6 @@
+import { CssBaseline, createTheme, ThemeProvider } from '@mui/material';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import App from './App.tsx';
 
 const lightTheme = createTheme({
@@ -22,7 +22,10 @@ const lightTheme = createTheme({
   },
 });
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root');
+if (!root) throw new Error('Root element not found');
+
+createRoot(root).render(
   <StrictMode>
     <ThemeProvider theme={lightTheme}>
       <CssBaseline />

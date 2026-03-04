@@ -1,37 +1,41 @@
-import { useMemo } from 'react';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import LinkIcon from '@mui/icons-material/Link';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import { CssBaseline, GlobalStyles, ThemeProvider } from '@mui/material';
 import { Refine } from '@refinedev/core';
 import {
+  RefineSnackbarProvider,
+  RefineThemes,
   ThemedLayoutV2,
   ThemedTitleV2,
-  RefineThemes,
-  RefineSnackbarProvider,
   useNotificationProvider,
 } from '@refinedev/mui';
-import { CssBaseline, ThemeProvider, GlobalStyles } from '@mui/material';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import routerProvider from '@refinedev/react-router-v6';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import LinkIcon from '@mui/icons-material/Link';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-
-import { createDataProvider } from './providers/dataProvider';
+import { useMemo } from 'react';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { DataProvider, useData } from './contexts/DataContext';
-import { TermList, TermCreate, TermEdit, TermShow } from './pages/terms';
-import { EdgeList, EdgeCreate, EdgeEdit, EdgeShow } from './pages/edges';
+import { EdgeCreate, EdgeEdit, EdgeList, EdgeShow } from './pages/edges';
 import { GameList, GameShow } from './pages/games';
+import { TermCreate, TermEdit, TermList, TermShow } from './pages/terms';
+import { createDataProvider } from './providers/dataProvider';
 
 function RefineApp() {
-  const { addTerm, updateTerm, deleteTerm, addEdge, updateEdge, deleteEdge } = useData();
+  const { addTerm, updateTerm, deleteTerm, addEdge, updateEdge, deleteEdge } =
+    useData();
 
-  const dataProvider = useMemo(() => createDataProvider({
-    addTerm,
-    updateTerm,
-    deleteTerm,
-    addEdge,
-    updateEdge,
-    deleteEdge,
-  }), [addTerm, updateTerm, deleteTerm, addEdge, updateEdge, deleteEdge]);
+  const dataProvider = useMemo(
+    () =>
+      createDataProvider({
+        addTerm,
+        updateTerm,
+        deleteTerm,
+        addEdge,
+        updateEdge,
+        deleteEdge,
+      }),
+    [addTerm, updateTerm, deleteTerm, addEdge, updateEdge, deleteEdge],
+  );
 
   return (
     <Refine

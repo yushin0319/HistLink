@@ -1,28 +1,28 @@
-import { useState, Fragment, useMemo } from 'react';
-import { List, EditButton, ShowButton, DeleteButton } from '@refinedev/mui';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {
-  Stack,
   Box,
+  Chip,
+  CircularProgress,
   Collapse,
+  IconButton,
+  Paper,
+  Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
   TablePagination,
-  IconButton,
-  Typography,
-  Chip,
-  Paper,
+  TableRow,
   Tabs,
-  Tab,
-  CircularProgress,
+  Typography,
 } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { DeleteButton, EditButton, List, ShowButton } from '@refinedev/mui';
+import { Fragment, useMemo, useState } from 'react';
 
-import { useData, Term, Edge } from '../../contexts/DataContext';
+import { type Edge, type Term, useData } from '../../contexts/DataContext';
 
 type TierFilter = 'all' | 1 | 2 | 3;
 
@@ -32,9 +32,10 @@ function TermRow({ term }: { term: Term }) {
   const edges = getEdgesForTerm(term.id);
 
   const renderEdgeRow = (edge: Edge) => {
-    const connectedTerm = edge.from_term_id === term.id
-      ? { id: edge.to_term_id, name: edge.to_term_name }
-      : { id: edge.from_term_id, name: edge.from_term_name };
+    const connectedTerm =
+      edge.from_term_id === term.id
+        ? { id: edge.to_term_id, name: edge.to_term_name }
+        : { id: edge.from_term_id, name: edge.from_term_name };
 
     return (
       <TableRow key={edge.id} sx={{ '&:last-child td': { borderBottom: 0 } }}>
@@ -44,8 +45,20 @@ function TermRow({ term }: { term: Term }) {
         <TableCell sx={{ maxWidth: 400 }}>{edge.description}</TableCell>
         <TableCell>
           <Chip
-            label={edge.difficulty === 'easy' ? '易' : edge.difficulty === 'hard' ? '難' : '普'}
-            color={edge.difficulty === 'easy' ? 'success' : edge.difficulty === 'hard' ? 'error' : 'default'}
+            label={
+              edge.difficulty === 'easy'
+                ? '易'
+                : edge.difficulty === 'hard'
+                  ? '難'
+                  : '普'
+            }
+            color={
+              edge.difficulty === 'easy'
+                ? 'success'
+                : edge.difficulty === 'hard'
+                  ? 'error'
+                  : 'default'
+            }
             size="small"
           />
         </TableCell>
@@ -72,7 +85,13 @@ function TermRow({ term }: { term: Term }) {
         <TableCell>
           <Chip
             label={term.tier === 1 ? 'T1' : term.tier === 3 ? 'T3' : 'T2'}
-            color={term.tier === 1 ? 'success' : term.tier === 3 ? 'error' : 'default'}
+            color={
+              term.tier === 1
+                ? 'success'
+                : term.tier === 3
+                  ? 'error'
+                  : 'default'
+            }
             size="small"
           />
         </TableCell>
@@ -93,7 +112,9 @@ function TermRow({ term }: { term: Term }) {
                 「{term.name}」の関連用語 ({edges.length}件)
               </Typography>
               {edges.length === 0 ? (
-                <Typography color="text.secondary">関連する用語がありません</Typography>
+                <Typography color="text.secondary">
+                  関連する用語がありません
+                </Typography>
               ) : (
                 <Table size="small">
                   <TableHead>
@@ -105,9 +126,7 @@ function TermRow({ term }: { term: Term }) {
                       <TableCell width={80}>難易度</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {edges.map(renderEdgeRow)}
-                  </TableBody>
+                  <TableBody>{edges.map(renderEdgeRow)}</TableBody>
                 </Table>
               )}
             </Box>
@@ -174,7 +193,9 @@ export function TermList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedTerms.map((term) => <TermRow key={term.id} term={term} />)}
+            {paginatedTerms.map((term) => (
+              <TermRow key={term.id} term={term} />
+            ))}
           </TableBody>
         </Table>
         <TablePagination

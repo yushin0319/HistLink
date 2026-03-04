@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
-import SelectPage from './pages/SelectPage';
+import { useEffect, useState } from 'react';
 import GamePage from './pages/GamePage';
 import ResultPage from './pages/ResultPage';
 import RulePage from './pages/RulePage';
+import SelectPage from './pages/SelectPage';
 import { useGameStore } from './stores/gameStore';
 
 const TUTORIAL_SEEN_KEY = 'histlink_tutorial_seen';
 
 export default function App() {
-  const { isPlaying, isCompleted, lives, gameId, pendingStart, confirmStart } = useGameStore();
+  const { isPlaying, isCompleted, lives, gameId, pendingStart, confirmStart } =
+    useGameStore();
   const [showRule, setShowRule] = useState(false);
   const [showRulePreview, setShowRulePreview] = useState(false);
 

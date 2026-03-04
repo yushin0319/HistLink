@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
-import ResultPage from '../ResultPage';
-import { useGameStore } from '../../stores/gameStore';
+import { act, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as gameApi from '../../services/gameApi';
+import { useGameStore } from '../../stores/gameStore';
 import type { RouteStepWithChoices } from '../../types/api';
+import ResultPage from '../ResultPage';
 
 // gameApi をモック
 vi.mock('../../services/gameApi', () => ({
@@ -19,7 +19,13 @@ const mockGetOverallRanking = vi.mocked(gameApi.getOverallRanking);
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: 'テスト用語1', tier: 1, category: '時代1', description: '' },
+    term: {
+      id: 1,
+      name: 'テスト用語1',
+      tier: 1,
+      category: '時代1',
+      description: '',
+    },
     correct_next_id: 2,
     choices: [],
     difficulty: 'easy',
@@ -28,7 +34,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 1,
-    term: { id: 2, name: 'テスト用語2', tier: 1, category: '時代2', description: '' },
+    term: {
+      id: 2,
+      name: 'テスト用語2',
+      tier: 1,
+      category: '時代2',
+      description: '',
+    },
     correct_next_id: null,
     choices: [],
     difficulty: '',
@@ -55,12 +67,22 @@ describe('ResultPage 表示・アニメーション', () => {
       playerName: 'テストユーザー',
       myRank: 1,
       rankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 2332, cleared_steps: 10 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 2332,
+          cleared_steps: 10,
+        },
         { rank: 2, user_name: 'たろう', score: 2000, cleared_steps: 10 },
       ],
       overallMyRank: 1,
       overallRankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 5000, cleared_steps: 50 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 5000,
+          cleared_steps: 50,
+        },
         { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
       ],
     });
@@ -74,13 +96,23 @@ describe('ResultPage 表示・アニメーション', () => {
       user_name: 'テストユーザー',
       my_rank: 1,
       rankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 2332, cleared_steps: 10 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 2332,
+          cleared_steps: 10,
+        },
       ],
     });
     mockGetOverallRanking.mockResolvedValue({
       my_rank: 1,
       rankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 5000, cleared_steps: 50 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 5000,
+          cleared_steps: 50,
+        },
         { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
       ],
     });
@@ -106,7 +138,9 @@ describe('ResultPage 表示・アニメーション', () => {
 
     expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
 
-    const filledDiamonds = container.querySelectorAll('[data-testid="DiamondIcon"]');
+    const filledDiamonds = container.querySelectorAll(
+      '[data-testid="DiamondIcon"]',
+    );
     expect(filledDiamonds).toHaveLength(3);
   });
 
@@ -174,7 +208,9 @@ describe('ResultPage 表示・アニメーション', () => {
     const box = container.querySelector('[class*="MuiBox-root"]');
     expect(box).toBeInTheDocument();
 
-    const containerElement = container.querySelector('[class*="MuiContainer-root"]');
+    const containerElement = container.querySelector(
+      '[class*="MuiContainer-root"]',
+    );
     expect(containerElement).toBeInTheDocument();
   });
 
@@ -226,7 +262,11 @@ describe('ResultPage 表示・アニメーション', () => {
   });
 
   it('異なる難易度設定でスコアボーナスが変わる（easy: 100点）', async () => {
-    useGameStore.setState({ lives: 1, difficulty: 'easy', gameId: 'easy-game' });
+    useGameStore.setState({
+      lives: 1,
+      difficulty: 'easy',
+      gameId: 'easy-game',
+    });
 
     render(<ResultPage />);
 
@@ -240,7 +280,11 @@ describe('ResultPage 表示・アニメーション', () => {
   });
 
   it('異なる初期スコアでも正しく動作する', async () => {
-    useGameStore.setState({ lives: 1, score: 500, gameId: 'different-score-game' });
+    useGameStore.setState({
+      lives: 1,
+      score: 500,
+      gameId: 'different-score-game',
+    });
 
     render(<ResultPage />);
 

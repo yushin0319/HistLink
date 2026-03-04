@@ -1,4 +1,4 @@
-import { Box, Typography, Fade } from '@mui/material';
+import { Box, Fade, Typography } from '@mui/material';
 
 interface EdgeDisplayProps {
   keyword: string;
@@ -6,7 +6,11 @@ interface EdgeDisplayProps {
   show: boolean;
 }
 
-export default function EdgeDisplay({ keyword, explanation, show }: EdgeDisplayProps) {
+export default function EdgeDisplay({
+  keyword,
+  explanation,
+  show,
+}: EdgeDisplayProps) {
   return (
     <Box
       sx={{
@@ -15,13 +19,13 @@ export default function EdgeDisplay({ keyword, explanation, show }: EdgeDisplayP
         alignItems: 'center',
         justifyContent: 'center',
         mb: 1,
-        mt: 2
+        mt: 2,
       }}
     >
       <Fade in={show} timeout={300}>
         <Box
           sx={{
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           <Typography

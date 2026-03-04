@@ -1,7 +1,7 @@
-import { Show } from '@refinedev/mui';
-import { useShow } from '@refinedev/core';
-import { Typography, Stack, Chip, Box } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Chip, Stack, Typography } from '@mui/material';
+import { useShow } from '@refinedev/core';
+import { Show } from '@refinedev/mui';
 
 export function EdgeShow() {
   const { queryResult } = useShow({

@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 export interface Term {
   id: number;
@@ -75,7 +82,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // Index edges by term_id for fast lookup
   const edgesByTermId = useMemo(() => {
@@ -84,12 +91,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
       if (!map.has(edge.from_term_id)) {
         map.set(edge.from_term_id, []);
       }
-      map.get(edge.from_term_id)!.push(edge);
+      map.get(edge.from_term_id)?.push(edge);
 
       if (!map.has(edge.to_term_id)) {
         map.set(edge.to_term_id, []);
       }
-      map.get(edge.to_term_id)!.push(edge);
+      map.get(edge.to_term_id)?.push(edge);
     }
     return map;
   }, [edges]);
@@ -117,38 +124,55 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   // CRUD helpers
   const addTerm = (term: Term) => {
-    setTerms(prev => [...prev, term].sort((a, b) => a.tier - b.tier));
+    setTerms((prev) => [...prev, term].sort((a, b) => a.tier - b.tier));
   };
 
   const updateTerm = (term: Term) => {
-    setTerms(prev => prev.map(t => t.id === term.id ? term : t).sort((a, b) => a.tier - b.tier));
+    setTerms((prev) =>
+      prev
+        .map((t) => (t.id === term.id ? term : t))
+        .sort((a, b) => a.tier - b.tier),
+    );
   };
 
   const deleteTerm = (id: number) => {
-    setTerms(prev => prev.filter(t => t.id !== id));
+    setTerms((prev) => prev.filter((t) => t.id !== id));
     // Also remove edges connected to this term
-    setEdges(prev => prev.filter(e => e.from_term_id !== id && e.to_term_id !== id));
+    setEdges((prev) =>
+      prev.filter((e) => e.from_term_id !== id && e.to_term_id !== id),
+    );
   };
 
   const addEdge = (edge: Edge) => {
-    setEdges(prev => [...prev, edge]);
+    setEdges((prev) => [...prev, edge]);
   };
 
   const updateEdge = (edge: Edge) => {
-    setEdges(prev => prev.map(e => e.id === edge.id ? edge : e));
+    setEdges((prev) => prev.map((e) => (e.id === edge.id ? edge : e)));
   };
 
   const deleteEdge = (id: number) => {
-    setEdges(prev => prev.filter(e => e.id !== id));
+    setEdges((prev) => prev.filter((e) => e.id !== id));
   };
 
   return (
-    <DataContext.Provider value={{
-      terms, edges, loading, error,
-      getEdgesForTerm, getTermsByTier, refetch: fetchData,
-      addTerm, updateTerm, deleteTerm,
-      addEdge, updateEdge, deleteEdge,
-    }}>
+    <DataContext.Provider
+      value={{
+        terms,
+        edges,
+        loading,
+        error,
+        getEdgesForTerm,
+        getTermsByTier,
+        refetch: fetchData,
+        addTerm,
+        updateTerm,
+        deleteTerm,
+        addEdge,
+        updateEdge,
+        deleteEdge,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
-import GamePage from '../GamePage';
-import { useGameStore } from '../../stores/gameStore';
+import { act, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as gameApi from '../../services/gameApi';
+import { useGameStore } from '../../stores/gameStore';
 import type { GameStartResponse, RouteStepWithChoices } from '../../types/api';
+import GamePage from '../GamePage';
 
 // gameApi のモック
 vi.mock('../../services/gameApi');
@@ -12,7 +12,13 @@ vi.mock('../../services/gameApi');
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: '邪馬台国', tier: 1, category: '弥生時代', description: '卑弥呼が治めた国' },
+    term: {
+      id: 1,
+      name: '邪馬台国',
+      tier: 1,
+      category: '弥生時代',
+      description: '卑弥呼が治めた国',
+    },
     correct_next_id: 2,
     choices: [
       { term_id: 2, name: '卑弥呼', tier: 1 },
@@ -26,7 +32,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 1,
-    term: { id: 2, name: '卑弥呼', tier: 1, category: '弥生時代', description: '邪馬台国の女王' },
+    term: {
+      id: 2,
+      name: '卑弥呼',
+      tier: 1,
+      category: '弥生時代',
+      description: '邪馬台国の女王',
+    },
     correct_next_id: 6,
     choices: [
       { term_id: 6, name: '大化の改新', tier: 1 },
@@ -40,7 +52,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 2,
-    term: { id: 6, name: '大化の改新', tier: 1, category: '飛鳥時代', description: '645年の政治改革' },
+    term: {
+      id: 6,
+      name: '大化の改新',
+      tier: 1,
+      category: '飛鳥時代',
+      description: '645年の政治改革',
+    },
     correct_next_id: null,
     choices: [],
     difficulty: '',
@@ -71,8 +89,12 @@ describe('GamePage', () => {
     mockStartGameSession = vi.fn();
     mockSubmitGameResult = vi.fn();
 
-    vi.mocked(gameApi.startGameSession).mockImplementation(mockStartGameSession);
-    vi.mocked(gameApi.submitGameResult).mockImplementation(mockSubmitGameResult);
+    vi.mocked(gameApi.startGameSession).mockImplementation(
+      mockStartGameSession,
+    );
+    vi.mocked(gameApi.submitGameResult).mockImplementation(
+      mockSubmitGameResult,
+    );
   });
 
   describe('初期レンダリング', () => {
@@ -132,7 +154,7 @@ describe('GamePage', () => {
     it('選択肢をクリックすると回答処理が実行される', async () => {
       mockStartGameSession.mockResolvedValue(mockGameStartResponse);
 
-      const { container } = render(<GamePage />);
+      render(<GamePage />);
 
       await screen.findByText('邪馬台国');
 
@@ -281,7 +303,8 @@ describe('GamePage', () => {
 
       // 3回不正解でゲームオーバー
       await act(async () => {
-        const { answerQuestion, completeFeedbackPhase } = useGameStore.getState();
+        const { answerQuestion, completeFeedbackPhase } =
+          useGameStore.getState();
         answerQuestion(999); // 不正解
         completeFeedbackPhase();
         answerQuestion(999); // 不正解
@@ -304,7 +327,10 @@ describe('GamePage', () => {
     it('アンマウント中にAPIコールが完了しても状態を更新しない', async () => {
       let resolveStartGame!: (value: GameStartResponse) => void;
       mockStartGameSession.mockImplementation(
-        () => new Promise((resolve) => { resolveStartGame = resolve; })
+        () =>
+          new Promise((resolve) => {
+            resolveStartGame = resolve;
+          }),
       );
 
       const { unmount } = render(<GamePage />);

@@ -1,5 +1,5 @@
-import { Box, Typography, Modal, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Box, IconButton, Modal, Typography } from '@mui/material';
 import type { RouteStepWithChoices } from '../types/api';
 
 interface RouteReviewModalProps {
@@ -9,7 +9,12 @@ interface RouteReviewModalProps {
   falseSteps: number[]; // 間違えたステージのインデックス配列
 }
 
-export default function RouteReviewModal({ open, onClose, steps, falseSteps }: RouteReviewModalProps) {
+export default function RouteReviewModal({
+  open,
+  onClose,
+  steps,
+  falseSteps,
+}: RouteReviewModalProps) {
   // falseSteps[i]は「ステージi→i+1のエッジでミス」を意味する
   // エッジ: 3回目のミス+1以降をグレー表示（3回目のエッジ自体は赤で見せる）
   const thirdFalseStep = falseSteps.length >= 3 ? falseSteps[2] : -1;
@@ -57,7 +62,15 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
         </IconButton>
 
         {/* ルート表示 */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, mt: 3 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 0,
+            mt: 3,
+          }}
+        >
           {steps.map((step, index) => {
             // エッジ: edgeGrayStart以降はグレー表示
             const isEdgeGray = edgeGrayStart >= 0 && index >= edgeGrayStart;
@@ -85,7 +98,9 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
                   <Typography
                     variant="body2"
                     fontWeight="medium"
-                    sx={{ color: isTermGray ? 'text.disabled' : 'text.primary' }}
+                    sx={{
+                      color: isTermGray ? 'text.disabled' : 'text.primary',
+                    }}
                   >
                     {step.term.name}
                   </Typography>
@@ -105,7 +120,11 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
                     <Typography
                       variant="caption"
                       sx={{
-                        color: isEdgeGray ? 'text.disabled' : isEdgeFalse ? 'error.main' : 'primary.main',
+                        color: isEdgeGray
+                          ? 'text.disabled'
+                          : isEdgeFalse
+                            ? 'error.main'
+                            : 'primary.main',
                         fontWeight: 'medium',
                         fontSize: '0.75rem',
                       }}
@@ -119,7 +138,9 @@ export default function RouteReviewModal({ open, onClose, steps, falseSteps }: R
                           width: '70%',
                           textAlign: 'center',
                           fontSize: '0.65rem',
-                          color: isEdgeGray ? 'text.disabled' : 'text.secondary',
+                          color: isEdgeGray
+                            ? 'text.disabled'
+                            : 'text.secondary',
                         }}
                       >
                         {step.edge_description}

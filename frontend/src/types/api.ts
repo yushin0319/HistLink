@@ -17,7 +17,7 @@ export interface RouteStepWithChoices {
   term: Term;
   correct_next_id: number | null;
   choices: Choice[];
-  difficulty: string;  // エッジの難易度（easy/normal/hard）
+  difficulty: string; // エッジの難易度（easy/normal/hard）
   keyword: string;
   edge_description: string;
 }
@@ -31,11 +31,11 @@ export interface GameStartResponse {
 }
 
 export interface GameResultRequest {
-  base_score: number;  // タイマーベースの素点（ライフボーナス含まない）
+  base_score: number; // タイマーベースの素点（ライフボーナス含まない）
   final_lives: number;
   cleared_steps: number;
-  user_name?: string;  // デフォルト: "GUEST"
-  false_steps?: number[];  // 間違えたステージのインデックス配列
+  user_name?: string; // デフォルト: "GUEST"
+  false_steps?: number[]; // 間違えたステージのインデックス配列
 }
 
 export interface RankingEntry {

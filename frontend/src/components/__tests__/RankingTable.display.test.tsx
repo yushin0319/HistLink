@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import RankingTable from '../RankingTable';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useGameStore } from '../../stores/gameStore';
 import type { RankingEntry } from '../../types/api';
+import RankingTable from '../RankingTable';
 
 // テスト用のランキングデータ
 const mockRankings: RankingEntry[] = [
@@ -43,7 +43,7 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={5}
           gameId="test-game-id"
-        />
+        />,
       );
 
       expect(screen.getByRole('tab', { name: '10問' })).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={5}
           gameId="test-game-id"
-        />
+        />,
       );
 
       expect(screen.getByText('たろう')).toBeInTheDocument();
@@ -79,10 +79,12 @@ describe('RankingTable 表示', () => {
           overallMyRank={5}
           gameId="test-game-id"
           onShowRoute={mockOnShowRoute}
-        />
+        />,
       );
 
-      expect(screen.getByRole('button', { name: /ルートを見る/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /ルートを見る/i }),
+      ).toBeInTheDocument();
     });
 
     it('onShowRouteが渡されない場合、ルートを見るボタンは表示されない', () => {
@@ -95,10 +97,12 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={5}
           gameId="test-game-id"
-        />
+        />,
       );
 
-      expect(screen.queryByRole('button', { name: /ルートを見る/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /ルートを見る/i }),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -114,7 +118,7 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={5}
           gameId="test-game-id"
-        />
+        />,
       );
 
       const overallTab = screen.getByRole('tab', { name: '全体' });
@@ -136,7 +140,7 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={5}
           gameId="test-game-id"
-        />
+        />,
       );
 
       await user.click(screen.getByRole('tab', { name: '全体' }));
@@ -145,7 +149,9 @@ describe('RankingTable 表示', () => {
       expect(screen.getByText('たろう')).toBeInTheDocument();
     });
 
-    it.each([10, 30, 50])('タブのステージ数が%i問に応じて変わる', (totalStages) => {
+    it.each([
+      10, 30, 50,
+    ])('タブのステージ数が%i問に応じて変わる', (totalStages) => {
       render(
         <RankingTable
           totalStages={totalStages}
@@ -155,10 +161,12 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={5}
           gameId="test-game-id"
-        />
+        />,
       );
 
-      expect(screen.getByRole('tab', { name: `${totalStages}問` })).toBeInTheDocument();
+      expect(
+        screen.getByRole('tab', { name: `${totalStages}問` }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -176,10 +184,12 @@ describe('RankingTable 表示', () => {
           overallMyRank={5}
           gameId="test-game-id"
           onShowRoute={mockOnShowRoute}
-        />
+        />,
       );
 
-      const showRouteButton = screen.getByRole('button', { name: /ルートを見る/i });
+      const showRouteButton = screen.getByRole('button', {
+        name: /ルートを見る/i,
+      });
       await user.click(showRouteButton);
 
       expect(mockOnShowRoute).toHaveBeenCalledTimes(1);
@@ -189,7 +199,12 @@ describe('RankingTable 表示', () => {
   describe('ランキング順位計算', () => {
     it('スコアが高いとランキング上位に入る（5位以内）', () => {
       const rankingsWithSelf: RankingEntry[] = [
-        { rank: 1, user_name: 'テストユーザー', score: 2000, cleared_steps: 10 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 2000,
+          cleared_steps: 10,
+        },
         { rank: 2, user_name: 'たろう', score: 1800, cleared_steps: 10 },
         { rank: 3, user_name: 'はなこ', score: 1700, cleared_steps: 10 },
         { rank: 4, user_name: 'じろう', score: 1600, cleared_steps: 10 },
@@ -204,7 +219,7 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={1}
           gameId="test-game-id"
-        />
+        />,
       );
 
       expect(screen.getByText('テストユーザー')).toBeInTheDocument();
@@ -221,12 +236,10 @@ describe('RankingTable 表示', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={10}
           gameId="test-game-id"
-        />
+        />,
       );
 
       expect(screen.getByText('・・・')).toBeInTheDocument();
     });
   });
-
 });
-

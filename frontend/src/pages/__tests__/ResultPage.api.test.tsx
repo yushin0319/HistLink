@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ResultPage from '../ResultPage';
-import { useGameStore } from '../../stores/gameStore';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as gameApi from '../../services/gameApi';
+import { useGameStore } from '../../stores/gameStore';
 import type { RouteStepWithChoices } from '../../types/api';
+import ResultPage from '../ResultPage';
 
 // gameApi をモック
 vi.mock('../../services/gameApi', () => ({
@@ -21,7 +21,13 @@ const mockGetOverallRanking = vi.mocked(gameApi.getOverallRanking);
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
-    term: { id: 1, name: 'テスト用語1', tier: 1, category: '時代1', description: '' },
+    term: {
+      id: 1,
+      name: 'テスト用語1',
+      tier: 1,
+      category: '時代1',
+      description: '',
+    },
     correct_next_id: 2,
     choices: [],
     difficulty: 'easy',
@@ -30,7 +36,13 @@ const mockSteps: RouteStepWithChoices[] = [
   },
   {
     step_no: 1,
-    term: { id: 2, name: 'テスト用語2', tier: 1, category: '時代2', description: '' },
+    term: {
+      id: 2,
+      name: 'テスト用語2',
+      tier: 1,
+      category: '時代2',
+      description: '',
+    },
     correct_next_id: null,
     choices: [],
     difficulty: '',
@@ -56,12 +68,22 @@ describe('ResultPage API・操作', () => {
       playerName: 'テストユーザー',
       myRank: 1,
       rankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 2332, cleared_steps: 10 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 2332,
+          cleared_steps: 10,
+        },
         { rank: 2, user_name: 'たろう', score: 2000, cleared_steps: 10 },
       ],
       overallMyRank: 1,
       overallRankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 5000, cleared_steps: 50 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 5000,
+          cleared_steps: 50,
+        },
         { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
       ],
     });
@@ -75,7 +97,12 @@ describe('ResultPage API・操作', () => {
       user_name: 'テストユーザー',
       my_rank: 1,
       rankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 2332, cleared_steps: 10 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 2332,
+          cleared_steps: 10,
+        },
       ],
     });
     mockUpdateGame.mockResolvedValue({
@@ -94,7 +121,12 @@ describe('ResultPage API・操作', () => {
     mockGetOverallRanking.mockResolvedValue({
       my_rank: 1,
       rankings: [
-        { rank: 1, user_name: 'テストユーザー', score: 5000, cleared_steps: 50 },
+        {
+          rank: 1,
+          user_name: 'テストユーザー',
+          score: 5000,
+          cleared_steps: 50,
+        },
         { rank: 2, user_name: '全体2位', score: 4500, cleared_steps: 50 },
       ],
     });
@@ -124,20 +156,25 @@ describe('ResultPage API・操作', () => {
             final_lives: 0,
             user_name: 'テストユーザー',
             false_steps: [],
-          })
+          }),
         );
       });
     });
 
     it('submitGameResultエラー時でもクラッシュしない', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       mockSubmitGameResult.mockRejectedValueOnce(new Error('API Error'));
       useGameStore.setState({ lives: 0, gameId: 'error-test-game' });
 
       expect(() => render(<ResultPage />)).not.toThrow();
 
       await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith('結果送信エラー:', expect.any(Error));
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          '結果送信エラー:',
+          expect.any(Error),
+        );
       });
 
       consoleErrorSpy.mockRestore();
@@ -168,7 +205,7 @@ describe('ResultPage API・操作', () => {
           'game-over-test',
           expect.objectContaining({
             cleared_steps: 5,
-          })
+          }),
         );
       });
     });
@@ -229,7 +266,7 @@ describe('ResultPage API・操作', () => {
         () => {
           expect(screen.queryByText('テスト用語1')).not.toBeInTheDocument();
         },
-        { timeout: 2000 }
+        { timeout: 2000 },
       );
     });
   });
@@ -255,10 +292,9 @@ describe('ResultPage API・操作', () => {
       await user.keyboard('{Enter}');
 
       await waitFor(() => {
-        expect(mockUpdateGame).toHaveBeenCalledWith(
-          'name-change-test-game',
-          { user_name: '新しい名前' }
-        );
+        expect(mockUpdateGame).toHaveBeenCalledWith('name-change-test-game', {
+          user_name: '新しい名前',
+        });
       });
     });
   });

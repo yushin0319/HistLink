@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import RankingTable from '../RankingTable';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useGameStore } from '../../stores/gameStore';
 import type { RankingEntry } from '../../types/api';
+import RankingTable from '../RankingTable';
 
 // プレイヤー名編集テスト用のランキング（自分のエントリを含む）
 const mockRankingsWithCurrentUser: RankingEntry[] = [
@@ -52,7 +52,7 @@ describe('RankingTable 名前編集', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={1}
           gameId="test-game-id"
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');
@@ -72,7 +72,7 @@ describe('RankingTable 名前編集', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={1}
           gameId="test-game-id"
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');
@@ -96,7 +96,7 @@ describe('RankingTable 名前編集', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={1}
           gameId="test-game-id"
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');
@@ -120,7 +120,7 @@ describe('RankingTable 名前編集', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={1}
           gameId="test-game-id"
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');
@@ -152,7 +152,7 @@ describe('RankingTable 名前編集', () => {
           overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');
@@ -169,8 +169,12 @@ describe('RankingTable 名前編集', () => {
 
     it('onNameChangeがエラーを投げた場合、元の名前に戻る', async () => {
       const user = userEvent.setup();
-      const mockOnNameChange = vi.fn().mockRejectedValue(new Error('API Error'));
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const mockOnNameChange = vi
+        .fn()
+        .mockRejectedValue(new Error('API Error'));
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
 
       render(
         <RankingTable
@@ -182,7 +186,7 @@ describe('RankingTable 名前編集', () => {
           overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');
@@ -215,7 +219,7 @@ describe('RankingTable 名前編集', () => {
           overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
-        />
+        />,
       );
 
       const overallTab = screen.getByRole('tab', { name: '全体' });
@@ -241,7 +245,7 @@ describe('RankingTable 名前編集', () => {
           overallRankings={mockOverallRankings}
           overallMyRank={10}
           gameId="test-game-id"
-        />
+        />,
       );
 
       expect(screen.getByText('・・・')).toBeInTheDocument();
@@ -274,7 +278,7 @@ describe('RankingTable 名前編集', () => {
           overallMyRank={1}
           gameId="test-game-id"
           onNameChange={mockOnNameChange}
-        />
+        />,
       );
 
       const playerName = screen.getByText('テストユーザー');

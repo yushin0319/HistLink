@@ -4,7 +4,9 @@ interface BackgroundImageProps {
   opacity?: number;
 }
 
-export default function BackgroundImage({ opacity = 0.2 }: BackgroundImageProps) {
+export default function BackgroundImage({
+  opacity = 0.2,
+}: BackgroundImageProps) {
   return (
     <Box
       sx={{

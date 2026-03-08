@@ -19,10 +19,10 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 };
 
 export function GameShow() {
-  const { queryResult } = useShow({
+  const { query } = useShow({
     resource: 'games',
   });
-  const { data, isLoading } = queryResult;
+  const { data, isLoading } = query;
   const record = data?.data;
 
   return (

@@ -7,13 +7,13 @@ import { Refine } from '@refinedev/core';
 import {
   RefineSnackbarProvider,
   RefineThemes,
-  ThemedLayoutV2,
-  ThemedTitleV2,
+  ThemedLayout,
+  ThemedTitle,
   useNotificationProvider,
 } from '@refinedev/mui';
-import routerProvider from '@refinedev/react-router-v6';
+import routerProvider from '@refinedev/react-router';
 import { useMemo } from 'react';
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router';
 import { DataProvider, useData } from './contexts/DataContext';
 import { EdgeCreate, EdgeEdit, EdgeList, EdgeShow } from './pages/edges';
 import { GameList, GameShow } from './pages/games';
@@ -83,9 +83,9 @@ function RefineApp() {
       <Routes>
         <Route
           element={
-            <ThemedLayoutV2
-              Title={({ collapsed }) => (
-                <ThemedTitleV2
+            <ThemedLayout
+              Title={({ collapsed }: { collapsed: boolean }) => (
+                <ThemedTitle
                   collapsed={collapsed}
                   text="HistLink Studio"
                   icon={<HistoryEduIcon />}
@@ -93,7 +93,7 @@ function RefineApp() {
               )}
             >
               <Outlet />
-            </ThemedLayoutV2>
+            </ThemedLayout>
           }
         >
           <Route path="/terms">

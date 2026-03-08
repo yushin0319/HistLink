@@ -4,10 +4,10 @@ import { useShow } from '@refinedev/core';
 import { Show } from '@refinedev/mui';
 
 export function EdgeShow() {
-  const { queryResult } = useShow({
+  const { query } = useShow({
     resource: 'edges',
   });
-  const { data, isLoading } = queryResult;
+  const { data, isLoading } = query;
   const record = data?.data;
 
   return (

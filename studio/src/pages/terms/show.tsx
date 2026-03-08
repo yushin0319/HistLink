@@ -9,10 +9,10 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 };
 
 export function TermShow() {
-  const { queryResult } = useShow({
+  const { query } = useShow({
     resource: 'terms',
   });
-  const { data, isLoading } = queryResult;
+  const { data, isLoading } = query;
   const record = data?.data;
 
   return (

@@ -27,11 +27,11 @@ export function EdgeCreate() {
     },
   });
 
-  const { data: termsData } = useList<Term>({
+  const { result: termsResult } = useList<Term>({
     resource: 'terms',
     pagination: { pageSize: 1000 },
   });
-  const terms = termsData?.data ?? [];
+  const terms = termsResult.data;
 
   return (
     <Create saveButtonProps={saveButtonProps}>
@@ -46,7 +46,7 @@ export function EdgeCreate() {
           render={({ field }) => (
             <Autocomplete
               options={terms}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option: Term) => option.name}
               onChange={(_, value) => field.onChange(value?.id)}
               renderInput={(params) => (
                 <TextField
@@ -66,7 +66,7 @@ export function EdgeCreate() {
           render={({ field }) => (
             <Autocomplete
               options={terms}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option: Term) => option.name}
               onChange={(_, value) => field.onChange(value?.id)}
               renderInput={(params) => (
                 <TextField

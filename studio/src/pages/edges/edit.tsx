@@ -21,20 +21,20 @@ export function EdgeEdit() {
     register,
     control,
     formState: { errors },
-    refineCore: { queryResult },
+    refineCore: { query },
   } = useForm({
     refineCoreProps: {
       resource: 'edges',
     },
   });
 
-  const record = queryResult?.data?.data;
+  const record = query?.data?.data;
 
-  const { data: termsData } = useList<Term>({
+  const { result: termsResult } = useList<Term>({
     resource: 'terms',
     pagination: { pageSize: 1000 },
   });
-  const terms = termsData?.data ?? [];
+  const terms = termsResult.data;
 
   return (
     <Edit saveButtonProps={saveButtonProps}>
@@ -49,8 +49,8 @@ export function EdgeEdit() {
           render={({ field }) => (
             <Autocomplete
               options={terms}
-              getOptionLabel={(option) => option.name}
-              value={terms.find((t) => t.id === field.value) ?? null}
+              getOptionLabel={(option: Term) => option.name}
+              value={terms.find((t: Term) => t.id === field.value) ?? null}
               onChange={(_, value) => field.onChange(value?.id)}
               renderInput={(params) => (
                 <TextField
@@ -70,8 +70,8 @@ export function EdgeEdit() {
           render={({ field }) => (
             <Autocomplete
               options={terms}
-              getOptionLabel={(option) => option.name}
-              value={terms.find((t) => t.id === field.value) ?? null}
+              getOptionLabel={(option: Term) => option.name}
+              value={terms.find((t: Term) => t.id === field.value) ?? null}
               onChange={(_, value) => field.onChange(value?.id)}
               renderInput={(params) => (
                 <TextField

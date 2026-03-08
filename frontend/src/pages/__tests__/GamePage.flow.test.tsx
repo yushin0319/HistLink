@@ -1,12 +1,12 @@
-import { act, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as gameApi from '../../services/gameApi';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import { HttpResponse, http } from 'msw';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { server } from '../../mocks/server';
 import { useGameStore } from '../../stores/gameStore';
 import type { GameStartResponse, RouteStepWithChoices } from '../../types/api';
 import GamePage from '../GamePage';
 
-// gameApi のモック
-vi.mock('../../services/gameApi');
+const API_BASE = 'http://localhost:8000/api/v1';
 
 const mockSteps: RouteStepWithChoices[] = [
   {
@@ -76,30 +76,19 @@ const mockGameStartResponse: GameStartResponse = {
 };
 
 describe('GamePage', () => {
-  let mockStartGameSession: ReturnType<typeof vi.fn>;
-  let mockSubmitGameResult: ReturnType<typeof vi.fn>;
-
   beforeEach(() => {
-    vi.clearAllMocks();
     useGameStore.getState().resetGame();
-
-    mockStartGameSession = vi.fn();
-    mockSubmitGameResult = vi.fn();
-
-    vi.mocked(gameApi.startGameSession).mockImplementation(
-      mockStartGameSession,
-    );
-    vi.mocked(gameApi.submitGameResult).mockImplementation(
-      mockSubmitGameResult,
-    );
   });
 
   describe('ゲーム完了', () => {
     it('全ステージクリアで完了状態になる', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       // totalStagesが正しく設定されていることを確認
@@ -125,10 +114,13 @@ describe('GamePage', () => {
 
   describe('ゲームオーバー', () => {
     it('ライフが0になったらゲームオーバー状態になる', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       useGameStore.setState({ totalStages: 10 });
@@ -154,24 +146,30 @@ describe('GamePage', () => {
 
   describe('cleanup / キャンセル', () => {
     it('アンマウント中にAPIコールが完了しても状態を更新しない', async () => {
-      let resolveStartGame!: (value: GameStartResponse) => void;
-      mockStartGameSession.mockImplementation(
-        () =>
-          new Promise((resolve) => {
-            resolveStartGame = resolve;
-          }),
+      let resolveGate!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        resolveGate = resolve;
+      });
+      let requestReceived = false;
+      server.use(
+        http.post(`${API_BASE}/games/start`, async () => {
+          requestReceived = true;
+          await gate;
+          return HttpResponse.json(mockGameStartResponse);
+        }),
       );
 
       const { unmount } = render(<GamePage />);
 
-      expect(mockStartGameSession).toHaveBeenCalled();
+      // MSWがリクエストを受け取るまで待機
+      await waitFor(() => expect(requestReceived).toBe(true));
 
       // アンマウント（useEffect cleanup が走り cancelled = true になる）
       unmount();
 
       // アンマウント後にAPIレスポンスを解決（遅延完了を模擬）
       await act(async () => {
-        resolveStartGame(mockGameStartResponse);
+        resolveGate();
       });
 
       // キャンセルされているためgameIdはnullのまま

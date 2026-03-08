@@ -1,6 +1,7 @@
-import { act, render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { server } from '../../mocks/server';
 import { useGameStore } from '../../stores/gameStore';
 import type { RouteStepWithChoices } from '../../types/api';
@@ -41,11 +42,10 @@ const mockSteps: RouteStepWithChoices[] = [
   },
 ];
 
-describe('ResultPage 表示', () => {
-  let testCounter = 0;
+describe('ResultPage インタラクション', () => {
+  let testCounter = 200;
 
   beforeEach(() => {
-    vi.useFakeTimers();
     testCounter++;
     useGameStore.setState({
       lives: 3,
@@ -79,7 +79,6 @@ describe('ResultPage 表示', () => {
       ],
     });
 
-    // デフォルト成功レスポンス
     server.use(
       http.post(`${API_BASE}/games/:gameId/result`, ({ params }) => {
         return HttpResponse.json({
@@ -118,73 +117,91 @@ describe('ResultPage 表示', () => {
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     useGameStore.getState().resetGame();
   });
 
-  it('初期表示時、正しい要素が表示される', () => {
-    render(<ResultPage />);
+  describe('もう一度プレイボタン', () => {
+    it('ボタンクリックでresetGameが呼ばれる', async () => {
+      const user = userEvent.setup();
 
-    expect(screen.getByText('LIFE')).toBeInTheDocument();
-    expect(screen.getByText('SCORE')).toBeInTheDocument();
-    expect(screen.getByText('COMPLETE')).toBeInTheDocument();
+      render(<ResultPage />);
+
+      await waitFor(() => {
+        expect(screen.getByText('もう一度プレイ')).toBeInTheDocument();
+      });
+
+      const initialGameId = useGameStore.getState().gameId;
+      const button = screen.getByText('もう一度プレイ');
+      await user.click(button);
+
+      // resetGame後にgameIdはnullになる
+      expect(useGameStore.getState().gameId).not.toBe(initialGameId);
+    });
   });
 
-  it('初期状態では3ライフと初期スコア2332が表示される', () => {
-    const { container } = render(<ResultPage />);
+  describe('ルートおさらいモーダル', () => {
+    it('ルートを見るボタンでモーダルが開き、ステップが表示される', async () => {
+      useGameStore.setState({ lives: 0, gameId: `modal-test-${testCounter}` });
+      const user = userEvent.setup();
 
-    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
+      render(<ResultPage />);
 
-    const filledDiamonds = container.querySelectorAll(
-      '[data-testid="DiamondIcon"]',
-    );
-    expect(filledDiamonds).toHaveLength(3);
-  });
+      const routeButton = screen.getByText('ルートを見る');
+      await user.click(routeButton);
 
-  it('レイアウトが正しく表示される', () => {
-    const { container } = render(<ResultPage />);
+      await waitFor(() => {
+        expect(screen.getByRole('presentation')).toBeInTheDocument();
+      });
 
-    const box = container.querySelector('[class*="MuiBox-root"]');
-    expect(box).toBeInTheDocument();
-
-    const containerElement = container.querySelector(
-      '[class*="MuiContainer-root"]',
-    );
-    expect(containerElement).toBeInTheDocument();
-  });
-
-  it('ResultHeaderコンポーネントに正しいpropsが渡される', () => {
-    render(<ResultPage />);
-
-    expect(screen.getByText('COMPLETE')).toBeInTheDocument();
-  });
-
-  it('initialLivesが0の時、アニメーションが実行されない', () => {
-    useGameStore.setState({ lives: 0, gameId: `zero-lives-${testCounter}` });
-
-    render(<ResultPage />);
-
-    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
-
-    act(() => {
-      vi.advanceTimersByTime(2000);
+      expect(screen.getByText('テスト用語1')).toBeInTheDocument();
     });
 
-    expect(screen.getAllByText('2332').length).toBeGreaterThan(0);
+    it('閉じるボタンをクリックするとonCloseが呼ばれる', async () => {
+      useGameStore.setState({ lives: 0, gameId: `modal-close-${testCounter}` });
+      const user = userEvent.setup();
+
+      render(<ResultPage />);
+
+      await user.click(screen.getByText('ルートを見る'));
+
+      await waitFor(() => {
+        expect(screen.getByRole('presentation')).toBeInTheDocument();
+      });
+
+      const closeButton = screen.getByTestId('CloseIcon').closest('button');
+      expect(closeButton).not.toBeNull();
+      await user.click(closeButton!);
+
+      await waitFor(
+        () => {
+          expect(screen.queryByText('テスト用語1')).not.toBeInTheDocument();
+        },
+        { timeout: 2000 },
+      );
+    });
   });
 
-  describe('ステージ表示', () => {
-    it('未クリアの場合、ステージ番号が表示される', () => {
+  describe('falseSteps', () => {
+    it('falseStepsがある場合、正しくモーダルに渡される', async () => {
+      const user = userEvent.setup();
       useGameStore.setState({
-        lives: 0,
-        currentStage: 5,
-        totalStages: 10,
-        gameId: `stage-display-${testCounter}`,
+        falseSteps: [0],
+        gameId: `false-steps-${testCounter}`,
       });
 
       render(<ResultPage />);
 
-      expect(screen.getByText('6 / 10')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('ルートを見る')).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByText('ルートを見る'));
+
+      await waitFor(() => {
+        expect(screen.getByRole('presentation')).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('テスト用語1')).toBeInTheDocument();
     });
   });
 });

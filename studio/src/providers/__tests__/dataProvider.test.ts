@@ -25,7 +25,7 @@ describe('createDataProvider', () => {
       const provider = createDataProvider();
       const result = await provider.getList({
         resource: 'terms',
-        pagination: { current: 2, pageSize: 5 },
+        pagination: { currentPage: 2, pageSize: 5 },
       });
 
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms?skip=5&limit=5');

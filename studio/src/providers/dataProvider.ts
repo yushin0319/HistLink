@@ -17,7 +17,7 @@ export function createDataProvider(
 ): DataProvider {
   return {
     getList: async ({ resource, pagination, sorters, filters }) => {
-      const { current = 1, pageSize = 10 } = pagination ?? {};
+      const { currentPage: current = 1, pageSize = 10 } = pagination ?? {};
 
       const params = new URLSearchParams();
       params.append('skip', String((current - 1) * pageSize));

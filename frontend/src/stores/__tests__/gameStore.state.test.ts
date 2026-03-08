@@ -235,4 +235,32 @@ describe('gameStore 状態管理', () => {
       expect(state.isFeedbackPhase).toBe(false);
     });
   });
+
+  describe('clearEdgeDisplay', () => {
+    it('show を false にし、keyword と explanation は保持する', () => {
+      useGameStore.setState({
+        edgeData: {
+          show: true,
+          keyword: '女王卑弥呼',
+          explanation: '邪馬台国を統治した女王',
+        },
+      });
+
+      useGameStore.getState().clearEdgeDisplay();
+      const state = useGameStore.getState();
+
+      expect(state.edgeData.show).toBe(false);
+      expect(state.edgeData.keyword).toBe('女王卑弥呼');
+      expect(state.edgeData.explanation).toBe('邪馬台国を統治した女王');
+    });
+
+    it('すでに show=false の場合も正常に動作する', () => {
+      useGameStore.setState({
+        edgeData: { show: false, keyword: '', explanation: '' },
+      });
+
+      expect(() => useGameStore.getState().clearEdgeDisplay()).not.toThrow();
+      expect(useGameStore.getState().edgeData.show).toBe(false);
+    });
+  });
 });

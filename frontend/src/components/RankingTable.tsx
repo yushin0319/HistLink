@@ -273,7 +273,7 @@ export default function RankingTable({
 
             {/* 名前 */}
             <NameEditField
-              isEditing={entry.isCurrentUser && isEditing}
+              isEditing={!!entry.isCurrentUser && isEditing}
               isSubmitting={isSubmitting}
               editingName={editingName}
               displayName={entry.name}

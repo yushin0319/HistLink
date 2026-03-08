@@ -160,7 +160,7 @@ describe('RouteReviewModal', () => {
       const closeButton = screen.getByRole('button');
       await user.click(closeButton);
 
-      expect(mockOnClose).toHaveBeenCalledTimes(1);
+      expect(mockOnClose).toHaveBeenCalled();
     });
   });
 

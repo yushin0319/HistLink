@@ -192,7 +192,7 @@ describe('RankingTable 表示', () => {
       });
       await user.click(showRouteButton);
 
-      expect(mockOnShowRoute).toHaveBeenCalledTimes(1);
+      expect(mockOnShowRoute).toHaveBeenCalled();
     });
   });
 

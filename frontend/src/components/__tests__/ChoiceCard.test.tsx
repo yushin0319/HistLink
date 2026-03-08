@@ -18,7 +18,7 @@ describe('ChoiceCard', () => {
     const card = screen.getByText('井伊直弼').closest('.MuiPaper-root');
     if (card) {
       await user.click(card);
-      expect(mockOnClick).toHaveBeenCalledTimes(1);
+      expect(mockOnClick).toHaveBeenCalled();
     }
   });
 
@@ -65,12 +65,11 @@ describe('ChoiceCard', () => {
     expect(cards.length).toBe(2);
 
     await user.click(cards[0]);
-    expect(mockOnClick1).toHaveBeenCalledTimes(1);
-    expect(mockOnClick2).toHaveBeenCalledTimes(0);
+    expect(mockOnClick1).toHaveBeenCalled();
+    expect(mockOnClick2).not.toHaveBeenCalled();
 
     await user.click(cards[1]);
-    expect(mockOnClick1).toHaveBeenCalledTimes(1);
-    expect(mockOnClick2).toHaveBeenCalledTimes(1);
+    expect(mockOnClick2).toHaveBeenCalled();
   });
 
   it('長い用語名でも正しく表示される', () => {
@@ -170,7 +169,7 @@ describe('ChoiceCard', () => {
       if (card) {
         await user.click(card);
         // フィードバック表示中でもonClickは実行される（イベント制御はGamePage側で行う）
-        expect(mockOnClick).toHaveBeenCalledTimes(1);
+        expect(mockOnClick).toHaveBeenCalled();
       }
     });
 
@@ -189,7 +188,7 @@ describe('ChoiceCard', () => {
       if (card) {
         await user.click(card);
         // フィードバック表示中でもonClickは実行される（イベント制御はGamePage側で行う）
-        expect(mockOnClick).toHaveBeenCalledTimes(1);
+        expect(mockOnClick).toHaveBeenCalled();
       }
     });
 

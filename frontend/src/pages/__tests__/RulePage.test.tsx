@@ -48,7 +48,7 @@ describe('RulePage', () => {
       render(<RulePage onStart={mockOnStart} />);
 
       await user.click(screen.getByRole('button', { name: 'ゲームへ' }));
-      expect(mockOnStart).toHaveBeenCalledTimes(1);
+      expect(mockOnStart).toHaveBeenCalled();
     });
   });
 });

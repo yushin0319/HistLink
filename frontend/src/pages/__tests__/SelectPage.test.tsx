@@ -1,20 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useGameStore } from '../../stores/gameStore';
 import SelectPage from '../SelectPage';
 
-// モック化
-vi.mock('../../stores/gameStore');
-
 describe('SelectPage', () => {
-  const mockRequestStartGame = vi.fn();
-
   beforeEach(() => {
-    vi.clearAllMocks();
-    (useGameStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      requestStartGame: mockRequestStartGame,
-    });
+    useGameStore.getState().resetGame();
+  });
+
+  afterEach(() => {
+    useGameStore.getState().resetGame();
   });
 
   describe('初期表示', () => {
@@ -176,18 +172,21 @@ describe('SelectPage', () => {
   });
 
   describe('ゲーム開始', () => {
-    it('スタートボタンをクリックするとrequestStartGameが呼ばれる（デフォルト: normal, 10）', async () => {
+    it('スタートボタンをクリックするとゲームが開始される（デフォルト: normal, 10）', async () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
       const startButton = screen.getByRole('button', { name: /スタート/i });
       await user.click(startButton);
 
-      expect(mockRequestStartGame).toHaveBeenCalledWith('normal', 10);
-      expect(mockRequestStartGame).toHaveBeenCalledTimes(1);
+      // 振る舞いで確認: storeのstateが正しく更新されたか
+      const state = useGameStore.getState();
+      expect(state.difficulty).toBe('normal');
+      expect(state.totalStages).toBe(10);
+      expect(state.pendingStart).toBe(true);
     });
 
-    it('選択した難易度とステージ数でrequestStartGameが呼ばれる（easy, 30）', async () => {
+    it('選択した難易度とステージ数でゲームが開始される（easy, 30）', async () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
@@ -198,10 +197,12 @@ describe('SelectPage', () => {
       const startButton = screen.getByRole('button', { name: /スタート/i });
       await user.click(startButton);
 
-      expect(mockRequestStartGame).toHaveBeenCalledWith('easy', 30);
+      const state = useGameStore.getState();
+      expect(state.difficulty).toBe('easy');
+      expect(state.totalStages).toBe(30);
     });
 
-    it('選択した難易度とステージ数でrequestStartGameが呼ばれる（hard, 50）', async () => {
+    it('選択した難易度とステージ数でゲームが開始される（hard, 50）', async () => {
       const user = userEvent.setup();
       render(<SelectPage />);
 
@@ -212,7 +213,9 @@ describe('SelectPage', () => {
       const startButton = screen.getByRole('button', { name: /スタート/i });
       await user.click(startButton);
 
-      expect(mockRequestStartGame).toHaveBeenCalledWith('hard', 50);
+      const state = useGameStore.getState();
+      expect(state.difficulty).toBe('hard');
+      expect(state.totalStages).toBe(50);
     });
   });
 });

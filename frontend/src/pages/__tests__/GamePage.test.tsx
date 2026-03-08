@@ -1,14 +1,13 @@
 import { act, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as gameApi from '../../services/gameApi';
+import { HttpResponse, http } from 'msw';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { server } from '../../mocks/server';
 import { useGameStore } from '../../stores/gameStore';
 import type { GameStartResponse, RouteStepWithChoices } from '../../types/api';
 import GamePage from '../GamePage';
 
-// gameApi のモック
-vi.mock('../../services/gameApi');
+const API_BASE = 'http://localhost:8000/api/v1';
 
-// モックデータ: 3ステップのルート
 const mockSteps: RouteStepWithChoices[] = [
   {
     step_no: 0,
@@ -77,29 +76,17 @@ const mockGameStartResponse: GameStartResponse = {
 };
 
 describe('GamePage', () => {
-  let mockStartGameSession: ReturnType<typeof vi.fn>;
-  let mockSubmitGameResult: ReturnType<typeof vi.fn>;
-
   beforeEach(() => {
-    vi.clearAllMocks();
-
-    // gameStoreをリセット
     useGameStore.getState().resetGame();
-
-    mockStartGameSession = vi.fn();
-    mockSubmitGameResult = vi.fn();
-
-    vi.mocked(gameApi.startGameSession).mockImplementation(
-      mockStartGameSession,
-    );
-    vi.mocked(gameApi.submitGameResult).mockImplementation(
-      mockSubmitGameResult,
-    );
   });
 
   describe('初期レンダリング', () => {
     it('ローディング状態が表示される', () => {
-      mockStartGameSession.mockReturnValue(new Promise(() => {})); // 永遠に解決しないPromise
+      server.use(
+        http.post(`${API_BASE}/games/start`, async () => {
+          await new Promise(() => {}); // 永遠に解決しない
+        }),
+      );
 
       render(<GamePage />);
 
@@ -107,23 +94,36 @@ describe('GamePage', () => {
     });
 
     it('ゲーム開始時、startGameSessionが呼ばれる', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      let capturedBody:
+        | { difficulty: string; target_length: number }
+        | undefined;
+      server.use(
+        http.post(`${API_BASE}/games/start`, async ({ request }) => {
+          capturedBody = (await request.json()) as {
+            difficulty: string;
+            target_length: number;
+          };
+          return HttpResponse.json(mockGameStartResponse);
+        }),
+      );
 
       render(<GamePage />);
-
-      // API呼び出し確認
       await screen.findByText('邪馬台国');
 
-      expect(mockStartGameSession).toHaveBeenCalledWith('normal', 10);
-      // StrictModeで2回呼ばれる可能性があるため、少なくとも1回呼ばれたことを確認
-      expect(mockStartGameSession).toHaveBeenCalled();
+      expect(capturedBody).toMatchObject({
+        difficulty: 'normal',
+        target_length: 10,
+      });
     });
 
     it('ゲーム情報が表示される', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       // GameHeaderの英語ラベルを確認
@@ -131,17 +131,20 @@ describe('GamePage', () => {
       expect(screen.getByText('SCORE')).toBeInTheDocument();
       expect(screen.getByText('STAGE')).toBeInTheDocument();
       expect(screen.getByText('TIMER')).toBeInTheDocument();
-
-      // 値を確認
-      expect(screen.getAllByText('0').length).toBeGreaterThan(0); // スコアとタイマーに0が表示される
-      expect(screen.getByText('1 / 2')).toBeInTheDocument(); // ステージ（totalStagesはsteps.length - 1 = 2、最後のステップは回答不要）
+      // スコアとタイマーに0が表示される
+      expect(screen.getAllByText('0').length).toBeGreaterThan(0);
+      // ステージ（totalStagesはsteps.length - 1 = 2、最後のステップは回答不要）
+      expect(screen.getByText('1 / 2')).toBeInTheDocument();
     });
 
     it('最初のステップが表示される', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       expect(screen.getByText('卑弥呼が治めた国')).toBeInTheDocument();
@@ -152,10 +155,13 @@ describe('GamePage', () => {
     });
 
     it('選択肢をクリックすると回答処理が実行される', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       // 選択肢の1つをクリック（「卑弥呼」を選択）
@@ -181,10 +187,13 @@ describe('GamePage', () => {
     });
 
     it('タイマーが実際に動作している', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       const initialTime = useGameStore.getState().remainingTime;
@@ -198,10 +207,13 @@ describe('GamePage', () => {
     });
 
     it('currentStageが範囲外の時は読み込み中と表示される', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       // currentStageを範囲外に設定
@@ -214,10 +226,13 @@ describe('GamePage', () => {
     });
 
     it('エッジ表示が4秒後に自動的に非表示になる', async () => {
-      mockStartGameSession.mockResolvedValue(mockGameStartResponse);
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json(mockGameStartResponse),
+        ),
+      );
 
       render(<GamePage />);
-
       await screen.findByText('邪馬台国');
 
       // 正解を選択
@@ -246,7 +261,11 @@ describe('GamePage', () => {
 
   describe('エラーハンドリング', () => {
     it('API失敗時にエラーメッセージが表示される', async () => {
-      mockStartGameSession.mockRejectedValue(new Error('Network Error'));
+      server.use(
+        http.post(`${API_BASE}/games/start`, () =>
+          HttpResponse.json({ error: 'Network Error' }, { status: 500 }),
+        ),
+      );
 
       render(<GamePage />);
 

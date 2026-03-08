@@ -20,9 +20,7 @@ export default function GamePage() {
     isTimedOut,
     steps,
     gameId,
-    showEdge,
-    lastEdgeKeyword,
-    lastEdgeExplanation,
+    edgeData,
     isFeedbackPhase,
     selectedAnswerId,
     loadGameData,
@@ -31,6 +29,7 @@ export default function GamePage() {
     completeFeedbackPhase,
     decrementTimer,
     resetGame,
+    clearEdgeDisplay,
   } = useGameStore();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -54,14 +53,14 @@ export default function GamePage() {
 
   // エッジ表示を3.5秒後に非表示にする
   useEffect(() => {
-    if (showEdge) {
+    if (edgeData.show) {
       const timer = setTimeout(() => {
-        useGameStore.setState({ showEdge: false });
+        clearEdgeDisplay();
       }, 3500);
 
       return () => clearTimeout(timer);
     }
-  }, [showEdge]);
+  }, [edgeData.show, clearEdgeDisplay]);
 
   // ゲームセッション開始（全ルート+選択肢を一括取得）- 初回のみ
   useEffect(() => {
@@ -264,9 +263,9 @@ export default function GamePage() {
 
         {/* エッジ説明 */}
         <EdgeDisplay
-          keyword={lastEdgeKeyword}
-          explanation={lastEdgeExplanation}
-          show={showEdge}
+          keyword={edgeData.keyword}
+          explanation={edgeData.explanation}
+          show={edgeData.show}
         />
       </Container>
     </Box>

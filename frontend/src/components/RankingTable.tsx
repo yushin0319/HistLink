@@ -22,6 +22,68 @@ interface RankingTableProps {
   onShowRoute?: () => void;
 }
 
+interface NameEditFieldProps {
+  isEditing: boolean;
+  isSubmitting: boolean;
+  editingName: string;
+  displayName: string;
+  isCurrentUser: boolean;
+  onEditingNameChange: (name: string) => void;
+  onNameClick?: () => void;
+  onBlur: () => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+}
+
+function NameEditField({
+  isEditing,
+  isSubmitting,
+  editingName,
+  displayName,
+  isCurrentUser,
+  onEditingNameChange,
+  onNameClick,
+  onBlur,
+  onKeyDown,
+}: NameEditFieldProps) {
+  if (isEditing) {
+    return (
+      <TextField
+        value={editingName}
+        onChange={(e) => onEditingNameChange(e.target.value)}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
+        autoFocus
+        disabled={isSubmitting}
+        size="small"
+        variant="standard"
+        sx={{
+          flex: 1,
+          '& .MuiInputBase-input': {
+            fontWeight: 'bold',
+            color: 'primary.main',
+            py: 0,
+          },
+        }}
+        inputProps={{ maxLength: 20 }}
+      />
+    );
+  }
+  return (
+    <Typography
+      onClick={isCurrentUser ? onNameClick : undefined}
+      sx={{
+        flex: 1,
+        fontWeight: isCurrentUser ? 'bold' : 'medium',
+        color: isCurrentUser ? 'primary.main' : 'text.primary',
+        cursor: isCurrentUser ? 'pointer' : 'default',
+        '&:hover': isCurrentUser ? { textDecoration: 'underline' } : {},
+      }}
+    >
+      {displayName}
+    </Typography>
+  );
+}
+
 // APIのランキングデータを表示用に変換し、現在のユーザーをマーク
 function buildDisplayRanking(
   apiRankings: ApiRankingEntry[],
@@ -210,42 +272,17 @@ export default function RankingTable({
             </Typography>
 
             {/* 名前 */}
-            {entry.isCurrentUser && isEditing ? (
-              <TextField
-                value={editingName}
-                onChange={(e) => setEditingName(e.target.value)}
-                onBlur={handleNameSubmit}
-                onKeyDown={handleKeyDown}
-                autoFocus
-                disabled={isSubmitting}
-                size="small"
-                variant="standard"
-                sx={{
-                  flex: 1,
-                  '& .MuiInputBase-input': {
-                    fontWeight: 'bold',
-                    color: 'primary.main',
-                    py: 0,
-                  },
-                }}
-                inputProps={{ maxLength: 20 }}
-              />
-            ) : (
-              <Typography
-                onClick={entry.isCurrentUser ? handleNameClick : undefined}
-                sx={{
-                  flex: 1,
-                  fontWeight: entry.isCurrentUser ? 'bold' : 'medium',
-                  color: entry.isCurrentUser ? 'primary.main' : 'text.primary',
-                  cursor: entry.isCurrentUser ? 'pointer' : 'default',
-                  '&:hover': entry.isCurrentUser
-                    ? { textDecoration: 'underline' }
-                    : {},
-                }}
-              >
-                {entry.name}
-              </Typography>
-            )}
+            <NameEditField
+              isEditing={entry.isCurrentUser && isEditing}
+              isSubmitting={isSubmitting}
+              editingName={editingName}
+              displayName={entry.name}
+              isCurrentUser={entry.isCurrentUser ?? false}
+              onEditingNameChange={setEditingName}
+              onNameClick={handleNameClick}
+              onBlur={handleNameSubmit}
+              onKeyDown={handleKeyDown}
+            />
 
             {/* スコア */}
             <Typography
@@ -287,40 +324,17 @@ export default function RankingTable({
               >
                 {activeMyRank}
               </Typography>
-              {isEditing ? (
-                <TextField
-                  value={editingName}
-                  onChange={(e) => setEditingName(e.target.value)}
-                  onBlur={handleNameSubmit}
-                  onKeyDown={handleKeyDown}
-                  autoFocus
-                  disabled={isSubmitting}
-                  size="small"
-                  variant="standard"
-                  sx={{
-                    flex: 1,
-                    '& .MuiInputBase-input': {
-                      fontWeight: 'bold',
-                      color: 'primary.main',
-                      py: 0,
-                    },
-                  }}
-                  inputProps={{ maxLength: 20 }}
-                />
-              ) : (
-                <Typography
-                  onClick={handleNameClick}
-                  sx={{
-                    flex: 1,
-                    fontWeight: 'bold',
-                    color: 'primary.main',
-                    cursor: 'pointer',
-                    '&:hover': { textDecoration: 'underline' },
-                  }}
-                >
-                  {playerName}
-                </Typography>
-              )}
+              <NameEditField
+                isEditing={isEditing}
+                isSubmitting={isSubmitting}
+                editingName={editingName}
+                displayName={playerName}
+                isCurrentUser={true}
+                onEditingNameChange={setEditingName}
+                onNameClick={handleNameClick}
+                onBlur={handleNameSubmit}
+                onKeyDown={handleKeyDown}
+              />
               <Typography
                 sx={{
                   fontWeight: 'bold',

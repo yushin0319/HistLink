@@ -1,5 +1,8 @@
 import {
+  Box,
+  Button,
   Chip,
+  CircularProgress,
   Paper,
   Stack,
   Table,
@@ -9,8 +12,19 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useShow } from '@refinedev/core';
-import { Show } from '@refinedev/mui';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router';
+import { api } from '../../api/client';
+
+interface Game {
+  id: string;
+  player_name: string;
+  difficulty: string;
+  score: number;
+  is_completed: boolean;
+  created_at: string;
+  route: number[];
+}
 
 const DIFFICULTY_LABELS: Record<string, string> = {
   easy: 'かんたん',
@@ -19,14 +33,38 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 };
 
 export function GameShow() {
-  const { query } = useShow({
-    resource: 'games',
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data: record, isLoading } = useQuery({
+    queryKey: ['games', id],
+    queryFn: () => api.get<Game>('games', id as string),
+    enabled: !!id,
   });
-  const { data, isLoading } = query;
-  const record = data?.data;
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <Show isLoading={isLoading}>
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
+      >
+        <Typography variant="h5">ゲーム詳細</Typography>
+        <Button variant="outlined" onClick={() => navigate('/games')}>
+          一覧へ
+        </Button>
+      </Box>
       <Stack spacing={3}>
         <Stack direction="row" spacing={4}>
           <div>
@@ -50,7 +88,8 @@ export function GameShow() {
             <div>
               <Chip
                 label={
-                  DIFFICULTY_LABELS[record?.difficulty] ?? record?.difficulty
+                  DIFFICULTY_LABELS[record?.difficulty ?? ''] ??
+                  record?.difficulty
                 }
                 color={
                   record?.difficulty === 'easy'
@@ -120,6 +159,6 @@ export function GameShow() {
           </div>
         )}
       </Stack>
-    </Show>
+    </Box>
   );
 }

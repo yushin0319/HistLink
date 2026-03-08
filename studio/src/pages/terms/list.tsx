@@ -1,7 +1,12 @@
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   Box,
+  Button,
   Chip,
   CircularProgress,
   Collapse,
@@ -19,17 +24,33 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import { DeleteButton, EditButton, List, ShowButton } from '@refinedev/mui';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Fragment, useMemo, useState } from 'react';
-
+import { useNavigate } from 'react-router';
+import { api } from '../../api/client';
 import { type Edge, type Term, useData } from '../../contexts/DataContext';
 
 type TierFilter = 'all' | 1 | 2 | 3;
 
 function TermRow({ term }: { term: Term }) {
   const [open, setOpen] = useState(false);
-  const { getEdgesForTerm } = useData();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { getEdgesForTerm, deleteTerm } = useData();
   const edges = getEdgesForTerm(term.id);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => api.delete('terms', id),
+    onSuccess: (_, id) => {
+      deleteTerm(id);
+      queryClient.invalidateQueries({ queryKey: ['terms'] });
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    if (!window.confirm('この用語を削除しますか？')) return;
+    deleteMutation.mutate(id);
+  };
 
   const renderEdgeRow = (edge: Edge) => {
     const connectedTerm =
@@ -97,10 +118,27 @@ function TermRow({ term }: { term: Term }) {
         </TableCell>
         <TableCell>{edges.length}</TableCell>
         <TableCell>
-          <Stack direction="row" spacing={1}>
-            <ShowButton hideText recordItemId={term.id} />
-            <EditButton hideText recordItemId={term.id} />
-            <DeleteButton hideText recordItemId={term.id} />
+          <Stack direction="row" spacing={0.5}>
+            <IconButton
+              size="small"
+              onClick={() => navigate(`/terms/show/${term.id}`)}
+            >
+              <VisibilityIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              size="small"
+              onClick={() => navigate(`/terms/edit/${term.id}`)}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              size="small"
+              color="error"
+              onClick={() => handleDelete(term.id)}
+              disabled={deleteMutation.isPending}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
           </Stack>
         </TableCell>
       </TableRow>
@@ -141,12 +179,14 @@ export function TermList() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [tierFilter, setTierFilter] = useState<TierFilter>('all');
+  const navigate = useNavigate();
 
   const { getTermsByTier, loading } = useData();
 
-  const filteredTerms = useMemo(() => {
-    return getTermsByTier(tierFilter);
-  }, [getTermsByTier, tierFilter]);
+  const filteredTerms = useMemo(
+    () => getTermsByTier(tierFilter),
+    [getTermsByTier, tierFilter],
+  );
 
   const paginatedTerms = useMemo(() => {
     const start = page * rowsPerPage;
@@ -160,16 +200,31 @@ export function TermList() {
 
   if (loading) {
     return (
-      <List>
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-          <CircularProgress />
-        </Box>
-      </List>
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-    <List>
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 2,
+        }}
+      >
+        <Typography variant="h5">用語一覧</Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => navigate('/terms/create')}
+        >
+          新規作成
+        </Button>
+      </Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Tabs value={tierFilter} onChange={handleTabChange}>
           <Tab label={`全部 (${getTermsByTier('all').length})`} value="all" />
@@ -212,6 +267,6 @@ export function TermList() {
           labelRowsPerPage="表示件数:"
         />
       </TableContainer>
-    </List>
+    </Box>
   );
 }

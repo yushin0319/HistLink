@@ -7,23 +7,18 @@ import {
   Fade,
   Snackbar,
 } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BackgroundImage from '../components/BackgroundImage';
 import RankingTable from '../components/RankingTable';
 import ResultHeader from '../components/ResultHeader';
 import RouteReviewModal from '../components/RouteReviewModal';
+import { useCountUpAnimation } from '../hooks/useCountUpAnimation';
 import {
   getOverallRanking,
   submitGameResult,
   updateGame,
 } from '../services/gameApi';
 import { useGameStore } from '../stores/gameStore';
-
-const BONUS_POINTS = {
-  easy: 100,
-  normal: 200,
-  hard: 300,
-} as const;
 
 export default function ResultPage() {
   const {
@@ -45,26 +40,19 @@ export default function ResultPage() {
     resetGame,
   } = useGameStore();
 
-  const [lives, setLives] = useState(initialLives);
-  const [score, setScore] = useState(initialScore);
-  const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
-  const [showContent, setShowContent] = useState(false); // ライフ換金完了後にtrue
-  const [submitError, setSubmitError] = useState(false); // 結果送信エラー通知
-
-  // #4: アニメーション状態をuseRefで管理（モジュールスコープではなくインスタンス単位）
-  const animationStateRef = useRef({
-    isRunning: false,
-    timers: [] as ReturnType<typeof setTimeout>[],
-    intervals: [] as ReturnType<typeof setInterval>[],
+  const {
+    lives,
+    score,
+    showContent,
+    stop: stopAnimation,
+  } = useCountUpAnimation({
+    initialLives,
+    initialScore,
+    difficulty,
   });
 
-  const clearAnimationTimers = useCallback(() => {
-    const s = animationStateRef.current;
-    s.timers.forEach(clearTimeout);
-    s.intervals.forEach(clearInterval);
-    s.timers = [];
-    s.intervals = [];
-  }, []);
+  const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
+  const [submitError, setSubmitError] = useState(false); // 結果送信エラー通知
 
   // #5: ゲーム結果送信（cleanup関数でキャンセル対応）
   useEffect(() => {
@@ -121,76 +109,8 @@ export default function ResultPage() {
     setRankingData,
   ]);
 
-  useEffect(() => {
-    // ゲームオーバー（ライフ0）の場合はアニメーションなし、即座にコンテンツ表示
-    if (initialLives === 0) {
-      setLives(0);
-      setScore(initialScore);
-      setShowContent(true);
-      return;
-    }
-
-    const s = animationStateRef.current;
-    clearAnimationTimers();
-    s.isRunning = true;
-
-    setLives(initialLives);
-    setScore(initialScore);
-
-    let currentLifeIndex = 0;
-
-    const processNextLife = () => {
-      if (!s.isRunning || currentLifeIndex >= initialLives) {
-        return;
-      }
-
-      const bonusPoints = BONUS_POINTS[difficulty];
-      const countUpSteps = bonusPoints / 10;
-      const countUpDuration = 500;
-      const intervalPerStep = countUpDuration / countUpSteps;
-
-      let currentCount = 0;
-      const countUpInterval = setInterval(() => {
-        if (!s.isRunning) return;
-
-        currentCount++;
-        setScore((prev) => prev + 10);
-
-        if (currentCount >= countUpSteps) {
-          clearInterval(countUpInterval);
-          setLives((prev) => Math.max(0, prev - 1));
-        }
-      }, intervalPerStep);
-      s.intervals.push(countUpInterval);
-
-      currentLifeIndex++;
-
-      if (currentLifeIndex < initialLives) {
-        const nextLifeTimer = setTimeout(() => {
-          if (s.isRunning) processNextLife();
-        }, 600);
-        s.timers.push(nextLifeTimer);
-      } else {
-        const finalTimer = setTimeout(() => {
-          if (!s.isRunning) return;
-          setShowContent(true);
-        }, 500);
-        s.timers.push(finalTimer);
-      }
-    };
-
-    processNextLife();
-
-    return () => {
-      s.isRunning = false;
-      clearAnimationTimers();
-    };
-  }, [initialLives, initialScore, difficulty, clearAnimationTimers]);
-
   const handleRetry = () => {
-    const s = animationStateRef.current;
-    s.isRunning = false;
-    clearAnimationTimers();
+    stopAnimation();
     resetGame();
   };
 

@@ -108,8 +108,8 @@ describe('gameStore ゲームフロー', () => {
       expect(state.lives).toBe(3);
       expect(state.score).toBe(200);
       expect(state.remainingTime).toBe(200);
-      expect(state.showEdge).toBe(true);
-      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
+      expect(state.edgeData.show).toBe(true);
+      expect(state.edgeData.keyword).toBe('女王卑弥呼');
     });
 
     it('不正解後feedbackPhaseを完了するとライフが減る', () => {
@@ -125,8 +125,8 @@ describe('gameStore ゲームフロー', () => {
       expect(state.currentStage).toBe(1);
       expect(state.lives).toBe(2);
       expect(state.score).toBe(0);
-      expect(state.showEdge).toBe(true);
-      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
+      expect(state.edgeData.show).toBe(true);
+      expect(state.edgeData.keyword).toBe('女王卑弥呼');
     });
 
     it('残り時間に応じてスコアが変動する', () => {
@@ -234,7 +234,7 @@ describe('gameStore ゲームフロー', () => {
       expect(state.isFeedbackPhase).toBe(true);
       expect(state.selectedAnswerId).toBe(2);
       expect(state.isLastAnswerCorrect).toBe(false);
-      expect(state.showEdge).toBe(false);
+      expect(state.edgeData.show).toBe(false);
     });
 
     it('タイムアウト後feedbackPhaseを完了するとライフが減る', () => {

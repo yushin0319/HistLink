@@ -247,7 +247,7 @@ describe('GamePage', () => {
       });
 
       // エッジが表示される（feedbackPhase後に表示開始）
-      expect(useGameStore.getState().showEdge).toBe(true);
+      expect(useGameStore.getState().edgeData.show).toBe(true);
 
       // 3.5秒待つ（合計4秒）
       await act(async () => {
@@ -255,7 +255,7 @@ describe('GamePage', () => {
       });
 
       // エッジが自動的に非表示になる
-      expect(useGameStore.getState().showEdge).toBe(false);
+      expect(useGameStore.getState().edgeData.show).toBe(false);
     }, 10000); // タイムアウトを10秒に設定
   });
 

@@ -1,7 +1,14 @@
 import { create } from 'zustand';
 import type { RankingEntry, RouteStepWithChoices } from '../types/api';
 
-type Difficulty = 'easy' | 'normal' | 'hard';
+export type Difficulty = 'easy' | 'normal' | 'hard';
+
+/** 難易度別ライフボーナスポイント（バックエンドの LIFE_BONUS と同値を維持） */
+export const LIFE_BONUS_POINTS: Record<Difficulty, number> = {
+  easy: 100,
+  normal: 200,
+  hard: 300,
+};
 
 interface GameState {
   // プレイヤー情報
@@ -41,9 +48,7 @@ interface GameState {
   isLastAnswerCorrect: boolean | null; // 最後の回答が正解だったか
 
   // フィードバック表示
-  showEdge: boolean; // エッジ説明を表示するか
-  lastEdgeKeyword: string; // 最後に表示したエッジのキーワード
-  lastEdgeExplanation: string; // 最後に表示したエッジの説明
+  edgeData: { show: boolean; keyword: string; explanation: string }; // エッジ説明の表示データ
   isTimedOut: boolean; // タイムアウトによる失敗かどうか
 
   // アクション
@@ -62,6 +67,7 @@ interface GameState {
   completeFeedbackPhase: () => void; // feedbackPhase終了後のステージ遷移
   decrementTimer: () => void;
   resetGame: () => void;
+  clearEdgeDisplay: () => void; // エッジ説明を非表示にする
 }
 
 const INITIAL_LIVES = 3;
@@ -95,9 +101,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   isFeedbackPhase: false,
   selectedAnswerId: null,
   isLastAnswerCorrect: null,
-  showEdge: false,
-  lastEdgeKeyword: '',
-  lastEdgeExplanation: '',
+  edgeData: { show: false, keyword: '', explanation: '' },
   isTimedOut: false,
 
   // プレイヤー名を設定
@@ -172,19 +176,16 @@ export const useGameStore = create<GameState>((set, get) => ({
     // 正解判定：選択された用語IDが正解の次の用語IDと一致するか
     const isCorrect = selectedTermId === currentStep.correct_next_id;
 
-    // 正解・不正解どちらもエッジ情報を即座に表示開始
-    const showEdge = true;
-    const lastEdgeKeyword = currentStep.keyword;
-    const lastEdgeExplanation = currentStep.edge_description;
-
     // feedbackPhaseに入る（0.5秒間視覚フィードバック表示）
     set({
       isFeedbackPhase: true,
       selectedAnswerId: selectedTermId,
       isLastAnswerCorrect: isCorrect,
-      showEdge,
-      lastEdgeKeyword,
-      lastEdgeExplanation,
+      edgeData: {
+        show: true,
+        keyword: currentStep.keyword,
+        explanation: currentStep.edge_description,
+      },
       isTimedOut: false,
     });
   },
@@ -211,11 +212,6 @@ export const useGameStore = create<GameState>((set, get) => ({
       ? state.falseSteps
       : [...state.falseSteps, state.currentStage];
 
-    // エッジ情報を継続表示（answerQuestionで設定済み）
-    const showEdge = state.showEdge; // answerQuestionで設定した値をそのまま維持
-    const lastEdgeKeyword = state.lastEdgeKeyword;
-    const lastEdgeExplanation = state.lastEdgeExplanation;
-
     // ライフが0になったらゲームオーバー
     if (newLives <= 0) {
       set({
@@ -226,7 +222,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         isFeedbackPhase: false,
         selectedAnswerId: null,
         isLastAnswerCorrect: null,
-        showEdge: false,
+        edgeData: { ...state.edgeData, show: false },
         isTimedOut: false,
       });
       return;
@@ -245,9 +241,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         isFeedbackPhase: false,
         selectedAnswerId: null,
         isLastAnswerCorrect: null,
-        showEdge,
-        lastEdgeKeyword,
-        lastEdgeExplanation,
+        // edgeData はanswerQuestionで設定した値をそのまま維持
         isTimedOut: false,
       });
       return;
@@ -263,9 +257,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       isFeedbackPhase: false,
       selectedAnswerId: null,
       isLastAnswerCorrect: null,
-      showEdge,
-      lastEdgeKeyword,
-      lastEdgeExplanation,
+      // edgeData はanswerQuestionで設定した値をそのまま維持
       isTimedOut: false,
     });
   },
@@ -289,7 +281,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         isFeedbackPhase: true,
         selectedAnswerId: correctNextId, // 正解を緑背景で表示
         isLastAnswerCorrect: false, // タイムアウトは不正解扱い
-        showEdge: false, // タイムアウト時はedge表示なし
+        edgeData: { show: false, keyword: '', explanation: '' }, // タイムアウト時はedge表示なし
         isTimedOut: true,
       });
       return;
@@ -321,10 +313,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       isFeedbackPhase: false,
       selectedAnswerId: null,
       isLastAnswerCorrect: null,
-      showEdge: false,
-      lastEdgeKeyword: '',
-      lastEdgeExplanation: '',
+      edgeData: { show: false, keyword: '', explanation: '' },
       isTimedOut: false,
     });
+  },
+
+  clearEdgeDisplay: () => {
+    set((state) => ({ edgeData: { ...state.edgeData, show: false } }));
   },
 }));

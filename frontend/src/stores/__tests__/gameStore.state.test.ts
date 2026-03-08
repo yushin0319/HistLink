@@ -166,8 +166,8 @@ describe('gameStore 状態管理', () => {
       expect(state.isFeedbackPhase).toBe(true);
       expect(state.selectedAnswerId).toBe(2);
       expect(state.isLastAnswerCorrect).toBe(true);
-      expect(state.showEdge).toBe(true);
-      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
+      expect(state.edgeData.show).toBe(true);
+      expect(state.edgeData.keyword).toBe('女王卑弥呼');
       expect(state.currentStage).toBe(0);
     });
 
@@ -180,8 +180,8 @@ describe('gameStore 状態管理', () => {
       expect(state.isFeedbackPhase).toBe(true);
       expect(state.selectedAnswerId).toBe(3);
       expect(state.isLastAnswerCorrect).toBe(false);
-      expect(state.showEdge).toBe(true);
-      expect(state.lastEdgeKeyword).toBe('女王卑弥呼');
+      expect(state.edgeData.show).toBe(true);
+      expect(state.edgeData.keyword).toBe('女王卑弥呼');
       expect(state.currentStage).toBe(0);
     });
 

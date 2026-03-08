@@ -8,9 +8,9 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import BackgroundImage from '../components/BackgroundImage';
+import type { Difficulty } from '../stores/gameStore';
 import { useGameStore } from '../stores/gameStore';
 
-type Difficulty = 'easy' | 'normal' | 'hard';
 type TotalStages = 10 | 30 | 50;
 
 const difficultyLabels: Record<Difficulty, string> = {

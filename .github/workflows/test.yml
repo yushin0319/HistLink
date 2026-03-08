@@ -33,11 +33,11 @@ jobs:
       ADMIN_SECRET: test_admin_secret
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: pip install .[dev]
+        run: uv sync --extra dev
       - name: Initialize database
         env:
           PGPASSWORD: histlink_test_password
@@ -45,7 +45,7 @@ jobs:
           psql -h localhost -U histlink_user -d histlink -f ../database/schema.sql
           psql -h localhost -U histlink_user -d histlink -f ../database/seed.sql
       - name: Run tests
-        run: pytest --tb=short -q
+        run: uv run pytest --tb=short -q
 
   lint:
     runs-on: ubuntu-latest

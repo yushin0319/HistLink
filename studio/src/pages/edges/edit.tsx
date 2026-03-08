@@ -1,63 +1,96 @@
 import {
   Autocomplete,
   Box,
-  FormControlLabel,
-  Switch,
+  Button,
+  Stack,
   TextField,
+  Typography,
 } from '@mui/material';
-import { useList } from '@refinedev/core';
-import { Edit } from '@refinedev/mui';
-import { useForm } from '@refinedev/react-hook-form';
-import { Controller } from 'react-hook-form';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router';
+import { api } from '../../api/client';
+import { type Edge, useData } from '../../contexts/DataContext';
 
 interface Term {
   id: number;
   name: string;
 }
 
+interface EdgeFormData {
+  from_term_id: number | null;
+  to_term_id: number | null;
+  keyword: string;
+  description: string;
+}
+
 export function EdgeEdit() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { terms, updateEdge } = useData();
+
+  const { data: record } = useQuery({
+    queryKey: ['edges', id],
+    queryFn: () => api.get<Edge>('edges', id as string),
+    enabled: !!id,
+  });
+
   const {
-    saveButtonProps,
     register,
+    handleSubmit,
     control,
+    reset,
     formState: { errors },
-    refineCore: { query },
-  } = useForm({
-    refineCoreProps: {
-      resource: 'edges',
+  } = useForm<EdgeFormData>();
+
+  useEffect(() => {
+    if (record) {
+      reset({
+        from_term_id: record.from_term_id,
+        to_term_id: record.to_term_id,
+        keyword: record.keyword,
+        description: record.description,
+      });
+    }
+  }, [record, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: EdgeFormData) =>
+      api.update<Edge>('edges', id as string, data),
+    onSuccess: (edge) => {
+      updateEdge(edge);
+      navigate('/edges');
     },
   });
 
-  const record = query?.data?.data;
-
-  const { result: termsResult } = useList<Term>({
-    resource: 'terms',
-    pagination: { pageSize: 1000 },
-  });
-  const terms = termsResult.data;
-
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        関連を編集
+      </Typography>
       <Box
         component="form"
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        onSubmit={handleSubmit((data) => mutation.mutate(data))}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600 }}
       >
         <Controller
           name="from_term_id"
           control={control}
           rules={{ required: '元用語は必須です' }}
           render={({ field }) => (
-            <Autocomplete
+            <Autocomplete<Term>
               options={terms}
-              getOptionLabel={(option: Term) => option.name}
-              value={terms.find((t: Term) => t.id === field.value) ?? null}
-              onChange={(_, value) => field.onChange(value?.id)}
+              getOptionLabel={(option) => option.name}
+              value={terms.find((t) => t.id === field.value) ?? null}
+              onChange={(_, value) => field.onChange(value?.id ?? null)}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="元用語"
                   error={!!errors.from_term_id}
-                  helperText={errors.from_term_id?.message as string}
+                  helperText={errors.from_term_id?.message}
+                  slotProps={{ inputLabel: { shrink: true } }}
                 />
               )}
             />
@@ -68,17 +101,18 @@ export function EdgeEdit() {
           control={control}
           rules={{ required: '先用語は必須です' }}
           render={({ field }) => (
-            <Autocomplete
+            <Autocomplete<Term>
               options={terms}
-              getOptionLabel={(option: Term) => option.name}
-              value={terms.find((t: Term) => t.id === field.value) ?? null}
-              onChange={(_, value) => field.onChange(value?.id)}
+              getOptionLabel={(option) => option.name}
+              value={terms.find((t) => t.id === field.value) ?? null}
+              onChange={(_, value) => field.onChange(value?.id ?? null)}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="先用語"
                   error={!!errors.to_term_id}
-                  helperText={errors.to_term_id?.message as string}
+                  helperText={errors.to_term_id?.message}
+                  slotProps={{ inputLabel: { shrink: true } }}
                 />
               )}
             />
@@ -88,7 +122,7 @@ export function EdgeEdit() {
           {...register('keyword', { required: 'キーワードは必須です' })}
           label="キーワード"
           error={!!errors.keyword}
-          helperText={errors.keyword?.message as string}
+          helperText={errors.keyword?.message}
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
         />
@@ -98,26 +132,23 @@ export function EdgeEdit() {
           multiline
           rows={4}
           error={!!errors.description}
-          helperText={errors.description?.message as string}
+          helperText={errors.description?.message}
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
         />
-        <Controller
-          name="is_reasonable"
-          control={control}
-          render={({ field }) => (
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={field.value ?? record?.is_reasonable ?? true}
-                  onChange={(e) => field.onChange(e.target.checked)}
-                />
-              }
-              label="妥当性確認済み"
-            />
-          )}
-        />
+        <Stack direction="row" spacing={1}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={mutation.isPending}
+          >
+            保存
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/edges')}>
+            キャンセル
+          </Button>
+        </Stack>
       </Box>
-    </Edit>
+    </Box>
   );
 }

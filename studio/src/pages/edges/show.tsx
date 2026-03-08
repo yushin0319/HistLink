@@ -1,17 +1,60 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Box, Chip, Stack, Typography } from '@mui/material';
-import { useShow } from '@refinedev/core';
-import { Show } from '@refinedev/mui';
+import EditIcon from '@mui/icons-material/Edit';
+import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router';
+import { api } from '../../api/client';
+import type { Edge } from '../../contexts/DataContext';
 
 export function EdgeShow() {
-  const { query } = useShow({
-    resource: 'edges',
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data: record, isLoading } = useQuery({
+    queryKey: ['edges', id],
+    queryFn: () => api.get<Edge>('edges', id as string),
+    enabled: !!id,
   });
-  const { data, isLoading } = query;
-  const record = data?.data;
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <Show isLoading={isLoading}>
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
+      >
+        <Typography variant="h5">関連詳細</Typography>
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={() => navigate(`/edges/edit/${id}`)}
+          >
+            編集
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/edges')}>
+            一覧へ
+          </Button>
+        </Stack>
+      </Box>
       <Stack spacing={2}>
         <div>
           <Typography variant="caption" color="text.secondary">
@@ -43,19 +86,7 @@ export function EdgeShow() {
             {record?.description}
           </Typography>
         </div>
-        <div>
-          <Typography variant="caption" color="text.secondary">
-            妥当性
-          </Typography>
-          <div>
-            <Chip
-              label={record?.is_reasonable ? '妥当' : '要確認'}
-              color={record?.is_reasonable ? 'success' : 'warning'}
-              size="small"
-            />
-          </div>
-        </div>
       </Stack>
-    </Show>
+    </Box>
   );
 }

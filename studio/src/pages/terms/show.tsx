@@ -1,22 +1,58 @@
-import { Chip, Stack, Typography } from '@mui/material';
-import { useShow } from '@refinedev/core';
-import { Show } from '@refinedev/mui';
-
-const DIFFICULTY_LABELS: Record<string, string> = {
-  easy: 'かんたん',
-  normal: 'ふつう',
-  hard: '難しい',
-};
+import EditIcon from '@mui/icons-material/Edit';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router';
+import { api } from '../../api/client';
+import type { Term } from '../../contexts/DataContext';
 
 export function TermShow() {
-  const { query } = useShow({
-    resource: 'terms',
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data: record, isLoading } = useQuery({
+    queryKey: ['terms', id],
+    queryFn: () => api.get<Term>('terms', id as string),
+    enabled: !!id,
   });
-  const { data, isLoading } = query;
-  const record = data?.data;
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <Show isLoading={isLoading}>
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
+      >
+        <Typography variant="h5">用語詳細</Typography>
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="contained"
+            startIcon={<EditIcon />}
+            onClick={() => navigate(`/terms/edit/${id}`)}
+          >
+            編集
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/terms')}>
+            一覧へ
+          </Button>
+        </Stack>
+      </Box>
       <Stack spacing={2}>
         <div>
           <Typography variant="caption" color="text.secondary">
@@ -44,27 +80,7 @@ export function TermShow() {
             {record?.description}
           </Typography>
         </div>
-        <div>
-          <Typography variant="caption" color="text.secondary">
-            難易度
-          </Typography>
-          <div>
-            <Chip
-              label={
-                DIFFICULTY_LABELS[record?.difficulty] ?? record?.difficulty
-              }
-              color={
-                record?.difficulty === 'easy'
-                  ? 'success'
-                  : record?.difficulty === 'hard'
-                    ? 'error'
-                    : 'default'
-              }
-              size="small"
-            />
-          </div>
-        </div>
       </Stack>
-    </Show>
+    </Box>
   );
 }

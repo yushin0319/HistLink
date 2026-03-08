@@ -1,6 +1,17 @@
-import { Box, MenuItem, TextField } from '@mui/material';
-import { Edit } from '@refinedev/mui';
-import { useForm } from '@refinedev/react-hook-form';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router';
+import { api } from '../../api/client';
+import { type Term, useData } from '../../contexts/DataContext';
 
 const DIFFICULTIES = [
   { value: 'easy', label: 'かんたん' },
@@ -8,28 +19,59 @@ const DIFFICULTIES = [
   { value: 'hard', label: '難しい' },
 ];
 
+interface TermFormData {
+  name: string;
+  category: string;
+  description: string;
+  difficulty: string;
+}
+
 export function TermEdit() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { updateTerm } = useData();
+
+  const { data: record } = useQuery({
+    queryKey: ['terms', id],
+    queryFn: () => api.get<Term>('terms', id as string),
+    enabled: !!id,
+  });
+
   const {
-    saveButtonProps,
     register,
+    handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm({
-    refineCoreProps: {
-      resource: 'terms',
+  } = useForm<TermFormData>();
+
+  useEffect(() => {
+    if (record) reset(record);
+  }, [record, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: TermFormData) =>
+      api.update<Term>('terms', id as string, data),
+    onSuccess: (term) => {
+      updateTerm(term);
+      navigate('/terms');
     },
   });
 
   return (
-    <Edit saveButtonProps={saveButtonProps}>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        用語を編集
+      </Typography>
       <Box
         component="form"
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        onSubmit={handleSubmit((data) => mutation.mutate(data))}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600 }}
       >
         <TextField
           {...register('name', { required: '用語名は必須です' })}
           label="用語名"
           error={!!errors.name}
-          helperText={errors.name?.message as string}
+          helperText={errors.name?.message}
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
         />
@@ -37,7 +79,7 @@ export function TermEdit() {
           {...register('category', { required: 'カテゴリは必須です' })}
           label="カテゴリ"
           error={!!errors.category}
-          helperText={errors.category?.message as string}
+          helperText={errors.category?.message}
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
         />
@@ -47,7 +89,7 @@ export function TermEdit() {
           multiline
           rows={4}
           error={!!errors.description}
-          helperText={errors.description?.message as string}
+          helperText={errors.description?.message}
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
         />
@@ -56,7 +98,7 @@ export function TermEdit() {
           label="難易度"
           select
           error={!!errors.difficulty}
-          helperText={errors.difficulty?.message as string}
+          helperText={errors.difficulty?.message}
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
         >
@@ -66,7 +108,19 @@ export function TermEdit() {
             </MenuItem>
           ))}
         </TextField>
+        <Stack direction="row" spacing={1}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={mutation.isPending}
+          >
+            保存
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/terms')}>
+            キャンセル
+          </Button>
+        </Stack>
       </Box>
-    </Edit>
+    </Box>
   );
 }

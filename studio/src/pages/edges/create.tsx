@@ -1,59 +1,76 @@
 import {
   Autocomplete,
   Box,
+  Button,
   FormControlLabel,
+  Stack,
   Switch,
   TextField,
+  Typography,
 } from '@mui/material';
-import { useList } from '@refinedev/core';
-import { Create } from '@refinedev/mui';
-import { useForm } from '@refinedev/react-hook-form';
-import { Controller } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { api } from '../../api/client';
+import { type Edge, useData } from '../../contexts/DataContext';
 
 interface Term {
   id: number;
   name: string;
 }
 
+interface EdgeFormData {
+  from_term_id: number | null;
+  to_term_id: number | null;
+  keyword: string;
+  description: string;
+  is_reasonable: boolean;
+}
+
 export function EdgeCreate() {
+  const navigate = useNavigate();
+  const { terms, addEdge } = useData();
+
   const {
-    saveButtonProps,
     register,
+    handleSubmit,
     control,
     formState: { errors },
-  } = useForm({
-    refineCoreProps: {
-      resource: 'edges',
+  } = useForm<EdgeFormData>({ defaultValues: { is_reasonable: true } });
+
+  const mutation = useMutation({
+    mutationFn: (data: EdgeFormData) => api.create<Edge>('edges', data),
+    onSuccess: (edge) => {
+      addEdge(edge);
+      navigate('/edges');
     },
   });
 
-  const { result: termsResult } = useList<Term>({
-    resource: 'terms',
-    pagination: { pageSize: 1000 },
-  });
-  const terms = termsResult.data;
-
   return (
-    <Create saveButtonProps={saveButtonProps}>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        関連を作成
+      </Typography>
       <Box
         component="form"
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        onSubmit={handleSubmit((data) => mutation.mutate(data))}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600 }}
       >
         <Controller
           name="from_term_id"
           control={control}
           rules={{ required: '元用語は必須です' }}
           render={({ field }) => (
-            <Autocomplete
+            <Autocomplete<Term>
               options={terms}
-              getOptionLabel={(option: Term) => option.name}
-              onChange={(_, value) => field.onChange(value?.id)}
+              getOptionLabel={(option) => option.name}
+              onChange={(_, value) => field.onChange(value?.id ?? null)}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="元用語"
                   error={!!errors.from_term_id}
-                  helperText={errors.from_term_id?.message as string}
+                  helperText={errors.from_term_id?.message}
                 />
               )}
             />
@@ -64,16 +81,16 @@ export function EdgeCreate() {
           control={control}
           rules={{ required: '先用語は必須です' }}
           render={({ field }) => (
-            <Autocomplete
+            <Autocomplete<Term>
               options={terms}
-              getOptionLabel={(option: Term) => option.name}
-              onChange={(_, value) => field.onChange(value?.id)}
+              getOptionLabel={(option) => option.name}
+              onChange={(_, value) => field.onChange(value?.id ?? null)}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="先用語"
                   error={!!errors.to_term_id}
-                  helperText={errors.to_term_id?.message as string}
+                  helperText={errors.to_term_id?.message}
                 />
               )}
             />
@@ -83,7 +100,7 @@ export function EdgeCreate() {
           {...register('keyword', { required: 'キーワードは必須です' })}
           label="キーワード"
           error={!!errors.keyword}
-          helperText={errors.keyword?.message as string}
+          helperText={errors.keyword?.message}
           fullWidth
         />
         <TextField
@@ -92,13 +109,12 @@ export function EdgeCreate() {
           multiline
           rows={4}
           error={!!errors.description}
-          helperText={errors.description?.message as string}
+          helperText={errors.description?.message}
           fullWidth
         />
         <Controller
           name="is_reasonable"
           control={control}
-          defaultValue={true}
           render={({ field }) => (
             <FormControlLabel
               control={
@@ -111,7 +127,19 @@ export function EdgeCreate() {
             />
           )}
         />
+        <Stack direction="row" spacing={1}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={mutation.isPending}
+          >
+            保存
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/edges')}>
+            キャンセル
+          </Button>
+        </Stack>
       </Box>
-    </Create>
+    </Box>
   );
 }

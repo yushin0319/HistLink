@@ -1,11 +1,63 @@
-import { Chip, Stack } from '@mui/material';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { DeleteButton, List, ShowButton, useDataGrid } from '@refinedev/mui';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Box, Chip, IconButton, Stack, Typography } from '@mui/material';
+import {
+  DataGrid,
+  type GridColDef,
+  type GridSortModel,
+} from '@mui/x-data-grid';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { api } from '../../api/client';
+
+interface Game {
+  id: string;
+  player_name: string;
+  difficulty: string;
+  score: number;
+  total_stages: number;
+  is_completed: boolean;
+  created_at: string;
+}
 
 export function GameList() {
-  const { dataGridProps } = useDataGrid({
-    resource: 'games',
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
   });
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['games', paginationModel, sortModel],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      params.set(
+        'skip',
+        String(paginationModel.page * paginationModel.pageSize),
+      );
+      params.set('limit', String(paginationModel.pageSize));
+      if (sortModel[0]) {
+        params.set('sort_by', sortModel[0].field);
+        params.set('sort_order', sortModel[0].sort ?? 'asc');
+      }
+      return api.list<Game>('games', params);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.delete('games', id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['games'] });
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    if (!window.confirm('このゲーム記録を削除しますか？')) return;
+    deleteMutation.mutate(id);
+  };
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 280 },
@@ -58,25 +110,48 @@ export function GameList() {
     {
       field: 'actions',
       headerName: '操作',
-      width: 120,
+      width: 100,
       sortable: false,
       renderCell: ({ row }) => (
-        <Stack direction="row" spacing={1}>
-          <ShowButton hideText recordItemId={row.id} />
-          <DeleteButton hideText recordItemId={row.id} />
+        <Stack direction="row" spacing={0.5}>
+          <IconButton
+            size="small"
+            onClick={() => navigate(`/games/show/${row.id}`)}
+          >
+            <VisibilityIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            color="error"
+            onClick={() => handleDelete(row.id)}
+            disabled={deleteMutation.isPending}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
         </Stack>
       ),
     },
   ];
 
   return (
-    <List>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        ゲーム履歴
+      </Typography>
       <DataGrid
-        {...dataGridProps}
+        rows={data?.data ?? []}
+        rowCount={data?.total ?? 0}
+        loading={isLoading}
+        paginationMode="server"
+        sortingMode="server"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
         columns={columns}
-        autoHeight
         pageSizeOptions={[10, 25, 50]}
+        autoHeight
       />
-    </List>
+    </Box>
   );
 }

@@ -1,6 +1,16 @@
-import { Box, MenuItem, TextField } from '@mui/material';
-import { Create } from '@refinedev/mui';
-import { useForm } from '@refinedev/react-hook-form';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { api } from '../../api/client';
+import { type Term, useData } from '../../contexts/DataContext';
 
 const DIFFICULTIES = [
   { value: 'easy', label: 'かんたん' },
@@ -8,35 +18,53 @@ const DIFFICULTIES = [
   { value: 'hard', label: '難しい' },
 ];
 
+interface TermFormData {
+  name: string;
+  category: string;
+  description: string;
+  difficulty: string;
+}
+
 export function TermCreate() {
+  const navigate = useNavigate();
+  const { addTerm } = useData();
+
   const {
-    saveButtonProps,
     register,
+    handleSubmit,
     formState: { errors },
-  } = useForm({
-    refineCoreProps: {
-      resource: 'terms',
+  } = useForm<TermFormData>({ defaultValues: { difficulty: 'normal' } });
+
+  const mutation = useMutation({
+    mutationFn: (data: TermFormData) => api.create<Term>('terms', data),
+    onSuccess: (term) => {
+      addTerm(term);
+      navigate('/terms');
     },
   });
 
   return (
-    <Create saveButtonProps={saveButtonProps}>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        用語を作成
+      </Typography>
       <Box
         component="form"
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        onSubmit={handleSubmit((data) => mutation.mutate(data))}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 600 }}
       >
         <TextField
           {...register('name', { required: '用語名は必須です' })}
           label="用語名"
           error={!!errors.name}
-          helperText={errors.name?.message as string}
+          helperText={errors.name?.message}
           fullWidth
         />
         <TextField
           {...register('category', { required: 'カテゴリは必須です' })}
           label="カテゴリ"
           error={!!errors.category}
-          helperText={errors.category?.message as string}
+          helperText={errors.category?.message}
           fullWidth
         />
         <TextField
@@ -45,7 +73,7 @@ export function TermCreate() {
           multiline
           rows={4}
           error={!!errors.description}
-          helperText={errors.description?.message as string}
+          helperText={errors.description?.message}
           fullWidth
         />
         <TextField
@@ -54,7 +82,7 @@ export function TermCreate() {
           select
           defaultValue="normal"
           error={!!errors.difficulty}
-          helperText={errors.difficulty?.message as string}
+          helperText={errors.difficulty?.message}
           fullWidth
         >
           {DIFFICULTIES.map((option) => (
@@ -63,7 +91,19 @@ export function TermCreate() {
             </MenuItem>
           ))}
         </TextField>
+        <Stack direction="row" spacing={1}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={mutation.isPending}
+          >
+            保存
+          </Button>
+          <Button variant="outlined" onClick={() => navigate('/terms')}>
+            キャンセル
+          </Button>
+        </Stack>
       </Box>
-    </Create>
+    </Box>
   );
 }

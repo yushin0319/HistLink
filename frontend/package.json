@@ -19,7 +19,7 @@
     "@mui/material": "^7.3.5",
     "axios": "^1.13.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

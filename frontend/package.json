@@ -30,15 +30,15 @@
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.2",
-    "@vitejs/plugin-react": "^5.1.0",
+    "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "^4.1.0",
     "@vitest/ui": "^4.0.9",
     "axios-mock-adapter": "^2.1.0",
     "happy-dom": "^20.8.3",
-    "jsdom": "^27.2.0",
+    "jsdom": "^28.1.0",
     "msw": "^2.12.10",
     "typescript": "~5.9.3",
-    "vite": "^7.2.2",
+    "vite": "^8.0.0",
     "vitest": "^4.1.0"
   }
 }

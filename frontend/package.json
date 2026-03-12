@@ -19,7 +19,7 @@
     "@mui/material": "^7.3.5",
     "axios": "^1.13.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
@@ -31,7 +31,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitest/coverage-v8": "^4.1.0",
     "@vitest/ui": "^4.0.9",
     "axios-mock-adapter": "^2.1.0",
     "happy-dom": "^20.8.3",

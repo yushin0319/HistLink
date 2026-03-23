@@ -27,7 +27,10 @@ describe('api', () => {
       const params = new URLSearchParams({ skip: '5', limit: '5' });
       const result = await api.list('terms', params);
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms?skip=5&limit=5');
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/terms?skip=5&limit=5',
+        expect.objectContaining({ headers: expect.any(Headers) }),
+      );
       expect(result.data).toEqual(items);
       expect(result.total).toBe(1);
     });
@@ -37,7 +40,10 @@ describe('api', () => {
 
       await api.list('terms');
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms');
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/terms',
+        expect.objectContaining({ headers: expect.any(Headers) }),
+      );
     });
 
     it('配列レスポンスを正規化する', async () => {
@@ -63,7 +69,10 @@ describe('api', () => {
 
       const result = await api.get('terms', 1);
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms/1');
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/terms/1',
+        expect.objectContaining({ headers: expect.any(Headers) }),
+      );
       expect(result).toEqual(term);
     });
 
@@ -80,11 +89,14 @@ describe('api', () => {
 
       const result = await api.create('terms', { name: '卑弥呼' });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: '卑弥呼' }),
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/terms',
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.any(Headers),
+          body: JSON.stringify({ name: '卑弥呼' }),
+        }),
+      );
       expect(result).toEqual(newTerm);
     });
 
@@ -101,11 +113,14 @@ describe('api', () => {
 
       const result = await api.update('terms', 1, { name: '更新済み' });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms/1', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: '更新済み' }),
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/terms/1',
+        expect.objectContaining({
+          method: 'PUT',
+          headers: expect.any(Headers),
+          body: JSON.stringify({ name: '更新済み' }),
+        }),
+      );
       expect(result).toEqual(updated);
     });
 
@@ -121,9 +136,13 @@ describe('api', () => {
 
       await api.delete('terms', 1);
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/admin/terms/1', {
-        method: 'DELETE',
-      });
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/admin/terms/1',
+        expect.objectContaining({
+          method: 'DELETE',
+          headers: expect.any(Headers),
+        }),
+      );
     });
 
     it('エラー時にthrowする', async () => {

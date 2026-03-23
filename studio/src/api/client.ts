@@ -1,9 +1,12 @@
 const API_URL = '/api/admin';
+const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_SECRET ?? '';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = options
-    ? await fetch(`${API_URL}${path}`, options)
-    : await fetch(`${API_URL}${path}`);
+  const headers = new Headers(options?.headers);
+  if (ADMIN_TOKEN) {
+    headers.set('Authorization', `Bearer ${ADMIN_TOKEN}`);
+  }
+  const res = await fetch(`${API_URL}${path}`, { ...options, headers });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json() as Promise<T>;
 }

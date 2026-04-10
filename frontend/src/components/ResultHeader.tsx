@@ -40,7 +40,7 @@ export default function ResultHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               LIFE
             </Typography>
@@ -104,7 +104,7 @@ export default function ResultHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               STAGE
             </Typography>
@@ -116,7 +116,7 @@ export default function ResultHeader({
                 height: '2.125rem',
               }}
             >
-              <Typography variant="h5" fontWeight="bold">
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 {currentStage + 1 === totalStages
                   ? 'COMPLETE'
                   : `${currentStage + 1} / ${totalStages}`}
@@ -139,7 +139,7 @@ export default function ResultHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               SCORE
             </Typography>
@@ -153,8 +153,8 @@ export default function ResultHeader({
             >
               <Typography
                 variant="h4"
-                fontWeight="bold"
                 sx={{
+                  fontWeight: 'bold',
                   fontVariantNumeric: 'tabular-nums',
                   minWidth: '5ch',
                   textAlign: 'center',

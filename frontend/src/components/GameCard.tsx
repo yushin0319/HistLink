@@ -35,8 +35,8 @@ export default function GameCard({
       <Box sx={{ textAlign: 'center', width: '100%' }}>
         <Typography
           variant="h3"
-          fontWeight="bold"
           sx={{
+            fontWeight: 'bold',
             fontSize: { xs: '1.5rem', sm: '2rem', md: '2.25rem' },
             mb: 0.5,
             color: 'text.primary',

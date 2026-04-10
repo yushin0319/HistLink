@@ -65,8 +65,8 @@ export default function SelectPage({ onShowRule }: SelectPageProps) {
           {/* タイトル */}
           <Typography
             variant="h2"
-            fontWeight="bold"
             sx={{
+              fontWeight: 'bold',
               mb: 2,
               fontSize: { xs: '2.5rem', sm: '3rem' },
               color: 'text.primary',

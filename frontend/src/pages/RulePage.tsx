@@ -33,8 +33,8 @@ export default function RulePage({ onStart }: RulePageProps) {
           {/* タイトル */}
           <Typography
             variant="h4"
-            fontWeight="bold"
             sx={{
+              fontWeight: 'bold',
               mb: 3,
               color: 'text.primary',
             }}
@@ -70,8 +70,7 @@ export default function RulePage({ onStart }: RulePageProps) {
               <Box sx={{ textAlign: 'center' }}>
                 <Typography
                   variant="subtitle1"
-                  fontWeight="bold"
-                  sx={{ color: 'text.primary', mb: 0.25 }}
+                  sx={{ fontWeight: 'bold', color: 'text.primary', mb: 0.25 }}
                 >
                   十字軍運動
                 </Typography>
@@ -134,8 +133,7 @@ export default function RulePage({ onStart }: RulePageProps) {
               >
                 <Typography
                   variant="caption"
-                  fontWeight="bold"
-                  sx={{ color: 'white' }}
+                  sx={{ fontWeight: 'bold', color: 'white' }}
                 >
                   エルサレム
                 </Typography>
@@ -157,8 +155,7 @@ export default function RulePage({ onStart }: RulePageProps) {
               >
                 <Typography
                   variant="caption"
-                  fontWeight="bold"
-                  sx={{ color: 'text.primary' }}
+                  sx={{ fontWeight: 'bold', color: 'text.primary' }}
                 >
                   EEC
                 </Typography>
@@ -174,8 +171,7 @@ export default function RulePage({ onStart }: RulePageProps) {
               >
                 <Typography
                   variant="caption"
-                  fontWeight="bold"
-                  sx={{ color: 'white' }}
+                  sx={{ fontWeight: 'bold', color: 'white' }}
                 >
                   冷戦
                 </Typography>
@@ -197,8 +193,7 @@ export default function RulePage({ onStart }: RulePageProps) {
               >
                 <Typography
                   variant="caption"
-                  fontWeight="bold"
-                  sx={{ color: 'text.primary' }}
+                  sx={{ fontWeight: 'bold', color: 'text.primary' }}
                 >
                   戦国時代
                 </Typography>

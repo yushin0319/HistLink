@@ -97,8 +97,8 @@ export default function RouteReviewModal({
                 >
                   <Typography
                     variant="body2"
-                    fontWeight="medium"
                     sx={{
+                      fontWeight: 'medium',
                       color: isTermGray ? 'text.disabled' : 'text.primary',
                     }}
                   >

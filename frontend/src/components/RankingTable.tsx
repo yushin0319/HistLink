@@ -64,7 +64,7 @@ function NameEditField({
             py: 0,
           },
         }}
-        inputProps={{ maxLength: 20 }}
+        slotProps={{ htmlInput: { maxLength: 20 } }}
       />
     );
   }

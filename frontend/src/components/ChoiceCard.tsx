@@ -79,8 +79,8 @@ export default function ChoiceCard({
       <Box sx={{ textAlign: 'center', px: 2 }}>
         <Typography
           variant="h5"
-          fontWeight="bold"
           sx={{
+            fontWeight: 'bold',
             fontSize: { xs: '1rem', sm: '1.2rem' },
             color: getTextColor(),
           }}

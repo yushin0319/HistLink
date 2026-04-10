@@ -42,7 +42,7 @@ export default function GameHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               LIFE
             </Typography>
@@ -84,7 +84,7 @@ export default function GameHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               STAGE
             </Typography>
@@ -96,7 +96,7 @@ export default function GameHeader({
                 height: '2.125rem',
               }}
             >
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                 {currentStage + 1} / {totalStages}
               </Typography>
             </Box>
@@ -117,7 +117,7 @@ export default function GameHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               SCORE
             </Typography>
@@ -129,7 +129,7 @@ export default function GameHeader({
                 height: '2.125rem',
               }}
             >
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                 {score}
               </Typography>
             </Box>
@@ -150,7 +150,7 @@ export default function GameHeader({
             <Typography
               variant="caption"
               color="text.secondary"
-              fontWeight="medium"
+              sx={{ fontWeight: 'medium' }}
             >
               TIMER
             </Typography>
@@ -165,8 +165,8 @@ export default function GameHeader({
               <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
                 <Typography
                   variant="h4"
-                  fontWeight="bold"
                   sx={{
+                    fontWeight: 'bold',
                     color: remainingTime <= 30 ? 'error.main' : 'text.primary',
                     fontVariantNumeric: 'tabular-nums',
                     minWidth: '2ch',
@@ -177,8 +177,8 @@ export default function GameHeader({
                 </Typography>
                 <Typography
                   variant="h4"
-                  fontWeight="bold"
                   sx={{
+                    fontWeight: 'bold',
                     color: remainingTime <= 30 ? 'error.main' : 'text.primary',
                     width: '0.5ch',
                     textAlign: 'center',
@@ -188,8 +188,8 @@ export default function GameHeader({
                 </Typography>
                 <Typography
                   variant="h4"
-                  fontWeight="bold"
                   sx={{
+                    fontWeight: 'bold',
                     color: remainingTime <= 30 ? 'error.main' : 'text.primary',
                     fontVariantNumeric: 'tabular-nums',
                     width: '1ch',

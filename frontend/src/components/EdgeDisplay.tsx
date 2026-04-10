@@ -31,8 +31,7 @@ export default function EdgeDisplay({
           <Typography
             variant="body2"
             color="text.secondary"
-            fontWeight="bold"
-            sx={{ fontSize: '0.9rem', mb: 0.5 }}
+            sx={{ fontWeight: 'bold', fontSize: '0.9rem', mb: 0.5 }}
           >
             {keyword}
           </Typography>

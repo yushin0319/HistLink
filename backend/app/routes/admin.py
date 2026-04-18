@@ -1,4 +1,7 @@
 """Admin API endpoints for HistLink Studio"""
+
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -6,15 +9,17 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.dependencies import verify_admin_token
 from app.schemas.admin import (
-    TermCreate,
-    TermUpdate,
-    TermResponse,
     EdgeCreate,
-    EdgeUpdate,
     EdgeResponse,
+    EdgeUpdate,
     PaginatedResponse,
+    TermCreate,
+    TermResponse,
+    TermUpdate,
 )
 from app.services.cache import get_cache
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(verify_admin_token)])
 
@@ -53,6 +58,7 @@ def refresh_cache():
 
 
 # ========== Terms CRUD ==========
+
 
 @router.get("/terms/all")
 async def list_all_terms():
@@ -168,12 +174,15 @@ async def create_term(term: TermCreate, db: Session = Depends(get_db)):
         VALUES (:name, :tier, :category, :description)
         RETURNING id, name, tier, category, description
     """)
-    result = db.execute(query, {
-        "name": term.name,
-        "tier": tier,
-        "category": term.category,
-        "description": term.description,
-    })
+    result = db.execute(
+        query,
+        {
+            "name": term.name,
+            "tier": tier,
+            "category": term.category,
+            "description": term.description,
+        },
+    )
     db.commit()
     row = result.fetchone()
 
@@ -199,13 +208,16 @@ async def update_term(term_id: int, term: TermUpdate, db: Session = Depends(get_
         WHERE id = :id
         RETURNING id, name, tier, category, description
     """)
-    result = db.execute(query, {
-        "id": term_id,
-        "name": term.name,
-        "tier": tier,
-        "category": term.category,
-        "description": term.description,
-    })
+    result = db.execute(
+        query,
+        {
+            "id": term_id,
+            "name": term.name,
+            "tier": tier,
+            "category": term.category,
+            "description": term.description,
+        },
+    )
     db.commit()
     row = result.fetchone()
 
@@ -241,6 +253,7 @@ async def delete_term(term_id: int, db: Session = Depends(get_db)):
 
 # ========== Edges CRUD ==========
 
+
 @router.get("/edges/all")
 async def list_all_edges():
     """Get all edges from cache (for client-side caching)"""
@@ -254,7 +267,9 @@ async def list_all_edges():
             "keyword": edge.keyword,
             "description": edge.description,
             "difficulty": edge.difficulty,
-            "from_term_name": cache.get_term(edge.term_a).name if cache.get_term(edge.term_a) else "",
+            "from_term_name": cache.get_term(edge.term_a).name
+            if cache.get_term(edge.term_a)
+            else "",
             "to_term_name": cache.get_term(edge.term_b).name if cache.get_term(edge.term_b) else "",
         }
         for edge in cache.edges
@@ -350,17 +365,25 @@ async def create_edge(edge: EdgeCreate, db: Session = Depends(get_db)):
         RETURNING id
     """)
     try:
-        result = db.execute(query, {
-            "term_a": term_a,
-            "term_b": term_b,
-            "keyword": edge.keyword,
-            "description": edge.description,
-            "difficulty": edge.difficulty,
-        })
+        result = db.execute(
+            query,
+            {
+                "term_a": term_a,
+                "term_b": term_b,
+                "keyword": edge.keyword,
+                "description": edge.description,
+                "difficulty": edge.difficulty,
+            },
+        )
         db.commit()
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        # 内部例外詳細はサーバーログへ。クライアントには固定メッセージで返す
+        logger.exception("Failed to create edge (term_a=%s, term_b=%s)", term_a, term_b)
+        raise HTTPException(
+            status_code=400,
+            detail="Failed to create edge (duplicate or invalid term reference)",
+        ) from e
 
     edge_id = result.fetchone()[0]
     refresh_cache()
@@ -381,14 +404,17 @@ async def update_edge(edge_id: int, edge: EdgeUpdate, db: Session = Depends(get_
         WHERE id = :id
         RETURNING id
     """)
-    result = db.execute(query, {
-        "id": edge_id,
-        "term_a": term_a,
-        "term_b": term_b,
-        "keyword": edge.keyword,
-        "description": edge.description,
-        "difficulty": edge.difficulty,
-    })
+    result = db.execute(
+        query,
+        {
+            "id": edge_id,
+            "term_a": term_a,
+            "term_b": term_b,
+            "keyword": edge.keyword,
+            "description": edge.description,
+            "difficulty": edge.difficulty,
+        },
+    )
     db.commit()
     row = result.fetchone()
 
@@ -416,6 +442,7 @@ async def delete_edge(edge_id: int, db: Session = Depends(get_db)):
 
 
 # ========== Games (Read-only) ==========
+
 
 @router.get("/games", response_model=PaginatedResponse)
 async def list_games(

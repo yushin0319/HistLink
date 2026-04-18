@@ -259,21 +259,21 @@ async def list_all_edges():
     """Get all edges from cache (for client-side caching)"""
     cache = get_cache()
 
-    return [
-        {
+    def _edge_row(edge):
+        from_term = cache.get_term(edge.term_a)
+        to_term = cache.get_term(edge.term_b)
+        return {
             "id": edge.id,
             "from_term_id": edge.term_a,
             "to_term_id": edge.term_b,
             "keyword": edge.keyword,
             "description": edge.description,
             "difficulty": edge.difficulty,
-            "from_term_name": cache.get_term(edge.term_a).name
-            if cache.get_term(edge.term_a)
-            else "",
-            "to_term_name": cache.get_term(edge.term_b).name if cache.get_term(edge.term_b) else "",
+            "from_term_name": from_term.name if from_term else "",
+            "to_term_name": to_term.name if to_term else "",
         }
-        for edge in cache.edges
-    ]
+
+    return [_edge_row(edge) for edge in cache.edges]
 
 
 @router.get("/edges", response_model=PaginatedResponse)

@@ -18,7 +18,8 @@ RUN pip install --no-cache-dir .
 COPY . .
 
 # 非rootユーザーで実行（コンテナエスケープ時の影響最小化）
-RUN useradd --create-home --shell /bin/bash appuser && chown -R appuser:appuser /app
+# インタラクティブログイン不要のため /sbin/nologin でログイン禁止
+RUN useradd --create-home --shell /sbin/nologin appuser && chown -R appuser:appuser /app
 USER appuser
 
 # ポート8000を公開

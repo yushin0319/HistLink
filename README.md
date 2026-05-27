@@ -4,9 +4,10 @@
 
 ## スタック
 
-- Backend: Python 3.11+ / FastAPI / SQLAlchemy 2.x / Pydantic / pytest + Hypothesis
-- Frontend: TypeScript / React 19 / Vite 8 / MUI v9 / Zustand / Playwright（E2E）
-- Studio: React 18 / Vite 7 / Refine（管理画面）
+- Backend: Python 3.11+ / FastAPI / SQLAlchemy 2.x / Pydantic / pytest + Hypothesis（uv 管理）
+- Frontend: TypeScript / React 19 / Vite 8 / MUI v9 / Zustand / axios / Playwright（E2E） / Biome
+- Studio: React 19 / Vite 7 / MUI v7 + @mui/x-data-grid / react-router v7 + react-hook-form + TanStack Query（自前管理画面、Refine は採用していない）
+- パッケージマネージャ: Bun（frontend / studio とも `bun.lock` あり）
 - DB: PostgreSQL 16（Docker local / Supabase 本番）
 - デプロイ: Render（FE: Static / BE: Web Service）
 
@@ -21,7 +22,7 @@ backend/app/
   services/cache.py  キャッシュ初期化
   database.py        PostgreSQL 接続
 frontend/src/        React アプリ（ゲーム画面）
-studio/src/          Refine 管理画面
+studio/src/          管理画面（MUI + react-router v7 内製）
 database/schema.sql  Term / Edge / Game テーブル
 ```
 
@@ -46,18 +47,18 @@ uv sync --group dev
 uv run pytest --cov=app
 uv run uvicorn app.main:app --reload
 
-# Frontend (npm)
+# Frontend (Bun)
 cd frontend
-npm install
-npm run dev          # :5173
-npm run test:run
-npm run build
+bun install
+bun run dev          # :5173
+bun run test:run
+bun run build
 
-# Studio（管理画面）
+# Studio（管理画面、Bun）
 cd studio
-npm install
-npm run dev
-npm run build
+bun install
+bun run dev
+bun run build
 
 # DB（ローカル）
 docker compose up -d
@@ -75,7 +76,8 @@ docker compose down -v   # リセット
 
 - Render（main push で自動）
 - n8n Health Check（10 分間隔）でスピンダウン防止
-- CI: `.github/workflows/test.yml`（pytest + vitest）/ PR レビュー: `gemini-review.yml`
+- CI: `.github/workflows/ci.yml` + `test.yml`（pytest + vitest）/ PR レビュー: `gemini-review.yml`
+- Dependabot patch/minor は `dependabot-automerge.yml` で auto-merge
 
 ## 運用ルール
 

@@ -4,9 +4,9 @@
 
 ## スタック
 
-- Backend: Python 3.11+ / FastAPI / SQLAlchemy 2.x / Pydantic / pytest + Hypothesis（uv 管理）
-- Frontend: TypeScript / React 19 / Vite 8 / MUI v9 / Zustand / axios / Playwright（E2E） / Biome
-- Studio: React 19 / Vite 7 / MUI v7 + @mui/x-data-grid / react-router v7 + react-hook-form + TanStack Query（自前管理画面、Refine は採用していない）
+- Backend: Python 3.11+ / FastAPI / SQLAlchemy 2.x / Pydantic / pytest + Hypothesis / ruff（uv 管理）
+- Frontend: TypeScript 7 / React 19 / Vite 8 / MUI v9 / Zustand / axios / vitest v4 / Playwright（E2E） / Biome v2
+- Studio: TypeScript 5 / React 19 / Vite 7 / MUI v7 + @mui/x-data-grid v8 / react-router v7 + react-hook-form + TanStack Query v5（自前管理画面、Refine は採用していない）
 - パッケージマネージャ: Bun（frontend / studio とも `bun.lock` あり）
 - DB: PostgreSQL 16（Docker local / Supabase 本番）
 - デプロイ: Render（FE: Static / BE: Web Service）
@@ -43,7 +43,7 @@ database/schema.sql  Term / Edge / Game テーブル
 ```bash
 # Backend (uv)
 cd backend
-uv sync --group dev
+uv sync --extra dev          # dev は [project.optional-dependencies]（dependency-groups は無い）
 uv run pytest --cov=app
 uv run uvicorn app.main:app --reload
 
@@ -51,14 +51,18 @@ uv run uvicorn app.main:app --reload
 cd frontend
 bun install
 bun run dev          # :5173
-bun run test:run
+bunx vitest run      # CI と同じ。package.json の test は watch モード
 bun run build
 
 # Studio（管理画面、Bun）
 cd studio
 bun install
 bun run dev
+bun run test:run
 bun run build
+
+# Lint（リポルート、CI と同じ）
+bunx @biomejs/biome check .
 
 # DB（ローカル）
 docker compose up -d

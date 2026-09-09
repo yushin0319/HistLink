@@ -1,10 +1,28 @@
 version: 2
 updates:
+  # bun manifest はリポジトリ内に 3 箇所ある (/, /frontend, /studio)。
+  # directory ごとに 1 エントリ必要で、漏れた directory は更新 PR が出ない。
+  - package-ecosystem: "bun"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
   - package-ecosystem: "bun"
     directory: "/frontend"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+
+  # studio は監視対象から漏れていた (2026-09-08 追加)。
+  # そのため studio/bun.lock の react-router が 7.14.1 のまま更新 PR が出ず、
+  # RSC Mode CSRF Bypass advisory のレンジ (>=7.12.0 <8.3.0) に留まっていた。
+  - package-ecosystem: "bun"
+    directory: "/studio"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
   - package-ecosystem: "pip"
     directory: "/backend"
     schedule:

@@ -7,12 +7,52 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      # vitest 本体と @vitest/* は peerDependencies でバージョンを厳密指定して
+      # いる ("@vitest/ui": "5.0.0" のように範囲指定ではない)。別 PR に分かれると
+      # 1 本ずつでは必ず peer 不整合になりマージできない (2026-09-09 に実際に
+      # #163/#165/#169 の 3 分割で発生)。1 PR にまとめる。
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      # MUI も material / icons-material / x-data-grid が相互に peer を張るため
+      # まとめる (#164 が単独マージ不能だった)。
+      mui:
+        patterns:
+          - "@mui/*"
+      # vite と @vitejs/plugin-react も peer で結びついている
+      # (plugin-react 6 の peer は vite ^8.0.0)。#166 が単独マージ不能だった。
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
 
   - package-ecosystem: "bun"
     directory: "/frontend"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      # vitest 本体と @vitest/* は peerDependencies でバージョンを厳密指定して
+      # いる ("@vitest/ui": "5.0.0" のように範囲指定ではない)。別 PR に分かれると
+      # 1 本ずつでは必ず peer 不整合になりマージできない (2026-09-09 に実際に
+      # #163/#165/#169 の 3 分割で発生)。1 PR にまとめる。
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      # MUI も material / icons-material / x-data-grid が相互に peer を張るため
+      # まとめる (#164 が単独マージ不能だった)。
+      mui:
+        patterns:
+          - "@mui/*"
+      # vite と @vitejs/plugin-react も peer で結びついている
+      # (plugin-react 6 の peer は vite ^8.0.0)。#166 が単独マージ不能だった。
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
 
   # studio は監視対象から漏れていた (2026-09-08 追加)。
   # そのため studio/bun.lock の react-router が 7.14.1 のまま更新 PR が出ず、
@@ -22,6 +62,26 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      # vitest 本体と @vitest/* は peerDependencies でバージョンを厳密指定して
+      # いる ("@vitest/ui": "5.0.0" のように範囲指定ではない)。別 PR に分かれると
+      # 1 本ずつでは必ず peer 不整合になりマージできない (2026-09-09 に実際に
+      # #163/#165/#169 の 3 分割で発生)。1 PR にまとめる。
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      # MUI も material / icons-material / x-data-grid が相互に peer を張るため
+      # まとめる (#164 が単独マージ不能だった)。
+      mui:
+        patterns:
+          - "@mui/*"
+      # vite と @vitejs/plugin-react も peer で結びついている
+      # (plugin-react 6 の peer は vite ^8.0.0)。#166 が単独マージ不能だった。
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
 
   - package-ecosystem: "pip"
     directory: "/backend"

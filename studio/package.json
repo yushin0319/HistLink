@@ -16,7 +16,7 @@
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
     "@mui/x-data-grid": "^8.24.0",
-    "@tanstack/react-query": "^5.81.5",
+    "@tanstack/react-query": "^5.102.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.87.0",

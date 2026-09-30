@@ -5,8 +5,8 @@
 ## スタック
 
 - Backend: Python 3.11+ / FastAPI / SQLAlchemy 2.x / Pydantic / pytest + Hypothesis / ruff（uv 管理）
-- Frontend: TypeScript 7 / React 19 / Vite 8 / MUI v9 / Zustand / axios / vitest v4 / Playwright（E2E） / Biome v2
-- Studio: TypeScript 5 / React 19 / Vite 7 / MUI v7 + @mui/x-data-grid v8 / react-router v7 + react-hook-form + TanStack Query v5（自前管理画面、Refine は採用していない）
+- Frontend: TypeScript 7 / React 19 / Vite 8 / MUI v9 / Zustand / axios / vitest v5 / Playwright（E2E） / Biome v2
+- Studio: TypeScript 7 / React 19 / Vite 8 / MUI v9 + @mui/x-data-grid v9 / react-router v8 + react-hook-form + TanStack Query v5 / vitest v5（自前管理画面、Refine は採用していない）
 - パッケージマネージャ: Bun（frontend / studio とも `bun.lock` あり）
 - DB: PostgreSQL 16（Docker local / Supabase 本番）
 - デプロイ: Render（FE: Static / BE: Web Service）
@@ -22,7 +22,7 @@ backend/app/
   services/cache.py  キャッシュ初期化
   database.py        PostgreSQL 接続
 frontend/src/        React アプリ（ゲーム画面）
-studio/src/          管理画面（MUI + react-router v7 内製）
+studio/src/          管理画面（MUI + react-router v8 内製）
 database/schema.sql  Term / Edge / Game テーブル
 ```
 

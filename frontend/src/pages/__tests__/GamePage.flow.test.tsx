@@ -96,14 +96,27 @@ describe('GamePage', () => {
       expect(beforeState.totalStages).toBe(2);
       expect(beforeState.currentStage).toBe(0);
 
-      // 全問正解でクリア（2回の回答が必要）
-      await act(async () => {
-        const { answerQuestion } = useGameStore.getState();
-        answerQuestion(2); // ステップ0 → feedbackPhase
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        answerQuestion(6); // ステップ1 → feedbackPhase → ゲーム完了
-        await new Promise((resolve) => setTimeout(resolve, 600));
+      // 全問正解でクリア（2回の回答が必要）。回答後は GamePage が 0.5 秒後に
+      // completeFeedbackPhase を呼ぶので、固定時間ではなく状態が変わるまで待つ
+      // （600ms の固定待ちは負荷が高いと 500ms のタイマーに追い越されて落ちていた）
+      act(() => {
+        useGameStore.getState().answerQuestion(2); // ステップ0 → feedbackPhase
       });
+      await waitFor(
+        () => {
+          const s = useGameStore.getState();
+          expect(s.isFeedbackPhase).toBe(false);
+          expect(s.currentStage).toBe(1);
+        },
+        { timeout: 3000 },
+      );
+      act(() => {
+        useGameStore.getState().answerQuestion(6); // ステップ1 → feedbackPhase → ゲーム完了
+      });
+      await waitFor(
+        () => expect(useGameStore.getState().isCompleted).toBe(true),
+        { timeout: 3000 },
+      );
 
       const state = useGameStore.getState();
       expect(state.currentStage).toBe(1);

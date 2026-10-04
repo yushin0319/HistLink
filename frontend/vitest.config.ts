@@ -6,6 +6,14 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'happy-dom',
+    // msw 3 は XHR/fetch を Node の http 層で横取りするため、happy-dom の fetch が
+    // 先に CORS プリフライト (OPTIONS) を送ってしまい本リクエストまで届かない。
+    // テスト環境では同一オリジンポリシーを無効化して msw 2 と同じ挙動に揃える。
+    environmentOptions: {
+      happyDOM: {
+        settings: { fetch: { disableSameOriginPolicy: true } },
+      },
+    },
     setupFiles: './src/test/setup.ts',
     css: true,
     exclude: ['e2e/**', 'node_modules/**'],
